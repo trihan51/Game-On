@@ -1,5 +1,6 @@
 package com.example.ttpm.game_on;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,8 +9,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+
+import com.parse.Parse;
 
 public class MainActivity extends AppCompatActivity {
+    private Button loginbutton;
+    protected Button registerbutton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +32,34 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+    loginbutton = (Button)findViewById(R.id.LoginButton);
+        loginbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent taketologinScreen = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(taketologinScreen);
+            }
+        });
+
+        registerbutton = (Button)findViewById(R.id.RegisterButton);
+        registerbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent taketoRegisterScreen = new Intent(MainActivity.this, RegisterActivity.class);
+                startActivity(taketoRegisterScreen);
+            }
+        });
+
+        // Enable Local Datastore.
+        Parse.enableLocalDatastore(this);
+
+        Parse.initialize(this, "duemHXnG4aocoONNNIEQLevZ7MyLAvqWSSFlBnpW", "Conlzrgvh0WbBVQgV7c0VIjqlEIcxUNSi4iwmzyW");
+
+
+
+
+
     }
 
     @Override

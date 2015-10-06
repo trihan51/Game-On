@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:ems="10"
-        android:id="@+id/editText4"
+        android:id="@+id/loginEmailForm"
         android:layout_marginTop="93dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -26,10 +26,10 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/editText5"
-        android:layout_below="@+id/editText4"
-        android:layout_alignLeft="@+id/editText4"
-        android:layout_alignStart="@+id/editText4"
+        android:id="@+id/loginPassForm"
+        android:layout_below="@+id/loginEmailForm"
+        android:layout_alignLeft="@+id/loginEmailForm"
+        android:layout_alignStart="@+id/loginEmailForm"
         android:hint="Enter Password.." />
 
     <Button
@@ -38,6 +38,6 @@
         android:text="Login"
         android:id="@+id/LoginButton2"
         android:layout_marginTop="142dp"
-        android:layout_below="@+id/editText5"
+        android:layout_below="@+id/loginPassForm"
         android:layout_centerHorizontal="true" />
 </RelativeLayout>

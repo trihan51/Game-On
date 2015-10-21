@@ -15,6 +15,8 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
+import java.util.regex.Pattern;
+
 public class RegisterActivity extends AppCompatActivity {
     protected Button registerbutton;
     protected EditText registerUsername;
@@ -41,7 +43,12 @@ public class RegisterActivity extends AppCompatActivity {
                 String password = registerPassword.getText().toString().trim();
                 String password1 = registerPassword2.getText().toString().trim();
 
-                if (password.equals(password1))
+                // Regex for domain check
+                Pattern domainPattern = Pattern.compile("\\S+(@sjsu\\.edu)$");
+                // Check email has '@sjsu.edu' domain
+                boolean domainValid = domainPattern.matcher(email).matches();
+
+                if (password.equals(password1) && domainValid)
                 {
                     ParseUser user = new ParseUser();
                     user.setPassword(password);
@@ -67,16 +74,13 @@ public class RegisterActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(RegisterActivity.this,"Passwords do not match", Toast.LENGTH_LONG).show();
+                    if(!password.equals(password1)) {
+                        Toast.makeText(RegisterActivity.this, "Passwords do not match", Toast.LENGTH_LONG).show();
+                    } else if(!domainValid) {
+                        Toast.makeText(RegisterActivity.this, "Enter valid '@sjsu.edu' email address", Toast.LENGTH_LONG).show();
+                    }
                 }
                 //Create new user in Parse
-
-
-
-
-
-
-
             }
         });
 

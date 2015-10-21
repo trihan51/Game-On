@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="C:\Users\Tri Han\Documents\GitHub\Game-On\Game-On\app\libs\Parse-1.10.2.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="a859414011ce2c18187acc83319688e6bd340635">
+        <dex dex="C:\Users\Tri Han\Documents\GitHub\Game-On\Game-On\app\build\intermediates\pre-dexed\debug\Parse-1.10.2-5328b053c36c5258b11aa91299f002e8ff7cffd6.jar" />
+    </item>
+    <item
+        jar="C:\Users\Tri Han\AppData\Local\Android\sdk1\extras\android\m2repository\com\android\support\support-annotations\23.0.1\support-annotations-23.0.1.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="1fce89a6428c51467090d7f424e4c9c3dbd55f7e">
+        <dex dex="C:\Users\Tri Han\Documents\GitHub\Game-On\Game-On\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.1-d616af4a14ce970f74a2ee5e0ada9d0ef46f94b9.jar" />
+    </item>
+    <item
+        jar="C:\Users\Tri Han\Documents\GitHub\Game-On\Game-On\app\build\intermediates\exploded-aar\com.android.support\design\23.0.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="e5c61a3169221a89654ffcaaed47bba51cf071ad">
+        <dex dex="C:\Users\Tri Han\Documents\GitHub\Game-On\Game-On\app\build\intermediates\pre-dexed\debug\classes-5301501216b364251bd100e3f87e1caa5839488e.jar" />
+    </item>
+    <item
+        jar="C:\Users\Tri Han\Documents\GitHub\Game-On\Game-On\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
+        <dex dex="C:\Users\Tri Han\Documents\GitHub\Game-On\Game-On\app\build\intermediates\pre-dexed\debug\classes-71bfb439b3f5b34aa4c838ef2694eb2840e46d21.jar" />
+    </item>
+    <item
+        jar="C:\Users\Tri Han\.gradle\caches\modules-2\files-2.1\com.parse.bolts\bolts-android\1.2.0\6ee2953ccf51ce72b6d548c30c4633b99eb4f9dd\bolts-android-1.2.0.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="6ee2953ccf51ce72b6d548c30c4633b99eb4f9dd">
+        <dex dex="C:\Users\Tri Han\Documents\GitHub\Game-On\Game-On\app\build\intermediates\pre-dexed\debug\bolts-android-1.2.0-f326c7bcb997fde8e674e522e9e7aded13b813ab.jar" />
+    </item>
+    <item
+        jar="C:\Users\Tri Han\Documents\GitHub\Game-On\Game-On\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\libs\internal_impl-23.0.1.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="aa92916125166649d8ad4ba3940c3dd7515596d3">
+        <dex dex="C:\Users\Tri Han\Documents\GitHub\Game-On\Game-On\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.1-a1f05be2042ea2ee191051621cf4efab1fd115d0.jar" />
+    </item>
+    <item
+        jar="C:\Users\Tri Han\Documents\GitHub\Game-On\Game-On\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
+        <dex dex="C:\Users\Tri Han\Documents\GitHub\Game-On\Game-On\app\build\intermediates\pre-dexed\debug\classes-203b0ae45b384c5db07ce5431114a312ec2249a4.jar" />
+    </item>
+
+</items>

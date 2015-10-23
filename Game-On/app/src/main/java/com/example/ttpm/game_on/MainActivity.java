@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 
 import com.parse.Parse;
+import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity {
     private Button loginbutton;
@@ -24,7 +25,14 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser != null) {
+            // do stuff with the user
+            Intent gomainscreen = new Intent(MainActivity.this, NearbySessionsMain.class);
+            startActivity(gomainscreen);
+        } else {
+            // show the signup or login screen
+        }
 
     loginbutton = (Button)findViewById(R.id.LoginButton);
         loginbutton.setOnClickListener(new View.OnClickListener() {
@@ -32,10 +40,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent taketologinScreen = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(taketologinScreen);
+                finish();
             }
         });
 
-        registerbutton = (Button)findViewById(R.id.RegisterButton);
+        registerbutton = (Button) findViewById(R.id.RegisterButton);
         registerbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,10 +53,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Enable Local Datastore.
-        Parse.enableLocalDatastore(this);
 
-        Parse.initialize(this, "duemHXnG4aocoONNNIEQLevZ7MyLAvqWSSFlBnpW", "Conlzrgvh0WbBVQgV7c0VIjqlEIcxUNSi4iwmzyW");
 
 
 

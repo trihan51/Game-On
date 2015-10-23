@@ -20,6 +20,7 @@ public class LoginActivity extends AppCompatActivity {
     protected Button loginbutton;
     protected EditText loginEmail;
     protected EditText loginPass;
+    protected Button forgotpassbutton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,14 @@ public class LoginActivity extends AppCompatActivity {
         loginPass = (EditText)findViewById(R.id.loginPassForm);
 
         loginbutton = (Button)findViewById(R.id.LoginButton2);
+        forgotpassbutton = (Button)findViewById(R.id.forgotpassbutton);
+        forgotpassbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent resetpass = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+                startActivity(resetpass);
+            }
+        });
 
        loginbutton.setOnClickListener(new View.OnClickListener() {
            @Override
@@ -48,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
                            Toast.makeText(LoginActivity.this, "Successfully logged in!", Toast.LENGTH_SHORT).show();
                            Intent TakeUserNearbySession = new Intent(LoginActivity.this, NearbySessionsMain.class);
                            startActivity(TakeUserNearbySession);
+                           finish();
                        }
                        else
                        {

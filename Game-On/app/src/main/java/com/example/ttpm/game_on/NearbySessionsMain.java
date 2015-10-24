@@ -1,9 +1,12 @@
 package com.example.ttpm.game_on;
 
+import android.app.ActionBar;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -15,16 +18,17 @@ import com.parse.ParseUser;
 
 import org.w3c.dom.Text;
 
-public class NearbySessionsMain extends AppCompatActivity {
+public class NearbySessionsMain extends AppCompatActivity  {
     protected TextView greetinguser;
     protected Button logoutbutton;
+    protected Button swipeinterfacebutton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby_sessions_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
         logoutbutton = (Button)findViewById(R.id.logoutbutton);
 
@@ -32,7 +36,9 @@ public class NearbySessionsMain extends AppCompatActivity {
          String currentuse = currentUser.getUsername();
 
         greetinguser = (TextView)findViewById(R.id.userloggedingreeting);
-        greetinguser.setText("Hello, "+currentuse + "!");
+        greetinguser.setText("Hello, "+ currentuse + "!");
+
+        swipeinterfacebutton = (Button)findViewById(R.id.swipehomebutton);
 
         logoutbutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,10 +60,20 @@ public class NearbySessionsMain extends AppCompatActivity {
             }
         });
 
+        swipeinterfacebutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent testswipey = new Intent(NearbySessionsMain.this, HomepageSwipe.class);
+                startActivity(testswipey);
+            }
+        });
+
 
 
 
 
     }
+
 
 }

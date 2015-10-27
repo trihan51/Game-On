@@ -12,11 +12,10 @@ import android.widget.TextView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PageFragment extends android.support.v4.app.Fragment {
+public class PageFragment2 extends android.support.v4.app.Fragment {
 
     TextView textView;
-
-    public PageFragment() {
+    public PageFragment2() {
         // Required empty public constructor
     }
 
@@ -24,19 +23,21 @@ public class PageFragment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
 
-        View view = inflater.inflate(R.layout.page_fragment_layout, container, false);
-        textView = (TextView)view.findViewById(R.id.textView3);
+        View view = inflater.inflate(R.layout.fragment_page_fragment2, container, false);
 
-       // Bundle bundle = getArguments();
+        textView = (TextView)view.findViewById(R.id.textView4);
+
+        //Bundle bundle = getArguments();
         //String message = Integer.toString(bundle.getInt("count"));
         textView.setText(getArguments().getString("msg"));
-    return view;
+        return view;
     }
 
-    public static PageFragment newInstance(String text)
+    public static PageFragment2 newInstance(String text)
     {
-        PageFragment f = new PageFragment();
+        PageFragment2 f = new PageFragment2();
         Bundle b = new Bundle();
         b.putString("msg", text);
         f.setArguments(b);

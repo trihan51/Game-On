@@ -16,13 +16,19 @@ public class SwipeAdapter  extends FragmentStatePagerAdapter{
     }
 
     @Override
-    public Fragment getItem(int i) {
-        Fragment fragment = new PageFragment();
+    public Fragment getItem(int pos) {
+       /* Fragment fragment = new PageFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("count", i + 1);
         fragment.setArguments(bundle);
 
-        return fragment;
+        return fragment;*/
+        switch(pos){
+            case 0: return PageFragment.newInstance("First Fragment, Instance 1");
+
+
+            default: return PageFragment.newInstance("First Fragment, Instance 1");
+        }
 
     }
 

@@ -66,6 +66,7 @@ public class NearbySessionsMain extends AppCompatActivity  {
 
                 Intent testswipey = new Intent(NearbySessionsMain.this, HomepageSwipe.class);
                 startActivity(testswipey);
+                finish();
             }
         });
 

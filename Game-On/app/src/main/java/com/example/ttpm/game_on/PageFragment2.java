@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.TextView;
 
 
@@ -15,6 +16,7 @@ import android.widget.TextView;
 public class PageFragment2 extends android.support.v4.app.Fragment {
 
     TextView textView;
+    GridView gridview;
     public PageFragment2() {
         // Required empty public constructor
     }
@@ -32,6 +34,11 @@ public class PageFragment2 extends android.support.v4.app.Fragment {
         //Bundle bundle = getArguments();
         //String message = Integer.toString(bundle.getInt("count"));
         textView.setText(getArguments().getString("msg"));
+
+        gridview = (GridView)view.findViewById(R.id.gridView);
+        gridview.setAdapter(new MyAdapter(view.getContext()));
+
+
         return view;
     }
 

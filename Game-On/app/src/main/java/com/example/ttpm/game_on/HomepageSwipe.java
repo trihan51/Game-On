@@ -15,12 +15,18 @@ public class HomepageSwipe extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_homepage_swipe);
         viewPager = (ViewPager)findViewById(R.id.view_pager);
 
         //SwipeAdapter swipeAdapter = new SwipeAdapter(getSupportFragmentManager());
         viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+
     }
+
+
+
 
     private class MyPagerAdapter extends FragmentPagerAdapter {
 

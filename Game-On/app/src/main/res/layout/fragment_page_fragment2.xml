@@ -3,12 +3,10 @@
     android:layout_height="match_parent" tools:context="com.example.ttpm.game_on.PageFragment2">
 
 
-    <TextView
+    <GridView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/textView4"
-        android:layout_alignParentTop="true"
+        android:id="@+id/gridView"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="70dp" />
+        android:layout_alignParentTop="true" />
 </RelativeLayout>

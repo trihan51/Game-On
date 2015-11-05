@@ -46,6 +46,16 @@
         </activity>
         <activity android:name=".HomepageSwipe" >
         </activity>
+        <activity
+            android:name=".HostSearchForGamesStub"
+            android:label="@string/title_activity_host_search_for_games_stub"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".HostSessionPage"
+            android:label="@string/title_activity_host_session_page"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
     </application>
 
 </manifest>

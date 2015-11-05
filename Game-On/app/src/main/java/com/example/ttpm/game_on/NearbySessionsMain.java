@@ -22,6 +22,7 @@ public class NearbySessionsMain extends AppCompatActivity  {
     protected TextView greetinguser;
     protected Button logoutbutton;
     protected Button swipeinterfacebutton;
+    protected Button goToHostPageStubButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,8 @@ public class NearbySessionsMain extends AppCompatActivity  {
         greetinguser.setText("Hello, "+ currentuse + "!");
 
         swipeinterfacebutton = (Button)findViewById(R.id.swipehomebutton);
+
+        goToHostPageStubButton = (Button) findViewById(R.id.GoToHostButton);
 
         logoutbutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +72,14 @@ public class NearbySessionsMain extends AppCompatActivity  {
             }
         });
 
-
+        goToHostPageStubButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goToHostPageStub = new Intent(NearbySessionsMain.this, HostSearchForGamesStub.class);
+                startActivity(goToHostPageStub);
+                finish();
+            }
+        });
 
 
 

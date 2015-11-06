@@ -8,5 +8,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/gridView"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:numColumns="2"
+        android:verticalSpacing="25dp"
+        android:touchscreenBlocksFocus="true" />
 </RelativeLayout>

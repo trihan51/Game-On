@@ -22,4 +22,19 @@
         android:layout_gravity="bottom|end" android:layout_margin="@dimen/fab_margin"
         android:src="@android:drawable/ic_dialog_email" />
 
+    <!--host-search-->
+    <EditText
+        android:id="@+id/txtsearch"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="search" />
+
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+    </ListView>
+    <!--host-search end-->
+
 </android.support.design.widget.CoordinatorLayout>

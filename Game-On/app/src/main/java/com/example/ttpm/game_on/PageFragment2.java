@@ -1,12 +1,9 @@
 package com.example.ttpm.game_on;
 
 
-import android.app.Dialog;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.parse.Parse;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseQueryAdapter;
 
 
 /**
@@ -29,6 +26,8 @@ public class PageFragment2 extends android.support.v4.app.Fragment {
 
     TextView textView;
     GridView gridview;
+    private ParseQueryAdapter<ParseObject> mainAdapter;
+
 
     public PageFragment2() {
         // Required empty public constructor
@@ -49,7 +48,7 @@ public class PageFragment2 extends android.support.v4.app.Fragment {
         //textView.setText(getArguments().getString("msg"));
         //textView.setText("holla");
        gridview = (GridView)view.findViewById(R.id.gridView);
-        //gridview.setAdapter(new MyAdapter(view.getContext()));
+        gridview.setAdapter(new MyAdapter(view.getContext()));
         gridview.setAdapter(new ImageAdapter(getActivity()));
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -77,7 +76,7 @@ public class PageFragment2 extends android.support.v4.app.Fragment {
         return f;
     }
 
-    public class ImageAdapter extends BaseAdapter {
+   public class ImageAdapter extends BaseAdapter {
         private Context mContext;
 
         public ImageAdapter(Context c) {

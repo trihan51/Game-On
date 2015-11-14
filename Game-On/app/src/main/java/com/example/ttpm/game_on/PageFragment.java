@@ -41,15 +41,7 @@ public class PageFragment extends android.support.v4.app.Fragment {
         textView.setText(getArguments().getString("msg"));
         logoutbutton = (Button) view.findViewById(R.id.logouttbutton);
 
-
-
-
-
-
         ParseUser currentUser = ParseUser.getCurrentUser();
-
-
-
 
         logoutbutton.setOnClickListener(new View.OnClickListener() {
             @Override

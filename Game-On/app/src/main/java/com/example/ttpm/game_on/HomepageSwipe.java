@@ -40,6 +40,7 @@ public class HomepageSwipe extends FragmentActivity {
                 case 0: return UserprofileFragment.newInstance("");
                 case 2: return PageFragment.newInstance("FirstFragment, Instance 1");
                 case 1: return PageFragment2.newInstance("SecondFragment, Instance 1");
+                case 3: return PageFragment3.newInstance("Third Fragment, Instance 1");
 
 
                 default: return PageFragment.newInstance("FirstFragment, Default");
@@ -48,7 +49,7 @@ public class HomepageSwipe extends FragmentActivity {
 
         @Override
         public int getCount() {
-            return 3;
+            return 4;
         }
     }
 

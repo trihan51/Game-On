@@ -9,6 +9,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
+import com.parse.ParseACL;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
 public class HostSearchForGamesStub extends AppCompatActivity {
 
     protected Button chessButton;
@@ -35,12 +40,26 @@ public class HostSearchForGamesStub extends AppCompatActivity {
         chessButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                post();
+
                 Intent goToSession = new Intent(HostSearchForGamesStub.this, HostSessionPage.class);
                 startActivity(goToSession);
                 return true;
             }
         });
+    }
 
+    private void post() {
+        GameOnSession session = new GameOnSession();
+        session.setGameTitle("chess");
+        session.setHost(ParseUser.getCurrentUser());
+
+        ParseACL acl = new ParseACL();
+        acl.setPublicReadAccess(true);
+        acl.setPublicWriteAccess(true);
+        session.setACL(acl);
+
+        session.saveInBackground();
     }
 
 }

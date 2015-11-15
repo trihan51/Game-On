@@ -22,6 +22,7 @@ public class NearbySessionsMain extends AppCompatActivity  {
     protected TextView greetinguser;
     protected Button logoutbutton;
     protected Button swipeinterfacebutton;
+    protected Button searchbutton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,11 +70,21 @@ public class NearbySessionsMain extends AppCompatActivity  {
             }
         });
 
-
-
-
-
+//        searchbutton = (Button)findViewById(R.id.hostsearchbutton);
+//        searchbutton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent hostSearchInt = new Intent(NearbySessionsMain.this, SearchActivity.class);
+//                startActivity(hostSearchInt);
+//                finish();
+//            }
+//        });
     }
 
+    public void sendMessage(View view)
+    {
+        Intent hostSearchInt = new Intent(NearbySessionsMain.this, SearchActivity.class);
+        startActivity(hostSearchInt);
+    }
 
 }

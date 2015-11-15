@@ -38,4 +38,16 @@
         android:layout_below="@+id/logoutbutton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="59dp" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="sendMessage"
+        android:text="HostSearchButton"
+        android:id="@+id/hostsearchbutton"
+        android:layout_below="@+id/swipehomebutton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="59dp" />
+
 </RelativeLayout>

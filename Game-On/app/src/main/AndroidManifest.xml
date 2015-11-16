@@ -50,7 +50,12 @@
             android:name=".HostSearchActivity"
             android:label="@string/title_activity_host_search"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name=".SessionPage"
+            android:label="@string/title_activity_session_page"
+            android:theme="@style/AppTheme.NoActionBar" >
         </activity>
     </application>
 

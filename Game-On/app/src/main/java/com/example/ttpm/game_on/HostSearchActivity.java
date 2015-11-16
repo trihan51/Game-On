@@ -1,5 +1,6 @@
 package com.example.ttpm.game_on;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,13 +10,16 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
 import com.parse.FindCallback;
+import com.parse.ParseACL;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -101,7 +105,7 @@ public class HostSearchActivity extends AppCompatActivity {
             @Override
             public void done(List<ParseObject> list, com.parse.ParseException e) {
                 if (e == null) {
-                    for(ParseObject boardGameName : list) {
+                    for (ParseObject boardGameName : list) {
 //                        listItems.add(boardGameName.getString("boardName"));
                     }
 //                    adapter = new ArrayAdapter<String>(HostSearchActivity.this, R.layout.list_item, R.id.txtitem, listItems);
@@ -116,5 +120,26 @@ public class HostSearchActivity extends AppCompatActivity {
         listItems=new ArrayList<>(Arrays.asList(items));
         adapter=new ArrayAdapter<String>(this, R.layout.list_item, R.id.txtitem, listItems);
         listView.setAdapter(adapter);
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                GameOnSession session = new GameOnSession();
+                session.setGameTitle((String) listView.getItemAtPosition(position));
+                session.setHost(ParseUser.getCurrentUser());
+
+                ParseACL acl = new ParseACL();
+                acl.setPublicReadAccess(true);
+                acl.setPublicWriteAccess(true);
+                session.setACL(acl);
+
+                session.saveInBackground();
+
+                Intent goToSession = new Intent(HostSearchActivity.this, SessionPage.class);
+                startActivity(goToSession);
+
+                return true;
+            }
+        });
     }
 }

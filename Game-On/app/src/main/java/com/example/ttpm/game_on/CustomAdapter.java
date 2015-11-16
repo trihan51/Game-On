@@ -3,6 +3,7 @@ package com.example.ttpm.game_on;
 /**
  * Created by manbirrandhawa on 11/13/15.
  */
+
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,8 @@ public class CustomAdapter extends ParseQueryAdapter<ParseObject> {
         super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {
             public ParseQuery create() {
                 ParseQuery query = new ParseQuery("BoardGames");
-                //query.whereEqualTo("boardName", true);
+                //query.whereEqualTo("Open", true);
+                //query.include("gameTitle.boardName");
                 return query;
             }
         });
@@ -46,8 +48,8 @@ public class CustomAdapter extends ParseQueryAdapter<ParseObject> {
         }
 
         // Add the title view
-        TextView titleTextView = (TextView) v.findViewById(R.id.text1);
-        titleTextView.setText(object.getString("boardName"));
+       TextView titleTextView = (TextView) v.findViewById(R.id.text1);
+       titleTextView.setText(object.getString("boardName"));
 
 
         return v;

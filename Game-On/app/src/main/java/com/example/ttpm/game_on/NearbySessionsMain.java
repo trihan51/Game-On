@@ -1,22 +1,14 @@
 package com.example.ttpm.game_on;
 
-import android.app.ActionBar;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.ParseUser;
-
-import org.w3c.dom.Text;
 
 public class NearbySessionsMain extends AppCompatActivity  {
     protected TextView greetinguser;
@@ -64,8 +56,11 @@ public class NearbySessionsMain extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
 
+
+
                 Intent testswipey = new Intent(NearbySessionsMain.this, HomepageSwipe.class);
                 startActivity(testswipey);
+                finish();
 
             }
         });

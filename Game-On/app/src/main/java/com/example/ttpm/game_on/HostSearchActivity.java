@@ -112,6 +112,7 @@ public class HostSearchActivity extends AppCompatActivity {
             }
         });
         items=new String[]{"Chess", "Monopoly", "Settlers of Catan", "Uno", "One Night Ultimate Werewolf", "Splendor"};
+        Arrays.sort(items);
         listItems=new ArrayList<>(Arrays.asList(items));
         adapter=new ArrayAdapter<String>(this, R.layout.list_item, R.id.txtitem, listItems);
         listView.setAdapter(adapter);

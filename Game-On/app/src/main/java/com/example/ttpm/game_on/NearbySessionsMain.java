@@ -70,21 +70,14 @@ public class NearbySessionsMain extends AppCompatActivity  {
             }
         });
 
-//        searchbutton = (Button)findViewById(R.id.hostsearchbutton);
-//        searchbutton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent hostSearchInt = new Intent(NearbySessionsMain.this, SearchActivity.class);
-//                startActivity(hostSearchInt);
-//                finish();
-//            }
-//        });
+        searchbutton = (Button)findViewById(R.id.hostsearchbutton);
+        searchbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent hostSearchInt = new Intent(NearbySessionsMain.this, HostSearchActivity.class);
+                startActivity(hostSearchInt);
+                finish();
+            }
+        });
     }
-
-    public void sendMessage(View view)
-    {
-        Intent hostSearchInt = new Intent(NearbySessionsMain.this, SearchActivity.class);
-        startActivity(hostSearchInt);
-    }
-
 }

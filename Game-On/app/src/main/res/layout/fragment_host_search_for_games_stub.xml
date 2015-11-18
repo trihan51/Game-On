@@ -12,22 +12,25 @@
     tools:context="com.example.ttpm.game_on.HostSearchForGamesStub">
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Welcome to the Host Page!"
-        android:id="@+id/hostPageStub"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Chess"
         android:id="@+id/ChessGame"
+
         android:layout_below="@+id/hostPageStub"
+        android:layout_marginTop="59dp"
+        android:layout_gravity="center_horizontal|top" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome to the Host Page!"
+        android:id="@+id/hostPageStub"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="59dp" />
+
+        android:layout_gravity="center_horizontal|top" />
 
 </FrameLayout>

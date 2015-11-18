@@ -25,9 +25,11 @@
         android:id="@+id/profileimageview"
         android:layout_below="@+id/profileWelcome"
         android:layout_centerHorizontal="true"
-
+        android:contentDescription="Profile Picture"
         android:layout_marginTop="60dp"
-        android:layout_above="@+id/changepic"/>
+        android:layout_above="@+id/changepic"
+        android:background="#000000"
+        android:padding="1dp"/>
 
     <Button
         style="?android:attr/buttonStyleSmall"

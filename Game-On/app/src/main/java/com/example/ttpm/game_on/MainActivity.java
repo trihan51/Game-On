@@ -2,16 +2,13 @@ package com.example.ttpm.game_on;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 
-import com.parse.Parse;
 import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
             // do stuff with the user
-            Intent gomainscreen = new Intent(MainActivity.this, NearbySessionsMain.class);
+            Intent gomainscreen = new Intent(MainActivity.this, HomepageSwipe.class);
             startActivity(gomainscreen);
         } else {
             // show the signup or login screen

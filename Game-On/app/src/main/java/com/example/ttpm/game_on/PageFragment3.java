@@ -64,7 +64,7 @@ listView = (ListView)view.findViewById(R.id.listView);
                 mainAdapter.clear();
                 mainAdapter.notifyDataSetChanged();
                 mainAdapter = new ParseQueryAdapter<ParseObject>(getActivity(), "GameSessionsTest1");
-                mainAdapter.getItemView(ParseObject , )
+                //mainAdapter.getItemView(ParseObject , )
                 listView.setAdapter(mainAdapter);
                 mainAdapter.loadObjects();
 

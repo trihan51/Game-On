@@ -38,18 +38,18 @@ public class HomepageSwipe extends FragmentActivity {
             switch(pos) {
 
                 case 0: return UserprofileFragment.newInstance("");
-                case 2: return PageFragment.newInstance("FirstFragment, Instance 1");
-                case 1: return PageFragment2.newInstance("SecondFragment, Instance 1");
-                case 3: return PageFragment3.newInstance("Third Fragment, Instance 1");
+                //case 2: return PageFragment.newInstance("FirstFragment, Instance 1");
+                //case 1: return PageFragment2.newInstance("SecondFragment, Instance 1");
+                //case 1: return PageFragment3.newInstance("Third Fragment, Instance 1");
+                case 1: return HostSearchForGamesStub.newInstance("Third Fragment, Instance 1");
 
-
-                default: return PageFragment.newInstance("FirstFragment, Default");
+                default: return PageFragment.newInstance("");
             }
         }
 
         @Override
         public int getCount() {
-            return 4;
+            return 3;
         }
     }
 

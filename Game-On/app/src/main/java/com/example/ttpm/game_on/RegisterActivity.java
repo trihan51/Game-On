@@ -2,8 +2,6 @@ package com.example.ttpm.game_on;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -54,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
                             if ( e == null)
                             {
                                 Toast.makeText(RegisterActivity.this, "Success!", Toast.LENGTH_LONG).show();
-                                Intent takeUserToNearbySessions = new Intent(RegisterActivity.this, NearbySessionsMain.class );
+                                Intent takeUserToNearbySessions = new Intent(RegisterActivity.this, HomepageSwipe.class );
                                 startActivity(takeUserToNearbySessions);
 
                             }else

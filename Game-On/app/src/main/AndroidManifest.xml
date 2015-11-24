@@ -51,7 +51,7 @@
             android:label="@string/title_activity_game_on_session"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
-        \
+
         <activity
             android:name=".HostSessionPage"
             android:label="@string/title_activity_host_session_page"

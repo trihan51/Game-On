@@ -20,11 +20,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseImageView;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import java.io.ByteArrayOutputStream;
@@ -238,7 +240,7 @@ public class UserprofileFragment extends android.support.v4.app.Fragment {
     private void onCaptureImageResult(Intent data) {
         Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
 
         File destination = new File(Environment.getExternalStorageDirectory(),
                 System.currentTimeMillis() + ".jpg");
@@ -254,6 +256,8 @@ public class UserprofileFragment extends android.support.v4.app.Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        uploadToParse(thumbnail, bytes);
 
         ivImage.setImageBitmap(thumbnail);
     }
@@ -285,6 +289,25 @@ public class UserprofileFragment extends android.support.v4.app.Fragment {
         bm = BitmapFactory.decodeFile(selectedImagePath, options);
 
         ivImage.setImageBitmap(bm);
+
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        uploadToParse(bm, bytes);
+    }
+
+    private void uploadToParse(Bitmap bitmap, ByteArrayOutputStream stream) {
+        byte[] image = stream.toByteArray();
+
+        ParseFile file = new ParseFile("profile.jpeg", image);
+        file.saveInBackground();
+
+        ParseObject imgupload = new ParseObject("ImageUpload");
+        imgupload.put("ImageName", "Profile Picture");
+        imgupload.put("ImageFile", file);
+        imgupload.saveInBackground();
+
+        Toast.makeText(this.getActivity(), "Image uploaded!",
+                Toast.LENGTH_SHORT).show();
     }
 }
 

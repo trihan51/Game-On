@@ -41,7 +41,7 @@ public class HomepageSwipe extends FragmentActivity {
                 //case 2: return PageFragment.newInstance("FirstFragment, Instance 1");
                 //case 1: return PageFragment2.newInstance("SecondFragment, Instance 1");
                 //case 1: return PageFragment3.newInstance("Third Fragment, Instance 1");
-                case 1: return HostSearchForGamesStub.newInstance("Third Fragment, Instance 1");
+                case 1: return HostSearchFragment.newInstance("Third Fragment, Instance 1");
 
                 default: return PageFragment.newInstance("");
             }

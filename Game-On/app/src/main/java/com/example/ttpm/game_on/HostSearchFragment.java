@@ -4,6 +4,7 @@ package com.example.ttpm.game_on;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -30,9 +31,10 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HostSearchForGamesStub extends android.support.v4.app.Fragment {
+public class HostSearchFragment extends android.support.v4.app.Fragment {
 
-    protected Button chessButton;
+    private RecyclerView mHostSearchRecyclerView;
+    private HostSearchAdapter mSearchAdapter;
 
     String[] items;
     final ArrayList<String> tempListItems;
@@ -44,36 +46,19 @@ public class HostSearchForGamesStub extends android.support.v4.app.Fragment {
     ListView listView;
     EditText editText;
 
-    public HostSearchForGamesStub() {
+    public HostSearchFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_host_search_for_games_stub, container, false);
+        View view = inflater.inflate(R.layout.fragment_host_search, container, false);
         RelativeLayout contentView = new RelativeLayout( getActivity() );
         // add all your stuff
-      
-
-        chessButton = (Button) view.findViewById(R.id.ChessGame);
-//        chessButton.setLongClickable(true);
-//        chessButton.setClickable(true);
-        chessButton.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                post();
-
-                Intent goToSession = new Intent(getActivity(), HostSessionPage.class);
-                startActivity(goToSession);
-                return true;
-            }
-        });
 
 //        host-search
-        listView=(ListView)view.findViewById(R.id.listview);
         editText=(EditText)view.findViewById(R.id.txtsearch);
         initList();
         editText.addTextChangedListener(new TextWatcher() {
@@ -171,14 +156,46 @@ public class HostSearchForGamesStub extends android.support.v4.app.Fragment {
 
         session.saveInBackground();
     }
-    public static HostSearchForGamesStub newInstance(String text)
+
+    public static HostSearchFragment newInstance(String text)
     {
-        HostSearchForGamesStub f = new HostSearchForGamesStub();
+        HostSearchFragment f = new HostSearchFragment();
         Bundle b = new Bundle();
         b.putString("msg", text);
         f.setArguments(b);
 
         return f;
+    }
+
+    private class HostSearchHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener {
+
+        public HostSearchHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        public void onClick(View v) {
+
+        }
+    }
+
+    private class HostSearchAdapter extends RecyclerView.Adapter<HostSearchHolder> {
+
+        @Override
+        public HostSearchHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return null;
+        }
+
+        @Override
+        public void onBindViewHolder(HostSearchHolder holder, int position) {
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return 0;
+        }
     }
 }
 

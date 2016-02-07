@@ -11,4 +11,9 @@
     <string name="title_activity_game_on_session">GameOnSession</string>
     <string name="title_activity_host_session_pages">HostSessionPages</string>
     <string name="title_activity_host_session_page">HostSessionPage</string>
+
+    <string name="list_item_host_games_game_pic">Picture of Game</string>
+    <string name="list_item_host_games_game_open">2 games open</string>
+    <string name="list_item_host_games_button">Quick Join</string>
+    <string name="fragment_host_search_hint">Search for a game</string>
 </resources>

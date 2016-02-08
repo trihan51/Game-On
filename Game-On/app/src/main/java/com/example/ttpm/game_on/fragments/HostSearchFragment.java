@@ -9,11 +9,11 @@ import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.adapter.HostSearchAdapter;
-import com.example.ttpm.game_on.adapter.models.BoardGame;
+import com.example.ttpm.game_on.models.BoardGame;
+import com.example.ttpm.game_on.models.BoardGameCollection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,6 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
     private RecyclerView mSearchRecyclerView;
     private HostSearchAdapter mSearchAdapter;
     private List<BoardGame> mBoardGames;
-    private SearchView mGameSearchView;
 
     public HostSearchFragment() {
     }
@@ -50,7 +49,7 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
         mSearchRecyclerView = (RecyclerView) view
                 .findViewById(R.id.host_search_recycler_view);
 
-        mGameSearchView = (SearchView) view
+        SearchView mGameSearchView = (SearchView) view
                 .findViewById(R.id.host_search_search_view);
         mGameSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -76,19 +75,8 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
 
         mSearchRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mBoardGames = new ArrayList<>();
-
-        for(int i = 0; i < 10; i++) {
-            BoardGame b = new BoardGame();
-            b.setBoardName("bt");
-            if (i % 2 == 0) {
-                b.setBoardName("hello");
-            }
-            if (i % 3 == 0) {
-                b.setBoardName("poo");
-            }
-            mBoardGames.add(b);
-        }
+        BoardGameCollection boardGameCollection = new BoardGameCollection();
+        mBoardGames = boardGameCollection.getBoardGames();
 
         mSearchAdapter = new HostSearchAdapter(getActivity(), mBoardGames);
         mSearchRecyclerView.setAdapter(mSearchAdapter);

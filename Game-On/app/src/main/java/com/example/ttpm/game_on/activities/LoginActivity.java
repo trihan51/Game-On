@@ -1,4 +1,4 @@
-package com.example.ttpm.game_on;
+package com.example.ttpm.game_on.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.ttpm.game_on.R;
 import com.parse.LogInCallback;
 import com.parse.ParseUser;
 
@@ -38,32 +39,28 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-       loginbutton.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
+        loginbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-               String email = loginEmail.getText().toString().trim();
-               String password = loginPass.getText().toString().trim();
+                String email = loginEmail.getText().toString().trim();
+                String password = loginPass.getText().toString().trim();
 
-               ParseUser.logInInBackground(email, password, new LogInCallback() {
-                   @Override
-                   public void done(ParseUser parseUser, com.parse.ParseException e) {
-                       if (parseUser != null)
-                       {
-                           Toast.makeText(LoginActivity.this, "Successfully logged in!", Toast.LENGTH_SHORT).show();
-                           Intent TakeUserNearbySession = new Intent(LoginActivity.this, HomepageSwipe.class);
-                           startActivity(TakeUserNearbySession);
-                           finish();
-                       }
-                       else
-                       {
-                           Toast.makeText(LoginActivity.this, "Error logging in!", Toast.LENGTH_SHORT).show();
-                       }
-                   }
-
-               });
-           }
-       });
+                ParseUser.logInInBackground(email, password, new LogInCallback() {
+                    @Override
+                    public void done(ParseUser parseUser, com.parse.ParseException e) {
+                        if (parseUser != null)
+                        {
+                            Toast.makeText(LoginActivity.this, "Successfully logged in!", Toast.LENGTH_SHORT).show();
+                            Intent TakeUserNearbySession = new Intent(LoginActivity.this, HomeActivity.class);
+                            startActivity(TakeUserNearbySession);
+                            finish();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Error logging in!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
     }
-
 }

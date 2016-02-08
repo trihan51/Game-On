@@ -1,4 +1,4 @@
-package com.example.ttpm.game_on;
+package com.example.ttpm.game_on.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.ttpm.game_on.R;
 import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,13 +26,13 @@ public class MainActivity extends AppCompatActivity {
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
             // do stuff with the user
-            Intent gomainscreen = new Intent(MainActivity.this, HomepageSwipe.class);
+            Intent gomainscreen = new Intent(MainActivity.this, HomeActivity.class);
             startActivity(gomainscreen);
         } else {
             // show the signup or login screen
         }
 
-    loginbutton = (Button)findViewById(R.id.LoginButton);
+        loginbutton = (Button)findViewById(R.id.LoginButton);
         loginbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,13 +50,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(taketoRegisterScreen);
             }
         });
-
-
-
-
-
-
-
     }
 
     @Override

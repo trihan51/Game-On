@@ -9,7 +9,7 @@
     android:background="@color/Darkprimarycolor"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_register"
-    tools:context="com.example.ttpm.game_on.RegisterActivity">
+    tools:context="com.example.ttpm.game_on.activities.RegisterActivity">
 
     <EditText
         android:layout_width="wrap_content"

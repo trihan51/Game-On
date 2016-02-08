@@ -1,4 +1,4 @@
-package com.example.ttpm.game_on.adapter.viewholder;
+package com.example.ttpm.game_on.viewholder;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -6,7 +6,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ttpm.game_on.R;
-import com.example.ttpm.game_on.adapter.models.BoardGame;
+import com.example.ttpm.game_on.models.BoardGame;
 
 /**
  * Created by Tony Nguyen on 2/7/2016.

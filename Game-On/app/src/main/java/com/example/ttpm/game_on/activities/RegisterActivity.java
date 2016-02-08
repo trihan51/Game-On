@@ -1,4 +1,4 @@
-package com.example.ttpm.game_on;
+package com.example.ttpm.game_on.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.ttpm.game_on.R;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
@@ -61,7 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
                             if ( e == null)
                             {
                                 Toast.makeText(RegisterActivity.this, "Success!", Toast.LENGTH_LONG).show();
-                                Intent takeUserToNearbySessions = new Intent(RegisterActivity.this, HomepageSwipe.class );
+                                Intent takeUserToNearbySessions = new Intent(RegisterActivity.this, HomeActivity.class );
                                 startActivity(takeUserToNearbySessions);
 
                             }else
@@ -83,17 +84,5 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
         });
-                //Create new user in Parse
-
-
-
-
-
-
-
-
-
-
     }
-
 }

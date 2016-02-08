@@ -1,6 +1,9 @@
-package com.example.ttpm.game_on.adapter.models;
+package com.example.ttpm.game_on.models;
 
 import android.content.Context;
+
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +20,13 @@ public class BoardGameCollection {
 
     public static BoardGameCollection get(Context context) {
         if(sBoardGameCollection == null) {
-            sBoardGameCollection = new BoardGameCollection(context);
+            sBoardGameCollection = new BoardGameCollection();
         }
 
         return sBoardGameCollection;
     }
 
-    private BoardGameCollection(Context context) {
+    public BoardGameCollection() {
         mBoardGames = new ArrayList<>();
     }
 
@@ -31,7 +34,25 @@ public class BoardGameCollection {
         mBoardGames.add(b);
     }
 
+    // grab board game list from parse
     public List<BoardGame> getBoardGames() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("BoardGames");
+
+        for(int i = 0; i < 10; i++) {
+            BoardGame b = new BoardGame();
+            b.setBoardName("Scrabble");
+            if (i % 2 == 0) {
+                b.setBoardName("Connect 4");
+            }
+            if (i % 3 == 0) {
+                b.setBoardName("Chess");
+            }
+            if (i % 5 == 0) {
+                b.setBoardName("Settlers of Catan");
+            }
+            mBoardGames.add(b);
+        }
+
         return mBoardGames;
     }
 

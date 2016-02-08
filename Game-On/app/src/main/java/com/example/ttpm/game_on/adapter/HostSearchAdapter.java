@@ -6,9 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.ttpm.game_on.adapter.viewholder.HostSearchViewHolder;
+import com.example.ttpm.game_on.viewholder.HostSearchViewHolder;
 import com.example.ttpm.game_on.R;
-import com.example.ttpm.game_on.adapter.models.BoardGame;
+import com.example.ttpm.game_on.models.BoardGame;
 
 import java.util.ArrayList;
 import java.util.List;

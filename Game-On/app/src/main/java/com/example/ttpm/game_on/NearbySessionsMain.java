@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ttpm.game_on.activities.HomeActivity;
+import com.example.ttpm.game_on.activities.MainActivity;
 import com.parse.ParseUser;
 
 public class NearbySessionsMain extends AppCompatActivity  {
@@ -55,21 +57,11 @@ public class NearbySessionsMain extends AppCompatActivity  {
         swipeinterfacebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-
-                Intent testswipey = new Intent(NearbySessionsMain.this, HomepageSwipe.class);
+                Intent testswipey = new Intent(NearbySessionsMain.this, HomeActivity.class);
                 startActivity(testswipey);
                 finish();
 
             }
         });
-
-
-
-
-
     }
-
-
 }

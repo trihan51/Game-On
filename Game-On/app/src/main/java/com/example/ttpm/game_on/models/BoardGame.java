@@ -1,4 +1,4 @@
-package com.example.ttpm.game_on.adapter.models;
+package com.example.ttpm.game_on.models;
 
 import java.util.ArrayList;
 import java.util.List;

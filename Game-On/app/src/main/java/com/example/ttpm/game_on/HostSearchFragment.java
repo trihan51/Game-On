@@ -2,8 +2,8 @@ package com.example.ttpm.game_on;
 
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,16 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
-import com.parse.ParseACL;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +31,7 @@ import java.util.List;
  */
 public class HostSearchFragment extends android.support.v4.app.Fragment {
 
-    private RecyclerView mHostSearchRecyclerView;
+    private RecyclerView mSearchRecyclerView;
     private HostSearchAdapter mSearchAdapter;
 
     String[] items;
@@ -47,7 +45,16 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
     EditText editText;
 
     public HostSearchFragment() {
-        // Required empty public constructor
+    }
+
+    public static HostSearchFragment newInstance(String text)
+    {
+        HostSearchFragment f = new HostSearchFragment();
+        Bundle b = new Bundle();
+        b.putString("msg", text);
+        f.setArguments(b);
+
+        return f;
     }
 
     @Override
@@ -55,8 +62,10 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_host_search, container, false);
-        RelativeLayout contentView = new RelativeLayout( getActivity() );
-        // add all your stuff
+
+        mSearchRecyclerView = (RecyclerView) view
+                .findViewById(R.id.host_search_recycler_view);
+        mSearchRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 //        host-search
         editText=(EditText)view.findViewById(R.id.txtsearch);
@@ -87,12 +96,14 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) {
-                    initList();
+                if (hasFocus) {
+                    //initList();
                 }
             }
         });
 //        host-search end
+
+        updateUI();
 
         return view;
     }
@@ -120,7 +131,7 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
 //        Arrays.sort(items);
             listItems = new ArrayList<>(Arrays.asList(items));
             adapter = new ArrayAdapter<String>(this.getActivity(), R.layout.host_item, R.id.txtitem, listItems);
-            listView.setAdapter(adapter);
+            //listView.setAdapter(adapter);
         }
     }
 
@@ -132,7 +143,7 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
             public void done(List<ParseObject> list, com.parse.ParseException e) {
                 if (e == null) {
                     for (ParseObject boardGameName : list) {
-                        if(!tempListItems.contains(boardGameName.getString("boardName"))) {
+                        if (!tempListItems.contains(boardGameName.getString("boardName"))) {
                             tempListItems.add(boardGameName.getString("boardName"));
                         }
                     }
@@ -144,57 +155,91 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
         return true;
     }
 
-    private void post() {
-        GameOnSession session = new GameOnSession();
-        session.setGameTitle("chess");
-        session.setHost(ParseUser.getCurrentUser());
+    private void updateUI() {
+        BoardGameCollection boardGameCollection = BoardGameCollection.get(getActivity());
+        List<BoardGame> boardGames = boardGameCollection.getBoardGames();
 
-        ParseACL acl = new ParseACL();
-        acl.setPublicReadAccess(true);
-        acl.setPublicWriteAccess(true);
-        session.setACL(acl);
-
-        session.saveInBackground();
-    }
-
-    public static HostSearchFragment newInstance(String text)
-    {
-        HostSearchFragment f = new HostSearchFragment();
-        Bundle b = new Bundle();
-        b.putString("msg", text);
-        f.setArguments(b);
-
-        return f;
+        if (mSearchAdapter == null) {
+            mSearchAdapter = new HostSearchAdapter(boardGames);
+            mSearchRecyclerView.setAdapter(mSearchAdapter);
+        } else {
+            mSearchAdapter.setBoardGames(boardGames);
+            mSearchAdapter.notifyDataSetChanged();
+        }
     }
 
     private class HostSearchHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
+        private TextView mTitleTextView;
+        private TextView mSessionsTextView;
+        private TextView mJoinButton;
+
+        private BoardGame mBoardGame;
+
         public HostSearchHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
+
+            mTitleTextView =
+                    (TextView) itemView.findViewById(R.id.list_item_host_games_game_pic);
+            mSessionsTextView =
+                    (TextView) itemView.findViewById(R.id.list_item_host_games_game_open);
+            mJoinButton =
+                    (TextView) itemView.findViewById(R.id.list_item_host_games_button);
+            mJoinButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getActivity(),
+                            "Wow, you QUICK JOIN this game!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        public void bindGame(BoardGame boardGame) {
+            mBoardGame = boardGame;
+            mTitleTextView.setText(mBoardGame.getBoardName());
+            mSessionsTextView.setText(Integer.toString(mBoardGame.getOpenSessions()));
         }
 
         @Override
         public void onClick(View v) {
-
+            Toast.makeText(getActivity(),
+                    "Wow, you LONG HELD this game!",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
     private class HostSearchAdapter extends RecyclerView.Adapter<HostSearchHolder> {
 
+        private List<BoardGame> mBoardGames;
+
+        public HostSearchAdapter(List<BoardGame> boardGames) {
+            mBoardGames = boardGames;
+        }
+
         @Override
         public HostSearchHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return null;
+            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            View view;
+            view = layoutInflater.inflate(R.layout.list_item_host_games, parent, false);
+            return new HostSearchHolder(view);
         }
 
         @Override
         public void onBindViewHolder(HostSearchHolder holder, int position) {
-
+            BoardGame boardGame = mBoardGames.get(position);
+            holder.bindGame(boardGame);
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return mBoardGames.size();
+        }
+
+        public void setBoardGames(List<BoardGame> boardGames) {
+            mBoardGames = boardGames;
         }
     }
 }

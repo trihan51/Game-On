@@ -22,7 +22,6 @@ public class HostSearchAdapter extends RecyclerView.Adapter<HostSearchViewHolder
     private List<BoardGame> mBoardGames;
 
     public HostSearchAdapter(Context context, List<BoardGame> boardGames) {
-//            mBoardGames = boardGames;
         mLayoutInflater = LayoutInflater.from(context);
         mBoardGames = new ArrayList<>(boardGames);
     }
@@ -42,11 +41,6 @@ public class HostSearchAdapter extends RecyclerView.Adapter<HostSearchViewHolder
     @Override
     public int getItemCount() {
         return mBoardGames.size();
-    }
-
-    public void setBoardGames(List<BoardGame> boardGames) {
-//            mBoardGames = boardGames;
-        mBoardGames = new ArrayList<>(boardGames);
     }
 
     public BoardGame removeGame(int position) {
@@ -93,7 +87,7 @@ public class HostSearchAdapter extends RecyclerView.Adapter<HostSearchViewHolder
     private void applyAndAnimateAdditions(List<BoardGame> newBoardGames) {
         for (int i = 0, count = newBoardGames.size(); i < count; i++) {
             BoardGame boardGame = newBoardGames.get(i);
-            if(mBoardGames.contains(boardGame)) {
+            if(!mBoardGames.contains(boardGame)) {
                 addGame(i, boardGame);
             }
         }

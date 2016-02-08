@@ -80,7 +80,13 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
 
         for(int i = 0; i < 10; i++) {
             BoardGame b = new BoardGame();
-            b.setBoardName("hello");
+            b.setBoardName("bt");
+            if (i % 2 == 0) {
+                b.setBoardName("hello");
+            }
+            if (i % 3 == 0) {
+                b.setBoardName("poo");
+            }
             mBoardGames.add(b);
         }
 

@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
+import com.example.ttpm.game_on.fragments.HostSearchFragment;
+
 public class HomepageSwipe extends FragmentActivity {
     ViewPager viewPager;
 

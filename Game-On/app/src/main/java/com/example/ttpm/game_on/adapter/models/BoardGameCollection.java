@@ -1,4 +1,4 @@
-package com.example.ttpm.game_on;
+package com.example.ttpm.game_on.adapter.models;
 
 import android.content.Context;
 
@@ -25,11 +25,6 @@ public class BoardGameCollection {
 
     private BoardGameCollection(Context context) {
         mBoardGames = new ArrayList<>();
-
-        for(int i = 0; i < 10; i++) {
-            BoardGame b = new BoardGame();
-            mBoardGames.add(b);
-        }
     }
 
     public void addBoardGame(BoardGame b) {

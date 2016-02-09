@@ -14,6 +14,10 @@ import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.adapter.HostSearchAdapter;
 import com.example.ttpm.game_on.models.BoardGame;
 import com.example.ttpm.game_on.models.BoardGameCollection;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,9 +81,27 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
 
         BoardGameCollection boardGameCollection = new BoardGameCollection();
         mBoardGames = boardGameCollection.getBoardGames();
+        queryForBoardGames();
 
         mSearchAdapter = new HostSearchAdapter(getActivity(), mBoardGames);
         mSearchRecyclerView.setAdapter(mSearchAdapter);
+    }
+
+    private void queryForBoardGames() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("BoardGames");
+        query.orderByAscending("boardName");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null) {
+                    for (ParseObject boardGameName : objects) {
+                        BoardGame b = new BoardGame();
+                        b.setBoardName(boardGameName.getString("boardName"));
+                        mSearchAdapter.addNewGame(b);
+                    }
+                }
+            }
+        });
     }
 
     private List<BoardGame> filter(List<BoardGame> boardGames, String query) {

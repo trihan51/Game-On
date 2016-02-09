@@ -43,6 +43,11 @@ public class HostSearchAdapter extends RecyclerView.Adapter<HostSearchViewHolder
         return mBoardGames.size();
     }
 
+    public void addNewGame(BoardGame boardGame) {
+        mBoardGames.add(boardGame);
+        notifyDataSetChanged();
+    }
+
     public BoardGame removeGame(int position) {
         BoardGame model = mBoardGames.remove(position);
         notifyItemRemoved(position);

@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,12 +18,17 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import org.json.JSONArray;
+
 import java.util.List;
 //import com.parse.ParseQueryAdapter;
 
 public class HostSessionPage extends AppCompatActivity {
 
     GameOnSession currentGameOnSession;
+
+    LinearLayout sessionInfoOutput;
+    Button cancelButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,18 +54,20 @@ public class HostSessionPage extends AppCompatActivity {
             public void done(List<GameOnSession> list, ParseException e) {
                 if (e == null) {
                     currentGameOnSession = list.get(0);
-                    TextView sessionInfoOutput = (TextView) findViewById(R.id.sessionInfoOutputArea);
-                    sessionInfoOutput.setText("");
-                    sessionInfoOutput.append("The game is: " + currentGameOnSession.getGameTitle() + "\n");
-                    sessionInfoOutput.append("The host is: " + currentGameOnSession.getHost().getUsername());
+                    sessionInfoOutput = (LinearLayout) findViewById(R.id.sessionInfoOutputArea);
+
+                    displayGameTitle(sessionInfoOutput);
+                    displaySessionHost(sessionInfoOutput);
+                    displaySessionParticipants(sessionInfoOutput);
+
                 } else {
                     Toast.makeText(HostSessionPage.this, "Error!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        Button leaveButton = (Button) findViewById(R.id.leaveButton);
-        leaveButton.setOnClickListener(new View.OnClickListener() {
+        cancelButton = (Button) findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -69,6 +77,34 @@ public class HostSessionPage extends AppCompatActivity {
                 startActivity(takeToNearbySessionsScreen);
             }
         });
+
+    }
+
+    private void displayGameTitle(LinearLayout displayArea) {
+        TextView gameTitleTextView = new TextView(this);
+        gameTitleTextView.append("Game Title: " + currentGameOnSession.getGameTitle() + "\n");
+        displayArea.addView(gameTitleTextView);
+    }
+
+    private void displaySessionHost(LinearLayout displayArea) {
+        TextView hostNameTextView = new TextView(this);
+        hostNameTextView.append("Host: " + currentGameOnSession.getHost().getUsername());
+        displayArea.addView(hostNameTextView);
+    }
+
+    private void displaySessionParticipants(LinearLayout displayArea) {
+        JSONArray participants = currentGameOnSession.getParticipants();
+        int length = participants.length();
+
+        try {
+            for (int i = 0; i < length; i++) {
+                TextView participantNameTextView = new TextView(this);
+                participantNameTextView.setText("Participant " + i + ": " + participants.getString(i));
+                displayArea.addView(participantNameTextView);
+            }
+        } catch (org.json.JSONException e) {
+            e.getStackTrace();
+        }
 
     }
 

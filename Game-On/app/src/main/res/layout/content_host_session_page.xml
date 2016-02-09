@@ -12,26 +12,20 @@
     tools:showIn="@layout/activity_host_session_page"
     tools:context="com.example.ttpm.game_on.HostSessionPage">
 
-    <TextView
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:text="Current Session"
+        android:text="Current Session Info"
         android:id="@+id/sessionInfoOutputArea"
-        android:layout_weight="1"/>
-
-    <ListView
-        android:id="@+id/participants_listview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1" >
-    </ListView>
+        android:orientation="vertical">
+    </LinearLayout>
 
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Leave"
-        android:id="@+id/leaveButton"
+        android:id="@+id/cancelButton"
         android:layout_centerHorizontal="true" />
 
 </LinearLayout>

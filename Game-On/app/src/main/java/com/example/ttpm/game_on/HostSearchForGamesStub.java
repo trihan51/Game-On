@@ -14,6 +14,8 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import org.json.JSONArray;
+
 public class HostSearchForGamesStub extends AppCompatActivity {
 
     protected Button chessButton;
@@ -53,6 +55,7 @@ public class HostSearchForGamesStub extends AppCompatActivity {
         GameOnSession session = new GameOnSession();
         session.setGameTitle("chess");
         session.setHost(ParseUser.getCurrentUser());
+        session.setParticipants(new JSONArray());
 
         ParseACL acl = new ParseACL();
         acl.setPublicReadAccess(true);

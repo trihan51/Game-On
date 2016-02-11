@@ -32,7 +32,7 @@ public class HostSearchViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 Toast.makeText(v.getContext(),
-                        "Wow, you QUICK JOIN this game!",
+                        "Wow, you HOSTED this game!",
                         Toast.LENGTH_SHORT).show();
             }
         });

@@ -29,7 +29,7 @@ public class PageFragment3 extends android.support.v4.app.Fragment {
         // Required empty public constructor
     }
 
-
+    List<>
 
 
     @Override

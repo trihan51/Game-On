@@ -63,7 +63,7 @@ public class HostSessionPage extends AppCompatActivity {
 
                 currentGameOnSession.deleteInBackground();
 
-                Intent takeToNearbySessionsScreen = new Intent(HostSessionPage.this, NearbySessionsMain.class);
+                Intent takeToNearbySessionsScreen = new Intent(HostSessionPage.this, HomepageSwipe.class);
                 startActivity(takeToNearbySessionsScreen);
             }
         });

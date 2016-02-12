@@ -14,7 +14,7 @@
 
     <string name="list_item_host_games_game_pic">Picture of Game</string>
     <string name="list_item_host_games_game_open">2 games open</string>
-    <string name="list_item_host_games_button">Host</string>
+    <string name="list_item_host_games_button">Host Game</string>
     <string name="fragment_host_search_hint">Search...</string>
     <string name="action_logout">LogOut</string>
 

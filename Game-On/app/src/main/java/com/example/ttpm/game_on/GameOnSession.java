@@ -5,6 +5,8 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import org.json.JSONArray;
+
 /**
  * Data model for a session
  */
@@ -32,6 +34,30 @@ public class GameOnSession extends ParseObject {
     }
 
     // TODO: 11/15/2015 add a participants property. This can be represented using an ArrayList.
+    public JSONArray getParticipants() { return getJSONArray("participants"); }
+
+    public void setParticipants(JSONArray participants) {
+        put("participants", participants);
+    }
+
+    public void addParticipant(String email) {
+        this.add("partipants", email);
+    }
+
+    public void removeParticipant(String email) throws org.json.JSONException {
+        JSONArray oldListOfParticipants = this.getParticipants();
+        JSONArray newListOfParticipants = new JSONArray();
+
+        int oldListLength = oldListOfParticipants.length();
+        for (int i = 0; i < oldListLength; i++) {
+            if (!oldListOfParticipants.getString(i).equals(email)) {
+                newListOfParticipants.put(oldListOfParticipants.getString(i));
+            }
+        }
+
+        this.remove("participants");
+        this.put("participants", newListOfParticipants);
+    }
 
     // TODO: 11/15/2015 uncomment the getters and setters below after incorporating location API.
 //    public ParseGeoPoint getLocation() {

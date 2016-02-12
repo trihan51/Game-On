@@ -14,7 +14,16 @@
 
     <string name="list_item_host_games_game_pic">Picture of Game</string>
     <string name="list_item_host_games_game_open">2 games open</string>
-    <string name="list_item_host_games_button">Quick Join</string>
+    <string name="list_item_host_games_button">Host</string>
     <string name="fragment_host_search_hint">Search...</string>
     <string name="action_logout">LogOut</string>
+
+    <!-- Strings for SessionFragment.java -->
+    <string name="session_header_text">Current Session Info</string>
+    <string name="cancel_button_text">Cancel</string>
+
+    <!-- Strings for DisabledFragment.java -->
+    <string name="disabled_text">You are currently in an open session.</string>
+    <string name="title_activity_session">SessionActivity</string>
+
 </resources>

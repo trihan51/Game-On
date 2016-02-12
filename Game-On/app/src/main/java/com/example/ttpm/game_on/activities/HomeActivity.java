@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +24,7 @@ import com.example.ttpm.game_on.fragments.HostSearchFragment;
 import com.parse.ParseUser;
 
 public class HomeActivity extends AppCompatActivity {
+
     ViewPager viewPager;
 
     @Override
@@ -82,7 +84,6 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int pos) {
             switch(pos) {
-
                 case 0: return UserProfileFragment.newInstance("");
                 //case 2: return PageFragment.newInstance("FirstFragment, Instance 1");
                 //case 1: return PageFragment2.newInstance("SecondFragment, Instance 1");

@@ -1,9 +1,5 @@
 package com.example.ttpm.game_on;
 
-/**
- * Created by manbirrandhawa on 11/13/15.
- */
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,15 +13,18 @@ import com.parse.ParseUser;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 
-public class CustomAdapter extends ParseQueryAdapter<ParseObject> {
-
-    public CustomAdapter(Context context) {
+/**
+ * Created by manbirrandhawa on 2/11/16.
+ */
+public class CustomSettlersOfCatan extends ParseQueryAdapter<ParseObject>
+{
+    public CustomSettlersOfCatan(Context context) {
         // Use the QueryFactory to construct a PQA that will only show
         // Todos marked as high-pri
         super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {
             public ParseQuery create() {
                 ParseQuery query = new ParseQuery("GameOnSession");
-                query.whereEqualTo("gameTitle", "chess");
+                query.whereEqualTo("gameTitle", "settlers of catan");
                 query.whereNotEqualTo("host", ParseUser.getCurrentUser());
                 //query.include("gameTitle.boardName");
                 return query;
@@ -51,8 +50,8 @@ public class CustomAdapter extends ParseQueryAdapter<ParseObject> {
         }*/
 
         // Add Name of Game Title
-       TextView titleTextView = (TextView) v.findViewById(R.id.GameNameSearchSessions);
-       titleTextView.setText(object.getString("gameTitle"));
+        TextView titleTextView = (TextView) v.findViewById(R.id.GameNameSearchSessions);
+        titleTextView.setText(object.getString("gameTitle"));
 
         //SetTimeStamp
         TextView timestampView = (TextView)v.findViewById(R.id.TimeRoomCreatedSearchSessions);
@@ -64,10 +63,10 @@ public class CustomAdapter extends ParseQueryAdapter<ParseObject> {
         // Set the created at date/time
         timestampView.setText(formattedDateTime);
 
-      /*  TextView participantsInRoomView = (TextView) v.findViewById(R.id.participantsInRoom);
+        /*TextView participantsInRoomView = (TextView) v.findViewById(R.id.participantsInRoom);
         participantsInRoomView.setText(object.getJSONArray("participants").toString()); */
+
 
         return v;
     }
-
 }

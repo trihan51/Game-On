@@ -3,27 +3,34 @@
     android:layout_width="fill_parent"
     android:layout_height="200dp" >
 
-    <com.parse.ParseImageView
-        android:id="@+id/icon"
-        android:layout_width="100dp"
-        android:layout_height="200dp"
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Game Title"
+        android:id="@+id/GameNameSearchSessions"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="15dip"
-        android:layout_marginRight="15dip" />
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/TimeRoomCreatedSearchSessions"
+        android:layout_alignEnd="@+id/TimeRoomCreatedSearchSessions" />
 
     <TextView
-        android:id="@+id/text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/icon"
-        android:layout_toRightOf="@id/icon"
-        android:textColor="#302a2a" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Time Session Created"
+        android:id="@+id/TimeRoomCreatedSearchSessions"
+        android:layout_below="@+id/GameNameSearchSessions" />
 
     <TextView
-        android:id="@+id/timestamp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/text1"
-        android:layout_toRightOf="@id/icon" />
-
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="People"
+        android:id="@+id/participantsInRoom"
+        android:layout_alignBottom="@+id/TimeRoomCreatedSearchSessions"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

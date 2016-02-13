@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.ttpm.game_on.PageFragment;
+import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.fragments.UserProfileFragment;
 import com.example.ttpm.game_on.fragments.HostSearchFragment;
@@ -44,35 +45,37 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        if (QueryPreferences.getStoredSessionId(this) == null) {
+            MenuItem currentSessionMenuItem = menu.findItem(R.id.action_current_session);
+            currentSessionMenuItem.setVisible(false);
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_logOut) {
-            ParseUser currentUser1 = ParseUser.getCurrentUser();
-            String currentuses = currentUser1.getUsername();
-            Toast.makeText(this, currentuses + " has logged out.", Toast.LENGTH_LONG).show();
-            ParseUser.logOut();
-            ParseUser currentUser = ParseUser.getCurrentUser();// this will now be null
-            if (currentUser != null) {
-                Toast.makeText(this, "Error logging out!", Toast.LENGTH_LONG).show();
-            } else {
-                Intent gohome = new Intent(this, MainActivity.class);
-                startActivity(gohome);
-                this.finish();
-            }
-
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_logOut:
+                ParseUser currentUser1 = ParseUser.getCurrentUser();
+                String currentuses = currentUser1.getUsername();
+                Toast.makeText(this, currentuses + " has logged out.", Toast.LENGTH_LONG).show();
+                ParseUser.logOut();
+                ParseUser currentUser = ParseUser.getCurrentUser();// this will now be null
+                if (currentUser != null) {
+                    Toast.makeText(this, "Error logging out!", Toast.LENGTH_LONG).show();
+                } else {
+                    Intent gohome = new Intent(this, MainActivity.class);
+                    startActivity(gohome);
+                    this.finish();
+                }
+                return true;
+            case R.id.action_current_session:
+                Intent intent = SessionActivity.newIntent(this);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private class MyPagerAdapter extends FragmentPagerAdapter {

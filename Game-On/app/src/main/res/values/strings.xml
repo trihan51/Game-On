@@ -19,6 +19,10 @@
     <string name="fragment_host_search_hint">Search...</string>
     <string name="action_logout">LogOut</string>
 
+    <!-- Strings for SessionActivity.java -->
+    <string name="alert_dialog_ok">Ok</string>
+    <string name="alert_dialog_two_buttons_title">Alert</string>
+
     <!-- Strings for SessionFragment.java -->
     <string name="session_header_text">Current Session Info</string>
     <string name="cancel_button_text">Cancel</string>
@@ -26,5 +30,15 @@
     <!-- Strings for DisabledFragment.java -->
     <string name="disabled_text">You are currently in an open session.</string>
     <string name="title_activity_session">SessionActivity</string>
+
+    <!-- Strings for menu_session.xml -->
+    <string name="start_polling">Start polling</string>
+    <string name="stop_polling">Stop polling</string>
+
+    <!-- Strings for PollService.java -->
+    <string name="session_update_title">New Session Update</string>
+    <string name="session_update_text">Session has changed. Click here to check it out!</string>
+    <string name="session_cancelled_title">Session Cancelled</string>
+    <string name="session_cancelled_text">We're sorry, but your current session has been cancelled.</string>
 
 </resources>

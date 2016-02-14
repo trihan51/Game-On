@@ -1,6 +1,7 @@
 package com.example.ttpm.game_on.activities;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,6 +28,11 @@ import com.parse.ParseUser;
 public class HomeActivity extends AppCompatActivity {
 
     ViewPager viewPager;
+
+    public static Intent newIntent(Context packageContext) {
+        Intent intent = new Intent(packageContext, HomeActivity.class);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

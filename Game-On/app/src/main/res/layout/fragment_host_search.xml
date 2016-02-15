@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        // should put searchview in actionbar
+        <!--should put searchview in actionbar-->
         <android.support.v7.widget.SearchView
             android:id="@+id/host_search_search_view"
             android:layout_width="fill_parent"

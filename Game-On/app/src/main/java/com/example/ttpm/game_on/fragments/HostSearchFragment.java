@@ -113,6 +113,7 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
                     for (ParseObject boardGameName : objects) {
                         BoardGame b = new BoardGame();
                         b.setBoardName(boardGameName.getString("boardName"));
+                        mBoardGames.add(b);
                         mSearchAdapter.addNewGame(b);
                     }
                 }

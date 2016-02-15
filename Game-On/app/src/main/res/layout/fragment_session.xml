@@ -9,23 +9,44 @@
               android:paddingTop="16dp"
               android:paddingBottom="16dp"
               android:background="@color/Darkprimarycolor"
-              app:layout_behavior="@string/appbar_scrolling_view_behavior">
+              app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:weightSum="1">
 
-    <LinearLayout
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="WString/session_header_text"
-        android:id="@+id/sessionInfoOutputArea"
-        android:orientation="vertical">
-    </LinearLayout>
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Host Name"
+        android:id="@+id/HostNameView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="[HOST]"
+        android:id="@+id/HostView"
+        android:layout_gravity="right" />
+
+    <TextView
+        android:layout_width="95dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Host Email"
+        android:id="@+id/HostEmailView" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="326dp"
+        android:id="@+id/listView4"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.74" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/cancel_button_text"
+        android:text="Cancel"
         android:id="@+id/cancelButton"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center"/>
-
+        android:layout_gravity="center_horizontal" />
 </LinearLayout>

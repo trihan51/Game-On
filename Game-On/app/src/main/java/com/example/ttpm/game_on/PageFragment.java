@@ -2,6 +2,7 @@ package com.example.ttpm.game_on;
 
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.ttpm.game_on.activities.SessionActivity;
 import com.example.ttpm.game_on.models.BoardGamesAvailable;
 import com.parse.ParseObject;
 import com.parse.ParseQueryAdapter;
@@ -83,6 +85,14 @@ public class PageFragment extends android.support.v4.app.Fragment {
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                     ParseObject clickedonEE = (ParseObject) listView.getItemAtPosition(position);
                                     Log.d("ObjectID of this game", clickedonEE.getObjectId().toString());
+                                    /*PageFragment fordata = new PageFragment();
+                                    Bundle args = new Bundle();
+                                    args.putString("SessionIDToJoin", clickedonEE.getObjectId().toString());
+                                    fordata.setArguments(args);*/
+                                    Intent intent = new Intent(getActivity(), SessionActivity.class);
+                                    intent.putExtra("SessionIDToJoin", clickedonEE.getObjectId().toString());
+                                    getActivity().startActivity(intent);
+
                                 }
                             });
                         }
@@ -213,7 +223,7 @@ public class PageFragment extends android.support.v4.app.Fragment {
         PageFragment f = new PageFragment();
 
         Bundle b = new Bundle();
-        b.putString("msg", text);
+
         f.setArguments(b);
 
         return f;

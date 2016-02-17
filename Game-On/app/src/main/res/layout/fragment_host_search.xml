@@ -8,20 +8,12 @@
     android:background="@color/GameOnOrange"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.ttpm.game_on.fragments.HostSearchFragment"
-             android:clickable="false">
+    android:clickable="false">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
-
-        <!--should put searchview in actionbar-->
-        <android.support.v7.widget.SearchView
-            android:id="@+id/host_search_search_view"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:queryHint="@string/fragment_host_search_hint"
-            />
 
         <android.support.v7.widget.RecyclerView
             xmlns:android="http://schemas.android.com/apk/res/android"

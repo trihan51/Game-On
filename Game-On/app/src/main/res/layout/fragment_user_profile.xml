@@ -10,8 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text=""
-        android:id="@+id/profileWelcome"
+        android:id="@+id/user_profile_welcome_message"
         android:layout_alignParentTop="true"
         android:paddingTop="16dp"
         android:paddingLeft="6dp"
@@ -22,12 +21,12 @@
     <com.parse.ParseImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:id="@+id/profileimageview"
-        android:layout_below="@+id/profileWelcome"
+        android:id="@+id/user_profile_profile_parse_image_view"
+        android:layout_below="@+id/user_profile_welcome_message"
         android:layout_centerHorizontal="true"
         android:contentDescription="Profile Picture"
         android:layout_marginTop="60dp"
-        android:layout_above="@+id/changepic"
+        android:layout_above="@+id/user_profile_change_profile_picture_button"
         android:background="#000000"
         android:padding="1dp"/>
 
@@ -36,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Change"
-        android:id="@+id/changepic"
+        android:id="@+id/user_profile_change_profile_picture_button"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
          />

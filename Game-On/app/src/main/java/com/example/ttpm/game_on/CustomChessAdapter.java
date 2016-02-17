@@ -17,9 +17,9 @@ import com.parse.ParseUser;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 
-public class CustomAdapter extends ParseQueryAdapter<ParseObject> {
+public class CustomChessAdapter extends ParseQueryAdapter<ParseObject> {
 
-    public CustomAdapter(Context context) {
+    public CustomChessAdapter(Context context) {
         // Use the QueryFactory to construct a PQA that will only show
         // Todos marked as high-pri
         super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {

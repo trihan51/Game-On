@@ -1,23 +1,48 @@
 <resources>
-    <string name="app_name">Game-On</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">Game On</string>
     <string name="action_current_session">Current Session</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_nearby_sessions_main">NearbySessionsMain</string>
     <string name="title_activity_user_profile">UserProfile</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_game_on_session">GameOnSession</string>
     <string name="title_activity_host_session_pages">HostSessionPages</string>
     <string name="title_activity_host_session_page">HostSessionPage</string>
 
+    <!--Strings for SplashFragment.java-->
+    <string name="fragment_splash_login_button">Login</string>
+    <string name="fragment_splash_register_button">Register</string>
+
+    <!--Strings for LoginFragment.java-->
+    <string name="fragment_login_email">Enter e-mail…</string>
+    <string name="fragment_login_password">Enter password…</string>
+    <string name="fragment_login_login_button">Login</string>
+    <string name="fragment_login_forgot_password_button">Forgot Password?</string>
+
+    <!--Strings for RegisterFragment.java-->
+    <string name="fragment_register_email">Enter e-mail address…</string>
+    <string name="fragment_register_password">Enter password…</string>
+    <string name="fragment_register_password_confirm">Reenter password…</string>
+    <string name="fragment_register_register_button">Register</string>
+
+    <!--Strings for ForgotPassword.java-->
+    <string name="fragment_forgot_password_text">Please enter the email address
+        associated with your Game-On account.</string>
+    <string name="fragment_forgot_password_email_hint_text">Enter e-mail here</string>
+    <string name="fragment_forgot_password_button">Reset</string>
+
+    <!--Strings for HostSearchFragment.java-->
     <string name="list_item_host_games_game_pic">Picture of Game</string>
     <string name="list_item_host_games_game_open">2 games open</string>
     <string name="list_item_host_games_button">Host Game</string>
-    <string name="fragment_host_search_hint">Search...</string>
-    <string name="action_logout">LogOut</string>
+    <string name="fragment_host_search_hint">Search…</string>
+
+    <!--Strings for menu-->
+    <string name="menu_action_logout">Log Out</string>
+    <string name="menu_action_settings">Settings</string>
 
     <!-- Strings for SessionFragment.java -->
     <string name="session_header_text">Current Session Info</string>

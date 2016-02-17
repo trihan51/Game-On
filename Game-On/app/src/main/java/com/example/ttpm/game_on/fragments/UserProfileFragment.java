@@ -2,6 +2,7 @@ package com.example.ttpm.game_on.fragments;
 
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ttpm.game_on.R;
+import com.example.ttpm.game_on.activities.SplashActivity;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -26,12 +28,14 @@ import com.parse.ParseUser;
  */
 public class UserProfileFragment extends android.support.v4.app.Fragment {
 
-protected TextView welcomey;
-    protected Button changepicbutton;
-    private int PICK_IMAGE_REQUEST = 1;
+    protected TextView mWelcomeMessageTextView;
+    protected Button mPictureChangeButton;
 
     public UserProfileFragment() {
-        // Required empty public constructor
+    }
+
+    public static UserProfileFragment newInstance() {
+        return new UserProfileFragment();
     }
 
     @Override
@@ -43,12 +47,12 @@ protected TextView welcomey;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_userprofile, container, false);
+        View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
-        welcomey = (TextView)view.findViewById(R.id.profileWelcome);
-        welcomey.setText("Welcome " + ParseUser.getCurrentUser().getUsername() + "!");
+        mWelcomeMessageTextView = (TextView)view.findViewById(R.id.user_profile_welcome_message);
+        mWelcomeMessageTextView.setText("Welcome " + ParseUser.getCurrentUser().getUsername() + "!");
 
-        changepicbutton = (Button)view.findViewById(R.id.changepic);
+        mPictureChangeButton = (Button)view.findViewById(R.id.user_profile_change_profile_picture_button);
 
         /* profilepic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,34 +141,49 @@ protected TextView welcomey;
                     });
                 }
             }
-        });*/
+        }); */
 
         ParseFile currentobject = ParseUser.getCurrentUser().getParseFile("profilePicture");
-        ParseImageView imageView = (ParseImageView)view.findViewById(R.id.profileimageview);
+        ParseImageView imageView = (ParseImageView)view.findViewById(R.id.user_profile_profile_parse_image_view);
         imageView.setParseFile(currentobject);
         imageView.loadInBackground(new GetDataCallback() {
             @Override
             public void done(byte[] data, ParseException e) {
-                //done?
             }
         });
 
-
         // profilepic = (ImageView) view.findViewById(R.id.profilepicimageview);
         //ParseImageView profview = (ParseImageView)findview
-
         //profilepic.setImage
 
         return view;
     }
 
-    public static UserProfileFragment newInstance(String text) {
-        UserProfileFragment f = new UserProfileFragment();
-        Bundle b = new Bundle();
-        b.putString("msg", text);
-        f.setArguments(b);
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_main, menu);
+    }
 
-        return f;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_action_log_out:
+                ParseUser currentUser1 = ParseUser.getCurrentUser();
+                String currentuses = currentUser1.getUsername();
+                Toast.makeText(getActivity(), currentuses + " has logged out.", Toast.LENGTH_LONG).show();
+                ParseUser.logOut();
+                ParseUser currentUser = ParseUser.getCurrentUser();// this will now be null
+                if (currentUser != null) {
+                    Toast.makeText(getActivity(), "Error logging out!", Toast.LENGTH_LONG).show();
+                } else {
+                    Intent intent = new Intent(getActivity(), SplashActivity.class);
+                    startActivity(intent);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
 

@@ -12,7 +12,7 @@
     tools:context="com.example.ttpm.game_on.activities.SplashActivity" >
 
     <TextView
-        android:text="Game-On"
+        android:text="@string/app_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -24,7 +24,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"
+        android:text="@string/fragment_splash_login_button"
         android:id="@+id/splash_login_button"
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true"
@@ -33,7 +33,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Register"
+        android:text="@string/fragment_splash_register_button"
         android:id="@+id/splash_register_button"
         android:layout_below="@+id/splash_login_button"
         android:layout_alignLeft="@+id/splash_login_button"

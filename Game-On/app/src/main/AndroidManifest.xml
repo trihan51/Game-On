@@ -14,8 +14,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".activities.SplashActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,22 +23,15 @@
         </activity>
         <activity
             android:name=".activities.LoginActivity"
-            android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:label="@string/title_activity_login" >
         </activity>
         <activity
             android:name=".activities.RegisterActivity"
-            android:label="@string/title_activity_register"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:label="@string/title_activity_register" >
         </activity>
         <activity
             android:name=".NearbySessionsMain"
-            android:label="@string/title_activity_nearby_sessions_main"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-        <activity
-            android:name=".UserProfile"
-            android:label="@string/title_activity_user_profile" >
+            android:label="@string/title_activity_nearby_sessions_main" >
         </activity>
         <activity android:name=".activities.ForgotPasswordActivity" >
         </activity>
@@ -47,13 +39,11 @@
         </activity>
         <activity
             android:name=".GameOnSession"
-            android:label="@string/title_activity_game_on_session"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:label="@string/title_activity_game_on_session" >
         </activity>
         <activity
             android:name=".HostSessionPage"
-            android:label="@string/title_activity_host_session_page"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:label="@string/title_activity_host_session_page" >
         </activity>
         <activity
             android:name=".activities.SessionActivity"

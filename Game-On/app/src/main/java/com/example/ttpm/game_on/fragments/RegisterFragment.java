@@ -72,8 +72,8 @@ public class RegisterFragment extends android.support.v4.app.Fragment {
                 public void done(ParseException e) {
                     if (e == null) {
                         Toast.makeText(getActivity(), "Success!", Toast.LENGTH_SHORT).show();
-                        Intent takeUserToNearbySessions = new Intent(getActivity(), HomeActivity.class);
-                        startActivity(takeUserToNearbySessions);
+                        Intent intent = new Intent(getActivity(), HomeActivity.class);
+                        startActivity(intent);
 
                     } else {
                         Toast.makeText(getActivity(), "There was an error!", Toast.LENGTH_SHORT).show();

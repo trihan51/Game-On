@@ -8,7 +8,6 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:background="@color/Darkprimarycolor"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_register"
     tools:context="com.example.ttpm.game_on.activities.RegisterActivity">
 
     <EditText
@@ -16,7 +15,7 @@
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:ems="10"
-        android:id="@+id/emaillogin"
+        android:id="@+id/register_email_edittext"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="85dp"
@@ -28,8 +27,8 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/registerpassword1"
-        android:layout_below="@+id/emaillogin"
+        android:id="@+id/register_password_edittext"
+        android:layout_below="@+id/register_email_edittext"
         android:layout_centerHorizontal="true"
         android:hint="Enter Password.."
         android:textColorHint="#ffffff" />
@@ -39,8 +38,8 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/registerpassword2"
-        android:layout_below="@+id/registerpassword1"
+        android:id="@+id/register_repeat_password_edittext"
+        android:layout_below="@+id/register_password_edittext"
         android:layout_centerHorizontal="true"
         android:hint="Enter Password Again.."
         android:textColorHint="#ffffff" />
@@ -49,8 +48,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="REGISTER"
-        android:id="@+id/RegisterButton2"
-        android:layout_below="@+id/registerpassword2"
+        android:id="@+id/register_register_button"
+        android:layout_below="@+id/register_repeat_password_edittext"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="95dp"
         android:textColor="#ffffff"

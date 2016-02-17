@@ -2,7 +2,6 @@ package com.example.ttpm.game_on.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,14 +22,13 @@ import com.parse.ParseUser;
 public class SplashFragment extends android.support.v4.app.Fragment{
 
     private Button mLoginButton;
-    protected Button mRegisterButton;
+    private Button mRegisterButton;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_splash, container, false);

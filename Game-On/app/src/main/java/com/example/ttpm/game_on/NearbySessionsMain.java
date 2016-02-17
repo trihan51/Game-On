@@ -8,8 +8,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ttpm.game_on.activities.HomeActivity;
-import com.example.ttpm.game_on.activities.MainActivity;
+import com.example.ttpm.game_on.activities.HomePagerActivity;
+import com.example.ttpm.game_on.activities.SplashActivity;
 import com.parse.ParseUser;
 
 public class NearbySessionsMain extends AppCompatActivity  {
@@ -27,7 +27,7 @@ public class NearbySessionsMain extends AppCompatActivity  {
         logoutbutton = (Button)findViewById(R.id.logoutbutton);
 
         ParseUser currentUser = ParseUser.getCurrentUser();
-         String currentuse = currentUser.getUsername();
+        String currentuse = currentUser.getUsername();
 
         greetinguser = (TextView)findViewById(R.id.userloggedingreeting);
         greetinguser.setText("Hello, "+ currentuse + "!");
@@ -46,7 +46,7 @@ public class NearbySessionsMain extends AppCompatActivity  {
                 {
                     Toast.makeText(NearbySessionsMain.this, "Error logging out!", Toast.LENGTH_LONG).show();
                 }else{
-                    Intent gohome = new Intent(NearbySessionsMain.this, MainActivity.class);
+                    Intent gohome = new Intent(NearbySessionsMain.this, SplashActivity.class);
                     startActivity(gohome);
                     finish();
                 }
@@ -57,7 +57,7 @@ public class NearbySessionsMain extends AppCompatActivity  {
         swipeinterfacebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent testswipey = new Intent(NearbySessionsMain.this, HomeActivity.class);
+                Intent testswipey = new Intent(NearbySessionsMain.this, HomePagerActivity.class);
                 startActivity(testswipey);
                 finish();
 

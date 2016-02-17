@@ -10,14 +10,19 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ttpm.game_on.GameOnSession;
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.SessionActivity;
+import com.example.ttpm.game_on.activities.SplashActivity;
 import com.example.ttpm.game_on.models.BoardGame;
 import com.example.ttpm.game_on.models.BoardGameCollection;
 import com.parse.FindCallback;
@@ -49,6 +54,12 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
     public static HostSearchFragment newInstance()
     {
         return new HostSearchFragment();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -91,6 +102,33 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
 
         mSearchAdapter = new HostSearchAdapter(getActivity(), mBoardGames);
         mSearchRecyclerView.setAdapter(mSearchAdapter);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_host_search, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_action_log_out:
+                ParseUser currentUser1 = ParseUser.getCurrentUser();
+                String currentuses = currentUser1.getUsername();
+                Toast.makeText(getActivity(), currentuses + " has logged out.", Toast.LENGTH_LONG).show();
+                ParseUser.logOut();
+                ParseUser currentUser = ParseUser.getCurrentUser();// this will now be null
+                if (currentUser != null) {
+                    Toast.makeText(getActivity(), "Error logging out!", Toast.LENGTH_LONG).show();
+                } else {
+                    Intent intent = new Intent(getActivity(), SplashActivity.class);
+                    startActivity(intent);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void queryForBoardGames() {

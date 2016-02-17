@@ -21,9 +21,6 @@ import com.parse.ParseUser;
  */
 public class SplashFragment extends android.support.v4.app.Fragment{
 
-    private Button mLoginButton;
-    private Button mRegisterButton;
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
@@ -39,8 +36,8 @@ public class SplashFragment extends android.support.v4.app.Fragment{
             startActivity(gomainscreen);
         }
 
-        mLoginButton = (Button) view.findViewById(R.id.splash_login_button);
-        mLoginButton.setOnClickListener(new View.OnClickListener() {
+        Button loginButton = (Button) view.findViewById(R.id.splash_login_button);
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -48,8 +45,8 @@ public class SplashFragment extends android.support.v4.app.Fragment{
             }
         });
 
-        mRegisterButton = (Button) view.findViewById(R.id.splash_register_button);
-        mRegisterButton.setOnClickListener(new View.OnClickListener() {
+        Button registerButton = (Button) view.findViewById(R.id.splash_register_button);
+        registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), RegisterActivity.class);
@@ -69,7 +66,7 @@ public class SplashFragment extends android.support.v4.app.Fragment{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_settings:
+            case R.id.menu_action_settings:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

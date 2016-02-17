@@ -7,11 +7,6 @@
     android:background="@color/Darkprimarycolor"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-
-
-
-
-
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

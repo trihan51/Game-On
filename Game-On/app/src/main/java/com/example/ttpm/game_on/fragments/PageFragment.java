@@ -2,13 +2,18 @@ package com.example.ttpm.game_on.fragments;
 
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.ttpm.game_on.CustomChessAdapter;
 import com.example.ttpm.game_on.CustomMonopolyAdapter;
@@ -16,9 +21,11 @@ import com.example.ttpm.game_on.CustomOneNightUltimateWerewolfAdapter;
 import com.example.ttpm.game_on.CustomSettlersOfCatanAdapter;
 import com.example.ttpm.game_on.CustomSplendorAdapter;
 import com.example.ttpm.game_on.R;
+import com.example.ttpm.game_on.activities.SplashActivity;
 import com.example.ttpm.game_on.models.BoardGamesAvailable;
 import com.parse.ParseObject;
 import com.parse.ParseQueryAdapter;
+import com.parse.ParseUser;
 
 
 /**
@@ -41,6 +48,12 @@ public class PageFragment extends android.support.v4.app.Fragment {
     public static PageFragment newInstance()
     {
         return new PageFragment();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -138,5 +151,32 @@ public class PageFragment extends android.support.v4.app.Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_action_log_out:
+                ParseUser currentUser1 = ParseUser.getCurrentUser();
+                String currentuses = currentUser1.getUsername();
+                Toast.makeText(getActivity(), currentuses + " has logged out.", Toast.LENGTH_LONG).show();
+                ParseUser.logOut();
+                ParseUser currentUser = ParseUser.getCurrentUser();// this will now be null
+                if (currentUser != null) {
+                    Toast.makeText(getActivity(), "Error logging out!", Toast.LENGTH_LONG).show();
+                } else {
+                    Intent intent = new Intent(getActivity(), SplashActivity.class);
+                    startActivity(intent);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

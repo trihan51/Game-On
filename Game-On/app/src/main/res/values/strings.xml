@@ -17,7 +17,7 @@
     <string name="list_item_host_games_game_open">2 games open</string>
     <string name="list_item_host_games_button">Host Game</string>
     <string name="fragment_host_search_hint">Search...</string>
-    <string name="action_logout">LogOut</string>
+    <string name="action_logout">Log Out</string>
 
     <!-- Strings for SessionFragment.java -->
     <string name="session_header_text">Current Session Info</string>

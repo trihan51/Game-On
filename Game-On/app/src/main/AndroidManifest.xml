@@ -43,7 +43,7 @@
         </activity>
         <activity android:name=".activities.ForgotPasswordActivity" >
         </activity>
-        <activity android:name=".activities.HomeActivity" >
+        <activity android:name=".activities.HomePagerActivity" >
         </activity>
         <activity
             android:name=".GameOnSession"
@@ -58,7 +58,7 @@
         <activity
             android:name=".activities.SessionActivity"
             android:label="@string/title_activity_session"
-            android:parentActivityName=".activities.HomeActivity">
+            android:parentActivityName=".activities.HomePagerActivity">
         </activity>
     </application>
 

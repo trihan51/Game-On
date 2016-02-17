@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.ForgotPasswordActivity;
-import com.example.ttpm.game_on.activities.HomeActivity;
+import com.example.ttpm.game_on.activities.HomePagerActivity;
 import com.parse.LogInCallback;
 import com.parse.ParseUser;
 
@@ -49,7 +49,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
                     public void done(ParseUser parseUser, com.parse.ParseException e) {
                         if (parseUser != null) {
                             Toast.makeText(getActivity(), "Successfully logged in!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getActivity(), HomeActivity.class);
+                            Intent intent = new Intent(getActivity(), HomePagerActivity.class);
                             startActivity(intent);
                         } else {
                             Toast.makeText(getActivity(), "Error logging in!", Toast.LENGTH_SHORT).show();

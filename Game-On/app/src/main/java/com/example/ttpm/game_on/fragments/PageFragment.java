@@ -8,14 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.example.ttpm.game_on.CustomAdapter;
+import com.example.ttpm.game_on.CustomChessAdapter;
 import com.example.ttpm.game_on.CustomMonopolyAdapter;
 import com.example.ttpm.game_on.CustomOneNightUltimateWerewolfAdapter;
-import com.example.ttpm.game_on.CustomSettlersOfCatan;
+import com.example.ttpm.game_on.CustomSettlersOfCatanAdapter;
 import com.example.ttpm.game_on.CustomSplendorAdapter;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.models.BoardGamesAvailable;
@@ -29,8 +27,8 @@ import com.parse.ParseQueryAdapter;
 public class PageFragment extends android.support.v4.app.Fragment {
 
     private ParseQueryAdapter<ParseObject> mainAdapter;
-    private CustomAdapter chessopensessionAdapter;
-    private CustomSettlersOfCatan settlersofcatansessionAdapter;
+    private CustomChessAdapter chessopensessionAdapter;
+    private CustomSettlersOfCatanAdapter settlersofcatansessionAdapter;
     private CustomSplendorAdapter splendorsessionAdapter;
     private CustomOneNightUltimateWerewolfAdapter onenightultimatewerewolfsessionAdapter;
     private CustomMonopolyAdapter monopolysessionAdapter;
@@ -56,9 +54,9 @@ public class PageFragment extends android.support.v4.app.Fragment {
         listView = (ListView) view.findViewById(R.id.listView2);
         listView.setAdapter(mainAdapter);
         mainAdapter.loadObjects();
-        chessopensessionAdapter = new CustomAdapter(getActivity());
+        chessopensessionAdapter = new CustomChessAdapter(getActivity());
         splendorsessionAdapter =  new CustomSplendorAdapter(getActivity());
-        settlersofcatansessionAdapter = new CustomSettlersOfCatan(getActivity());
+        settlersofcatansessionAdapter = new CustomSettlersOfCatanAdapter(getActivity());
         onenightultimatewerewolfsessionAdapter = new CustomOneNightUltimateWerewolfAdapter(getActivity());
         monopolysessionAdapter = new CustomMonopolyAdapter(getActivity());
 

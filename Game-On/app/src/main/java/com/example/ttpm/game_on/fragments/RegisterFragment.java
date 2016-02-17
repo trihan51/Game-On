@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.ttpm.game_on.R;
-import com.example.ttpm.game_on.activities.HomeActivity;
+import com.example.ttpm.game_on.activities.HomePagerActivity;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
@@ -72,7 +72,7 @@ public class RegisterFragment extends android.support.v4.app.Fragment {
                 public void done(ParseException e) {
                     if (e == null) {
                         Toast.makeText(getActivity(), "Success!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getActivity(), HomeActivity.class);
+                        Intent intent = new Intent(getActivity(), HomePagerActivity.class);
                         startActivity(intent);
 
                     } else {

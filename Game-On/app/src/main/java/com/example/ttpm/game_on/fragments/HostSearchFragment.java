@@ -153,13 +153,7 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
             mJoinButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Toast.makeText(v.getContext(),
-//                            "Wow, you QUICK JOIN this game!",
-//                            Toast.LENGTH_SHORT).show();
                     createSession(mTitleTextView.getText().toString());
-//                    Intent intent = SessionActivity.newIntent(getActivity());
-//                    startActivity(intent);
-
                 }
             });
         }
@@ -167,7 +161,7 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
         public void bindGame(BoardGame boardGame) {
             mBoardGame = boardGame;
             mTitleTextView.setText(mBoardGame.getBoardName());
-            mSessionsTextView.setText(Integer.toString(mBoardGame.getOpenSessions()));
+            mSessionsTextView.setText(Integer.toString(R.id.list_item_host_games_game_open));
         }
     }
 
@@ -300,7 +294,6 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
             }
         }
     }
-
 }
 
 

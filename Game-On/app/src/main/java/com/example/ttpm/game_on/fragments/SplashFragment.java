@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.ttpm.game_on.R;
-import com.example.ttpm.game_on.activities.HomeActivity;
+import com.example.ttpm.game_on.activities.HomePagerActivity;
 import com.example.ttpm.game_on.activities.LoginActivity;
 import com.example.ttpm.game_on.activities.RegisterActivity;
 import com.parse.ParseUser;
@@ -35,7 +35,7 @@ public class SplashFragment extends android.support.v4.app.Fragment{
 
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
-            Intent gomainscreen = new Intent(getActivity(), HomeActivity.class);
+            Intent gomainscreen = new Intent(getActivity(), HomePagerActivity.class);
             startActivity(gomainscreen);
         }
 

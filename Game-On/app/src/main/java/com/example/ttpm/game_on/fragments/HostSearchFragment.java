@@ -1,12 +1,10 @@
 package com.example.ttpm.game_on.fragments;
 
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -15,12 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.ttpm.game_on.GameOnSession;
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
-import com.example.ttpm.game_on.activities.HomeActivity;
 import com.example.ttpm.game_on.activities.SessionActivity;
 import com.example.ttpm.game_on.models.BoardGame;
 import com.example.ttpm.game_on.models.BoardGameCollection;
@@ -36,7 +32,6 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 
 /**
@@ -51,14 +46,9 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
     public HostSearchFragment() {
     }
 
-    public static HostSearchFragment newInstance(String text)
+    public static HostSearchFragment newInstance()
     {
-        HostSearchFragment f = new HostSearchFragment();
-        Bundle b = new Bundle();
-        b.putString("msg", text);
-        f.setArguments(b);
-
-        return f;
+        return new HostSearchFragment();
     }
 
     @Override

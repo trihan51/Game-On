@@ -37,7 +37,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                         if ( e == null)
                         {
                             Toast.makeText(ForgotPasswordActivity.this, "Password reset, check your email!", Toast.LENGTH_SHORT).show();
-                            Intent gohome = new Intent(ForgotPasswordActivity.this, MainActivity.class);
+                            Intent gohome = new Intent(ForgotPasswordActivity.this, SplashActivity.class);
                             startActivity(gohome);
                         } else {
                             Toast.makeText(ForgotPasswordActivity.this, "Email not found", Toast.LENGTH_SHORT).show();

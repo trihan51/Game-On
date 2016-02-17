@@ -9,7 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ttpm.game_on.activities.HomeActivity;
-import com.example.ttpm.game_on.activities.MainActivity;
+import com.example.ttpm.game_on.activities.SplashActivity;
 import com.parse.ParseUser;
 
 public class NearbySessionsMain extends AppCompatActivity  {
@@ -46,7 +46,7 @@ public class NearbySessionsMain extends AppCompatActivity  {
                 {
                     Toast.makeText(NearbySessionsMain.this, "Error logging out!", Toast.LENGTH_LONG).show();
                 }else{
-                    Intent gohome = new Intent(NearbySessionsMain.this, MainActivity.class);
+                    Intent gohome = new Intent(NearbySessionsMain.this, SplashActivity.class);
                     startActivity(gohome);
                     finish();
                 }

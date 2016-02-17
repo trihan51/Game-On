@@ -4,20 +4,15 @@ package com.example.ttpm.game_on.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.ttpm.game_on.PageFragment;
+import com.example.ttpm.game_on.fragments.PageFragment;
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.fragments.UserProfileFragment;
@@ -31,13 +26,10 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_homepage_swipe);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+        setContentView(R.layout.activity_home);
 
 
         viewPager = (ViewPager)findViewById(R.id.view_pager);
-        //SwipeAdapter swipeAdapter = new SwipeAdapter(getSupportFragmentManager());
         viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
     }
 
@@ -64,7 +56,7 @@ public class HomeActivity extends AppCompatActivity {
                 if (currentUser != null) {
                     Toast.makeText(this, "Error logging out!", Toast.LENGTH_LONG).show();
                 } else {
-                    Intent gohome = new Intent(this, MainActivity.class);
+                    Intent gohome = new Intent(this, SplashActivity.class);
                     startActivity(gohome);
                     this.finish();
                 }
@@ -87,13 +79,9 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int pos) {
             switch(pos) {
-                case 0: return UserProfileFragment.newInstance("");
-                //case 2: return PageFragment.newInstance("FirstFragment, Instance 1");
-                //case 1: return PageFragment2.newInstance("SecondFragment, Instance 1");
-                //case 1: return PageFragment3.newInstance("Third Fragment, Instance 1");
-                case 1: return HostSearchFragment.newInstance("Third Fragment, Instance 1");
-
-                default: return PageFragment.newInstance("");
+                case 0: return UserProfileFragment.newInstance();
+                case 1: return HostSearchFragment.newInstance();
+                default: return PageFragment.newInstance();
             }
         }
 

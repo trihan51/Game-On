@@ -12,7 +12,8 @@ import android.widget.Button;
 import com.example.ttpm.game_on.R;
 import com.parse.ParseUser;
 
-public class MainActivity extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity {
+
     private Button loginbutton;
     protected Button registerbutton;
 
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
             // do stuff with the user
-            Intent gomainscreen = new Intent(MainActivity.this, HomeActivity.class);
+            Intent gomainscreen = new Intent(SplashActivity.this, HomeActivity.class);
             startActivity(gomainscreen);
         } else {
             // show the signup or login screen
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         loginbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent taketologinScreen = new Intent(MainActivity.this, LoginActivity.class);
+                Intent taketologinScreen = new Intent(SplashActivity.this, LoginActivity.class);
                 startActivity(taketologinScreen);
                 finish();
             }
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         registerbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent taketoRegisterScreen = new Intent(MainActivity.this, RegisterActivity.class);
+                Intent taketoRegisterScreen = new Intent(SplashActivity.this, RegisterActivity.class);
                 startActivity(taketoRegisterScreen);
             }
         });

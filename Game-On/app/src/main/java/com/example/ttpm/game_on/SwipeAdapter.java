@@ -1,9 +1,10 @@
 package com.example.ttpm.game_on;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
+import com.example.ttpm.game_on.fragments.PageFragment;
 
 /**
  * Created by manbirrandhawa on 10/23/15.

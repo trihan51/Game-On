@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -42,7 +43,8 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HostSearchFragment extends android.support.v4.app.Fragment {
+public class HostSearchFragment extends android.support.v4.app.Fragment
+        implements SearchView.OnQueryTextListener{
 
     private RecyclerView mSearchRecyclerView;
     private HostSearchAdapter mSearchAdapter;
@@ -70,23 +72,6 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
         mSearchRecyclerView = (RecyclerView) view
                 .findViewById(R.id.host_search_recycler_view);
 
-        SearchView mGameSearchView = (SearchView) view
-                .findViewById(R.id.host_search_search_view);
-        mGameSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                List<BoardGame> filteredBoardGameList = filter(mBoardGames, newText);
-                mSearchAdapter.animateTo(filteredBoardGameList);
-                mSearchRecyclerView.scrollToPosition(0);
-                return true;
-            }
-        });
-
         return view;
     }
 
@@ -108,6 +93,10 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_host_search, menu);
+
+        MenuItem item = menu.findItem(R.id.menu_item_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(this);
     }
 
     @Override
@@ -129,6 +118,19 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        List<BoardGame> filteredBoardGameList = filter(mBoardGames, newText);
+        mSearchAdapter.animateTo(filteredBoardGameList);
+        mSearchRecyclerView.scrollToPosition(0);
+        return true;
     }
 
     private void queryForBoardGames() {

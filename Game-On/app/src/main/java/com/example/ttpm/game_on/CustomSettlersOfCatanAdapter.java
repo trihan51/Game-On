@@ -16,9 +16,9 @@ import java.text.SimpleDateFormat;
 /**
  * Created by manbirrandhawa on 2/11/16.
  */
-public class CustomSettlersOfCatan extends ParseQueryAdapter<ParseObject>
+public class CustomSettlersOfCatanAdapter extends ParseQueryAdapter<ParseObject>
 {
-    public CustomSettlersOfCatan(Context context) {
+    public CustomSettlersOfCatanAdapter(Context context) {
         // Use the QueryFactory to construct a PQA that will only show
         // Todos marked as high-pri
         super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {

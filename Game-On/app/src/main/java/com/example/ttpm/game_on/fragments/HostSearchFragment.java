@@ -1,17 +1,19 @@
 package com.example.ttpm.game_on.fragments;
 
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -20,8 +22,8 @@ import android.widget.Toast;
 import com.example.ttpm.game_on.GameOnSession;
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
-import com.example.ttpm.game_on.activities.HomeActivity;
 import com.example.ttpm.game_on.activities.SessionActivity;
+import com.example.ttpm.game_on.activities.SplashActivity;
 import com.example.ttpm.game_on.models.BoardGame;
 import com.example.ttpm.game_on.models.BoardGameCollection;
 import com.parse.FindCallback;
@@ -36,13 +38,13 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HostSearchFragment extends android.support.v4.app.Fragment {
+public class HostSearchFragment extends android.support.v4.app.Fragment
+        implements SearchView.OnQueryTextListener{
 
     private RecyclerView mSearchRecyclerView;
     private HostSearchAdapter mSearchAdapter;
@@ -51,14 +53,15 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
     public HostSearchFragment() {
     }
 
-    public static HostSearchFragment newInstance(String text)
+    public static HostSearchFragment newInstance()
     {
-        HostSearchFragment f = new HostSearchFragment();
-        Bundle b = new Bundle();
-        b.putString("msg", text);
-        f.setArguments(b);
+        return new HostSearchFragment();
+    }
 
-        return f;
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -68,23 +71,6 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
 
         mSearchRecyclerView = (RecyclerView) view
                 .findViewById(R.id.host_search_recycler_view);
-
-        SearchView mGameSearchView = (SearchView) view
-                .findViewById(R.id.host_search_search_view);
-        mGameSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                List<BoardGame> filteredBoardGameList = filter(mBoardGames, newText);
-                mSearchAdapter.animateTo(filteredBoardGameList);
-                mSearchRecyclerView.scrollToPosition(0);
-                return true;
-            }
-        });
 
         return view;
     }
@@ -103,6 +89,50 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
         mSearchRecyclerView.setAdapter(mSearchAdapter);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_host_search, menu);
+
+        MenuItem item = menu.findItem(R.id.menu_item_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_action_log_out:
+                ParseUser currentUser1 = ParseUser.getCurrentUser();
+                String currentuses = currentUser1.getUsername();
+                Toast.makeText(getActivity(), currentuses + " has logged out.", Toast.LENGTH_LONG).show();
+                ParseUser.logOut();
+                ParseUser currentUser = ParseUser.getCurrentUser();// this will now be null
+                if (currentUser != null) {
+                    Toast.makeText(getActivity(), "Error logging out!", Toast.LENGTH_LONG).show();
+                } else {
+                    Intent intent = new Intent(getActivity(), SplashActivity.class);
+                    startActivity(intent);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        List<BoardGame> filteredBoardGameList = filter(mBoardGames, newText);
+        mSearchAdapter.animateTo(filteredBoardGameList);
+        mSearchRecyclerView.scrollToPosition(0);
+        return true;
+    }
+
     private void queryForBoardGames() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("BoardGames");
         query.orderByAscending("boardName");
@@ -113,6 +143,7 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
                     for (ParseObject boardGameName : objects) {
                         BoardGame b = new BoardGame();
                         b.setBoardName(boardGameName.getString("boardName"));
+                        mBoardGames.add(b);
                         mSearchAdapter.addNewGame(b);
                     }
                 }
@@ -162,13 +193,7 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
             mJoinButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Toast.makeText(v.getContext(),
-//                            "Wow, you QUICK JOIN this game!",
-//                            Toast.LENGTH_SHORT).show();
                     createSession(mTitleTextView.getText().toString());
-//                    Intent intent = SessionActivity.newIntent(getActivity());
-//                    startActivity(intent);
-
                 }
             });
         }
@@ -176,7 +201,7 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
         public void bindGame(BoardGame boardGame) {
             mBoardGame = boardGame;
             mTitleTextView.setText(mBoardGame.getBoardName());
-            mSessionsTextView.setText(Integer.toString(mBoardGame.getOpenSessions()));
+            mSessionsTextView.setText(Integer.toString(R.id.list_item_host_games_game_open));
         }
     }
 
@@ -309,7 +334,6 @@ public class HostSearchFragment extends android.support.v4.app.Fragment {
             }
         }
     }
-
 }
 
 

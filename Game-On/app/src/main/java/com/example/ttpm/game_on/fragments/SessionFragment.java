@@ -2,8 +2,6 @@ package com.example.ttpm.game_on.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
@@ -21,12 +19,13 @@ import com.example.ttpm.game_on.NearbySessionsMain;
 import com.example.ttpm.game_on.PollService;
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
-import com.example.ttpm.game_on.activities.HomeActivity;
 import com.example.ttpm.game_on.activities.SessionActivity;
+import com.example.ttpm.game_on.QueryPreferences;
+import com.example.ttpm.game_on.R;
+import com.example.ttpm.game_on.activities.HomePagerActivity;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import org.json.JSONArray;
 
@@ -76,7 +75,7 @@ public class SessionFragment extends VisibleFragment {
         // The line above is the replacement for the Toast line below. However, not sure if it works yet.
 //        Toast.makeText(getActivity(), "Session has been cancelled", Toast.LENGTH_LONG).show();
         QueryPreferences.setStoredSessionId(getActivity(), null);
-        Intent intent = HomeActivity.newIntent(getActivity());
+        Intent intent = HomePagerActivity.newIntent(getActivity());
         startActivity(intent);
     }
 
@@ -122,7 +121,7 @@ public class SessionFragment extends VisibleFragment {
 
                 QueryPreferences.setStoredSessionId(getActivity(), null);
 
-                Intent intent = new Intent(getActivity(), HomeActivity.class);
+                Intent intent = new Intent(getActivity(), HomePagerActivity.class);
                 startActivity(intent);
             }
         });

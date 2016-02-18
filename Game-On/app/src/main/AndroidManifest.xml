@@ -2,8 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.ttpm.game_on" >
 
+    <permission android:name="com.example.ttpm.game_on.PRIVATE"
+                android:protectionLevel="signature" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="com.example.ttpm.game_on.PRIVATE" />
 
     <application
         android:name=".Gameon"
@@ -50,7 +55,26 @@
             android:label="@string/title_activity_session"
             android:parentActivityName=".activities.HomePagerActivity">
         </activity>
+
+        <service android:name=".PollService" />
+
+        <receiver android:name=".StartupReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".NotificationReceiver"
+                  android:exported="false">
+            <intent-filter
+                android:priority="-999">
+                <action
+                    android:name="com.example.ttpm.game_on.SHOW_NOTIFICATION" />
+            </intent-filter>
+        </receiver>
+
         <activity android:name=".activities.UserGameActivity"/>
+
     </application>
 
 </manifest>

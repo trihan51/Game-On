@@ -57,19 +57,5 @@ public class SplashFragment extends android.support.v4.app.Fragment{
         return view;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_main, menu);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_action_settings:
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 }

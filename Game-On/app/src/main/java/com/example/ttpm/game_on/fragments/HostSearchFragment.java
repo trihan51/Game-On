@@ -44,7 +44,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class HostSearchFragment extends android.support.v4.app.Fragment
-        implements SearchView.OnQueryTextListener{
+        implements SearchView.OnQueryTextListener {
 
     private RecyclerView mSearchRecyclerView;
     private HostSearchAdapter mSearchAdapter;
@@ -151,60 +151,6 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
         });
     }
 
-    private List<BoardGame> filter(List<BoardGame> boardGames, String query) {
-        query = query.toLowerCase();
-
-        List<BoardGame> filteredBoardGame = new ArrayList<>();
-        for (BoardGame boardGame : boardGames) {
-            String text = boardGame.getBoardName().toLowerCase();
-            if (text.contains(query)) {
-                filteredBoardGame.add(boardGame);
-            }
-        }
-
-        return filteredBoardGame;
-    }
-
-    /**********************************************************************************************/
-    /*                                Private Inner Classes                                       */
-    /**********************************************************************************************/
-    /**
-     * HostSearchViewHolder is used by RecyclerView to display Views to the user.
-     *
-     * Created by Tony Nguyen on 2/7/2016.
-     */
-    private class HostSearchViewHolder extends RecyclerView.ViewHolder {
-
-        private TextView mTitleTextView;
-        private TextView mSessionsTextView;
-        private TextView mJoinButton;
-
-        private BoardGame mBoardGame;
-
-        public HostSearchViewHolder(View itemView) {
-            super(itemView);
-
-            mTitleTextView =
-                    (TextView) itemView.findViewById(R.id.list_item_host_games_game_pic);
-            mSessionsTextView =
-                    (TextView) itemView.findViewById(R.id.list_item_host_games_game_open);
-            mJoinButton =
-                    (TextView) itemView.findViewById(R.id.list_item_host_games_button);
-            mJoinButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    createSession(mTitleTextView.getText().toString());
-                }
-            });
-        }
-
-        public void bindGame(BoardGame boardGame) {
-            mBoardGame = boardGame;
-            mTitleTextView.setText(mBoardGame.getBoardName());
-            mSessionsTextView.setText(Integer.toString(R.id.list_item_host_games_game_open));
-        }
-    }
-
     private void createSession(String gameTitle) {
         final GameOnSession session = new GameOnSession();
         session.setGameTitle(gameTitle);
@@ -232,6 +178,60 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
         });
     }
 
+    private List<BoardGame> filter(List<BoardGame> boardGames, String query) {
+        query = query.toLowerCase();
+
+        List<BoardGame> filteredBoardGame = new ArrayList<>();
+        for (BoardGame boardGame : boardGames) {
+            String text = boardGame.getBoardName().toLowerCase();
+            if (text.contains(query)) {
+                filteredBoardGame.add(boardGame);
+            }
+        }
+
+        return filteredBoardGame;
+    }
+
+    /**********************************************************************************************/
+    /*                                Private Inner Classes                                       */
+    /**********************************************************************************************/
+    /**
+     * HostSearchViewHolder is used by RecyclerView to display Views to the user.
+     *
+     * Created by Tony Nguyen on 2/7/2016.
+     */
+    private class HostSearchViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView mTitleTextView;
+        private TextView mSessionsTextView;
+        private TextView mHostButton;
+
+        private BoardGame mBoardGame;
+
+        public HostSearchViewHolder(View itemView) {
+            super(itemView);
+
+            mTitleTextView =
+                    (TextView) itemView.findViewById(R.id.list_item_host_games_game_pic);
+            mSessionsTextView =
+                    (TextView) itemView.findViewById(R.id.list_item_host_games_game_open);
+            mHostButton =
+                    (TextView) itemView.findViewById(R.id.list_item_host_games_button);
+            mHostButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    createSession(mTitleTextView.getText().toString());
+                }
+            });
+        }
+
+        public void bindGame(BoardGame boardGame) {
+            mBoardGame = boardGame;
+            mTitleTextView.setText(mBoardGame.getBoardName());
+            mSessionsTextView.setText(Integer.toString(R.id.list_item_host_games_game_open));
+        }
+    }
+
     /**
      * HostSearchAdapter works with RecyclerView to bind content to RecyclerView.ViewHolder and
      * display it to the user.
@@ -250,7 +250,7 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
 
         @Override
         public HostSearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = mLayoutInflater.inflate(R.layout.list_item_host_games, parent, false);
+            View view = mLayoutInflater.inflate(R.layout.list_item_host_search, parent, false);
             return new HostSearchViewHolder(view);
         }
 

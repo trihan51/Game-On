@@ -10,7 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.fragments.HostSearchFragment;
-import com.example.ttpm.game_on.fragments.PageFragment;
+import com.example.ttpm.game_on.fragments.UserSearchFragment;
 import com.example.ttpm.game_on.fragments.UserProfileFragment;
 
 public class HomePagerActivity extends AppCompatActivity {
@@ -31,7 +31,7 @@ public class HomePagerActivity extends AppCompatActivity {
                     case 1:
                         return HostSearchFragment.newInstance();
                     default:
-                        return PageFragment.newInstance();
+                        return UserSearchFragment.newInstance();
                 }
             }
 

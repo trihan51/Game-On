@@ -34,11 +34,21 @@
     <string name="fragment_forgot_password_email_hint_text">Enter e-mail here</string>
     <string name="fragment_forgot_password_button">Reset</string>
 
+    <!--Strings for UserSearchFragment.java-->
+    <string name="list_item_user_games_game_pic">Picture of Game</string>
+    <string name="list_item_user_games_game_open">No games open</string>
+    <string name="list_item_user_games_button">See List</string>
+
     <!--Strings for HostSearchFragment.java-->
     <string name="list_item_host_games_game_pic">Picture of Game</string>
     <string name="list_item_host_games_game_open">2 games open</string>
     <string name="list_item_host_games_button">Host Game</string>
     <string name="fragment_host_search_hint">Search…</string>
+
+    <!--Strings for UserGameFragment.java-->
+    <string name="list_item_games_game_pic">Picture of Game</string>
+    <string name="list_item_games_game_open">No games open</string>
+    <string name="list_item_games_button">Join Game</string>
 
     <!--Strings for menu-->
     <string name="menu_action_logout">Log Out</string>

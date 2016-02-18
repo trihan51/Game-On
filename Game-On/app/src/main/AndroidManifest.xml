@@ -50,6 +50,7 @@
             android:label="@string/title_activity_session"
             android:parentActivityName=".activities.HomePagerActivity">
         </activity>
+        <activity android:name=".activities.UserGameActivity"/>
     </application>
 
 </manifest>

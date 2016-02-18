@@ -12,12 +12,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.SplashActivity;
 import com.example.ttpm.game_on.models.BoardGame;
 import com.example.ttpm.game_on.models.BoardGameCollection;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -35,6 +40,8 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
     private GameSearchAdapter mSearchAdapter;
     private List<BoardGame> mBoardGames;
 
+    private String boardGameName;
+
     public static UserGameFragment newInstance(String boardGameName) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_BOARD_GAME_NAME_ID, boardGameName);
@@ -48,7 +55,8 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-//        String boardGameName = (String) getArguments().getSerializable(ARG_BOARD_GAME_NAME_ID);
+        boardGameName = (String) getArguments().getSerializable(ARG_BOARD_GAME_NAME_ID);
+        Toast.makeText(getActivity(), boardGameName, Toast.LENGTH_SHORT).show();
     }
 
     @Nullable
@@ -104,13 +112,51 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
     }
 
     private void queryForSpecificBoardGames() {
-
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("GameOnSession");
+        query.whereEqualTo("gameTitle", boardGameName);
+        query.whereNotEqualTo("host", ParseUser.getCurrentUser());
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null) {
+                    for (ParseObject boardGameName : objects) {
+                        BoardGame b = new BoardGame();
+                        b.setBoardName(boardGameName.getString("boardName"));
+                        mBoardGames.add(b);
+                        mSearchAdapter.addNewGame(b);
+                    }
+                }
+            }
+        });
     }
 
     private class GameSearchViewHolder extends RecyclerView.ViewHolder {
 
+        public TextView mTitleTextView;
+        private TextView mSessionsTextView;
+        private TextView mJoinButton;
+
         public GameSearchViewHolder(View itemView) {
             super(itemView);
+
+            mTitleTextView =
+                    (TextView) itemView.findViewById(R.id.list_item_games_game_pic);
+            mSessionsTextView =
+                    (TextView) itemView.findViewById(R.id.list_item_games_game_open);
+            mJoinButton =
+                    (TextView) itemView.findViewById(R.id.list_item_games_button);
+            mJoinButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getActivity(), "You joined this open game! Position: "
+                            + Integer.toString(getAdapterPosition()), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        public void bindGame(BoardGame boardGame) {
+            mTitleTextView.setText(boardGameName);
+            mSessionsTextView.setText(Integer.toString(R.id.list_item_host_games_game_open));
         }
     }
 
@@ -126,17 +172,41 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
 
         @Override
         public GameSearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return null;
+            View view = mLayoutInflater.inflate(R.layout.list_item_user_game, parent, false);
+            return new GameSearchViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(GameSearchViewHolder holder, int position) {
-
+            BoardGame boardGame = mBoardGames.get(position);
+            holder.bindGame(boardGame);
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return mBoardGames.size();
+        }
+
+        public void addNewGame(BoardGame boardGame) {
+            mBoardGames.add(boardGame);
+            notifyDataSetChanged();
+        }
+
+        public BoardGame removeGame(int position) {
+            BoardGame model = mBoardGames.remove(position);
+            notifyItemRemoved(position);
+            return model;
+        }
+
+        public void addGame(int position, BoardGame boardGame) {
+            mBoardGames.add(position, boardGame);
+            notifyItemInserted(position);
+        }
+
+        public void moveGame(int fromPosition, int toPosition) {
+            BoardGame model = mBoardGames.remove(fromPosition);
+            mBoardGames.add(toPosition, model);
+            notifyItemMoved(fromPosition, toPosition);
         }
     }
 }

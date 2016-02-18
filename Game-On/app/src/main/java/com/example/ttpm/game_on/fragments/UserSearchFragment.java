@@ -41,14 +41,6 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
     private RecyclerView mSearchRecyclerView;
     private UserSearchAdapter mSearchAdapter;
     private List<BoardGame> mBoardGames;
-//    private ParseQueryAdapter<ParseObject> mainAdapter;
-//    private CustomChessAdapter chessopensessionAdapter;
-//    private CustomSettlersOfCatanAdapter settlersofcatansessionAdapter;
-//    private CustomSplendorAdapter splendorsessionAdapter;
-//    private CustomOneNightUltimateWerewolfAdapter onenightultimatewerewolfsessionAdapter;
-//    private CustomMonopolyAdapter monopolysessionAdapter;
-//
-//    private ListView listView;
 
     public UserSearchFragment() {
     }
@@ -83,7 +75,6 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
 
         BoardGameCollection boardGameCollection = new BoardGameCollection();
         mBoardGames = boardGameCollection.getBoardGames();
-
         queryForAllOpenUniqueBoardGames();
 
         mSearchAdapter = new UserSearchAdapter(getActivity(), mBoardGames);

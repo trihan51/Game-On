@@ -41,14 +41,6 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
     private RecyclerView mSearchRecyclerView;
     private UserSearchAdapter mSearchAdapter;
     private List<BoardGame> mBoardGames;
-//    private ParseQueryAdapter<ParseObject> mainAdapter;
-//    private CustomChessAdapter chessopensessionAdapter;
-//    private CustomSettlersOfCatanAdapter settlersofcatansessionAdapter;
-//    private CustomSplendorAdapter splendorsessionAdapter;
-//    private CustomOneNightUltimateWerewolfAdapter onenightultimatewerewolfsessionAdapter;
-//    private CustomMonopolyAdapter monopolysessionAdapter;
-//
-//    private ListView listView;
 
     public UserSearchFragment() {
     }
@@ -88,33 +80,6 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
 
         mSearchAdapter = new UserSearchAdapter(getActivity(), mBoardGames);
         mSearchRecyclerView.setAdapter(mSearchAdapter);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_main, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_action_log_out:
-                ParseUser currentUser1 = ParseUser.getCurrentUser();
-                String currentuses = currentUser1.getUsername();
-                Toast.makeText(getActivity(), currentuses + " has logged out.", Toast.LENGTH_LONG).show();
-                ParseUser.logOut();
-                ParseUser currentUser = ParseUser.getCurrentUser();// this will now be null
-                if (currentUser != null) {
-                    Toast.makeText(getActivity(), "Error logging out!", Toast.LENGTH_LONG).show();
-                } else {
-                    Intent intent = new Intent(getActivity(), SplashActivity.class);
-                    startActivity(intent);
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override

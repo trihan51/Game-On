@@ -276,7 +276,7 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
             mJoinButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Toast.makeText(getActivity(), mTitleTextView.getText(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), mTitleTextView.getText(), Toast.LENGTH_SHORT).show();
                 }
             });
         }

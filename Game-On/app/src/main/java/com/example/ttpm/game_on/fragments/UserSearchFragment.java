@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -83,13 +84,26 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_host_search, menu);
+
+        MenuItem item = menu.findItem(R.id.menu_item_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(this);
+    }
+
+    @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        return false;
+        List<BoardGame> filteredBoardGameList = filter(mBoardGames, newText);
+        mSearchAdapter.animateTo(filteredBoardGameList);
+        mSearchRecyclerView.scrollToPosition(0);
+        return true;
     }
 
     private void queryForAllOpenUniqueBoardGames() {
@@ -99,25 +113,39 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
-            if (e == null) {
-                for (ParseObject boardGameName : objects) {
-                    boolean boardGameExist = false;
-                    BoardGame b = new BoardGame();
-                    b.setBoardName(boardGameName.getString("gameTitle"));
-                    for(BoardGame boardGame : mBoardGames) {
-                        if(boardGame.getBoardName().toLowerCase()
-                                .equals(b.getBoardName().toLowerCase())){
-                            boardGameExist = true;
+                if (e == null) {
+                    for (ParseObject boardGameName : objects) {
+                        boolean boardGameExist = false;
+                        BoardGame b = new BoardGame();
+                        b.setBoardName(boardGameName.getString("gameTitle"));
+                        for (BoardGame boardGame : mBoardGames) {
+                            if (boardGame.getBoardName().toLowerCase()
+                                    .equals(b.getBoardName().toLowerCase())) {
+                                boardGameExist = true;
+                            }
                         }
-                    }
-                    if(!boardGameExist) {
-                        mBoardGames.add(b);
-                        mSearchAdapter.addNewGame(b);
+                        if (!boardGameExist) {
+                            mBoardGames.add(b);
+                            mSearchAdapter.addNewGame(b);
+                        }
                     }
                 }
             }
-            }
         });
+    }
+
+    private List<BoardGame> filter(List<BoardGame> boardGames, String query) {
+        query = query.toLowerCase();
+
+        List<BoardGame> filteredBoardGame = new ArrayList<>();
+        for (BoardGame boardGame : boardGames) {
+            String text = boardGame.getBoardName().toLowerCase();
+            if (text.contains(query)) {
+                filteredBoardGame.add(boardGame);
+            }
+        }
+
+        return filteredBoardGame;
     }
 
     private class UserSearchViewHolder extends RecyclerView.ViewHolder {
@@ -201,6 +229,53 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
             BoardGame model = mBoardGames.remove(fromPosition);
             mBoardGames.add(toPosition, model);
             notifyItemMoved(fromPosition, toPosition);
+        }
+
+        public void animateTo(List<BoardGame> boardGames) {
+            // remove all items that do not exist in filtered List anymore
+            applyAndAnimateRemovals(boardGames);
+            // add all items that did not exist in og list but do in filtered list
+            applyAndAnimateAdditions(boardGames);
+            // move all items which exist in both lists
+            applyAndAnimatedMovedItems(boardGames);
+        }
+
+        // iterate backwards thru internal list of Adapter
+        // check if ea item is contained in new filtered list
+        // if not, call removeGame
+        private void applyAndAnimateRemovals(List<BoardGame> newBoardGames) {
+            for (int i = mBoardGames.size() - 1; i >= 0; i--) {
+                BoardGame boardGame = mBoardGames.get(i);
+                if(!newBoardGames.contains(boardGame)) {
+                    removeGame(i);
+                }
+            }
+        }
+
+        // iterate thru filtered list
+        // check if ea item exists in internal list of adapter
+        // if not, call addGame
+        private void applyAndAnimateAdditions(List<BoardGame> newBoardGames) {
+            for (int i = 0, count = newBoardGames.size(); i < count; i++) {
+                BoardGame boardGame = newBoardGames.get(i);
+                if(!mBoardGames.contains(boardGame)) {
+                    addGame(i, boardGame);
+                }
+            }
+        }
+
+        // after removal and addition, both lists contain the same elements but in different order
+        // iterate backwards thru filtered list
+        // look up index of ea item in internal list
+        // if index different between the two, call moveItem to sort internal list
+        private void applyAndAnimatedMovedItems(List<BoardGame> newBoardGames) {
+            for (int toPosition = newBoardGames.size() - 1; toPosition >= 0; toPosition--) {
+                BoardGame boardGame = newBoardGames.get(toPosition);
+                int fromPosition = mBoardGames.indexOf(boardGame);
+                if (fromPosition >= 0 && fromPosition != toPosition) {
+                    moveGame(fromPosition, toPosition);
+                }
+            }
         }
     }
 }

@@ -2,10 +2,12 @@ package com.example.ttpm.game_on.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInstaller;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,7 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ttpm.game_on.GameOnSession;
+import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
+import com.example.ttpm.game_on.activities.SessionActivity;
 import com.example.ttpm.game_on.activities.SplashActivity;
 import com.example.ttpm.game_on.models.BoardGame;
 import com.example.ttpm.game_on.models.BoardGameCollection;
@@ -26,6 +30,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,7 +152,22 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
             mJoinButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getActivity(), "You clicked me!", Toast.LENGTH_SHORT).show();
+                    // Add user to current session
+                    mSession.addParticipant(ParseUser.getCurrentUser().getObjectId());
+                    mSession.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                // Saved Successfully
+                                QueryPreferences.setStoredSessionId(getActivity(), mSession.getObjectId());
+                                Intent intent = SessionActivity.newIntent(getActivity());
+                                startActivity(intent);
+                            } else {
+                                // The save failed
+                                Log.d("ERROR", "Unable to add current user to session: " + e);
+                            }
+                        }
+                    });
                 }
             });
         }

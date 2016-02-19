@@ -61,7 +61,7 @@
 
     <!-- Strings for SessionFragment.java -->
     <string name="session_header_text">Current Session Info</string>
-    <string name="cancel_button_text">Cancel</string>
+    <string name="leave_button_text">Leave</string>
 
     <!-- Strings for DisabledFragment.java -->
     <string name="disabled_text">You are currently in an open session.</string>

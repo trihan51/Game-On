@@ -23,8 +23,8 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/cancel_button_text"
-        android:id="@+id/cancelButton"
+        android:text="@string/leave_button_text"
+        android:id="@+id/leaveButton"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"/>
 

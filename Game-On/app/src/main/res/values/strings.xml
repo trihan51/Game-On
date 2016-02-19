@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">Game On</string>
     <string name="action_current_session">Current Session</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="title_activity_register">RegisterActivity</string>
-    <string name="title_activity_nearby_sessions_main">NearbySessionsMain</string>
-    <string name="title_activity_user_profile">UserProfile</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_register">Register</string>
+    <string name="title_activity_nearby_sessions_main">Nearby Sessions</string>
+    <string name="title_activity_user_profile">User Profile</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -34,22 +34,47 @@
     <string name="fragment_forgot_password_email_hint_text">Enter e-mail here</string>
     <string name="fragment_forgot_password_button">Reset</string>
 
+    <!--Strings for UserSearchFragment.java-->
+    <string name="list_item_user_games_game_pic">Picture of Game</string>
+    <string name="list_item_user_games_game_open">No games open</string>
+    <string name="list_item_user_games_list_button">See List</string>
+    <string name="list_item_user_games_quick_button">Quick Join</string>
+
     <!--Strings for HostSearchFragment.java-->
     <string name="list_item_host_games_game_pic">Picture of Game</string>
     <string name="list_item_host_games_game_open">2 games open</string>
     <string name="list_item_host_games_button">Host Game</string>
     <string name="fragment_host_search_hint">Search…</string>
 
+    <!--Strings for UserGameFragment.java-->
+    <string name="list_item_games_game_pic">Picture of Game</string>
+    <string name="list_item_games_game_open">No games open</string>
+    <string name="list_item_games_button">Join Game</string>
+
     <!--Strings for menu-->
     <string name="menu_action_logout">Log Out</string>
     <string name="menu_action_settings">Settings</string>
 
+    <!-- Strings for SessionActivity.java -->
+    <string name="alert_dialog_ok">Ok</string>
+    <string name="alert_dialog_two_buttons_title">Alert</string>
+
     <!-- Strings for SessionFragment.java -->
     <string name="session_header_text">Current Session Info</string>
-    <string name="cancel_button_text">Cancel</string>
+    <string name="leave_button_text">Leave</string>
 
     <!-- Strings for DisabledFragment.java -->
     <string name="disabled_text">You are currently in an open session.</string>
     <string name="title_activity_session">SessionActivity</string>
+
+    <!-- Strings for menu_session.xml -->
+    <string name="start_polling">Start polling</string>
+    <string name="stop_polling">Stop polling</string>
+
+    <!-- Strings for PollService.java -->
+    <string name="session_update_title">New Session Update</string>
+    <string name="session_update_text">Session has changed. Click here to check it out!</string>
+    <string name="session_cancelled_title">Session Cancelled</string>
+    <string name="session_cancelled_text">We\'re sorry, but your current session has been cancelled.</string>
 
 </resources>

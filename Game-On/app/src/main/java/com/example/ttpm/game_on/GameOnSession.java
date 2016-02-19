@@ -17,6 +17,14 @@ public class GameOnSession extends ParseObject {
         // default no-args constructor
     }
 
+    public String getSessionId() {
+        return getString("objectId");
+    }
+
+    public void setSessionId(String sessionId) {
+        put("objectId", sessionId);
+    }
+
     public String getGameTitle() {
         return getString("gameTitle");
     }
@@ -40,17 +48,19 @@ public class GameOnSession extends ParseObject {
         put("participants", participants);
     }
 
-    public void addParticipant(String email) {
-        this.add("partipants", email);
+    public void addParticipant(String userId) {
+        JSONArray participants = this.getParticipants();
+        participants.put(userId);
+        this.put("partipants", participants);
     }
 
-    public void removeParticipant(String email) throws org.json.JSONException {
+    public void removeParticipant(String userId) throws org.json.JSONException {
         JSONArray oldListOfParticipants = this.getParticipants();
         JSONArray newListOfParticipants = new JSONArray();
 
         int oldListLength = oldListOfParticipants.length();
         for (int i = 0; i < oldListLength; i++) {
-            if (!oldListOfParticipants.getString(i).equals(email)) {
+            if (!oldListOfParticipants.getString(i).equals(userId)) {
                 newListOfParticipants.put(oldListOfParticipants.getString(i));
             }
         }

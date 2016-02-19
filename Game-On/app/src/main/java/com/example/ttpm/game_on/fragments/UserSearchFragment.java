@@ -9,7 +9,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,24 +17,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.ttpm.game_on.GameOnSession;
-import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
-import com.example.ttpm.game_on.activities.SessionActivity;
-import com.example.ttpm.game_on.activities.SplashActivity;
+import com.example.ttpm.game_on.activities.UserGameActivity;
 import com.example.ttpm.game_on.models.BoardGame;
 import com.example.ttpm.game_on.models.BoardGameCollection;
 import com.parse.FindCallback;
-import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
-
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,19 +35,19 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HostSearchFragment extends android.support.v4.app.Fragment
+public class UserSearchFragment extends android.support.v4.app.Fragment
         implements SearchView.OnQueryTextListener {
 
     private RecyclerView mSearchRecyclerView;
-    private HostSearchAdapter mSearchAdapter;
+    private UserSearchAdapter mSearchAdapter;
     private List<BoardGame> mBoardGames;
 
-    public HostSearchFragment() {
+    public UserSearchFragment() {
     }
 
-    public static HostSearchFragment newInstance()
+    public static UserSearchFragment newInstance()
     {
-        return new HostSearchFragment();
+        return new UserSearchFragment();
     }
 
     @Override
@@ -68,10 +59,10 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_host_search, container, false);
+        View view = inflater.inflate(R.layout.fragment_user_search, container, false);
 
         mSearchRecyclerView = (RecyclerView) view
-                .findViewById(R.id.host_search_recycler_view);
+                .findViewById(R.id.user_search_recycler_view);
 
         return view;
     }
@@ -84,9 +75,10 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
 
         BoardGameCollection boardGameCollection = new BoardGameCollection();
         mBoardGames = boardGameCollection.getBoardGames();
-        queryForBoardGames();
 
-        mSearchAdapter = new HostSearchAdapter(getActivity(), mBoardGames);
+        queryForAllOpenUniqueBoardGames();
+
+        mSearchAdapter = new UserSearchAdapter(getActivity(), mBoardGames);
         mSearchRecyclerView.setAdapter(mSearchAdapter);
     }
 
@@ -113,46 +105,29 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
         return true;
     }
 
-    private void queryForBoardGames() {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("BoardGames");
-        query.orderByAscending("boardName");
+    private void queryForAllOpenUniqueBoardGames() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("GameOnSession");
+        query.orderByAscending("gameTitle");
+        query.whereNotEqualTo("host", ParseUser.getCurrentUser());
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
                 if (e == null) {
                     for (ParseObject boardGameName : objects) {
+                        boolean boardGameExist = false;
                         BoardGame b = new BoardGame();
-                        b.setBoardName(boardGameName.getString("boardName"));
-                        mBoardGames.add(b);
-                        mSearchAdapter.addNewGame(b);
+                        b.setBoardName(boardGameName.getString("gameTitle"));
+                        for (BoardGame boardGame : mBoardGames) {
+                            if (boardGame.getBoardName().toLowerCase()
+                                    .equals(b.getBoardName().toLowerCase())) {
+                                boardGameExist = true;
+                            }
+                        }
+                        if (!boardGameExist) {
+                            mBoardGames.add(b);
+                            mSearchAdapter.addNewGame(b);
+                        }
                     }
-                }
-            }
-        });
-    }
-
-    private void createSession(String gameTitle) {
-        final GameOnSession session = new GameOnSession();
-        session.setGameTitle(gameTitle);
-        session.setHost(ParseUser.getCurrentUser());
-        session.setParticipants(new JSONArray());
-
-        ParseACL acl  = new ParseACL();
-        acl.setPublicReadAccess(true);
-        acl.setPublicWriteAccess(true);
-        session.setACL(acl);
-
-        session.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    // Saved Successfully
-                    QueryPreferences.setStoredSessionId(getActivity(), session.getObjectId());
-                    Intent intent = SessionActivity.newIntent(getActivity());
-                    startActivity(intent);
-                } else {
-                    // The save failed
-                    Log.d("ERROR", "Unable to save session in the background: " + e);
                 }
             }
         });
@@ -172,37 +147,34 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
         return filteredBoardGame;
     }
 
-    /**********************************************************************************************/
-    /*                                Private Inner Classes                                       */
-    /**********************************************************************************************/
-    /**
-     * HostSearchViewHolder is used by RecyclerView to display Views to the user.
-     *
-     * Created by Tony Nguyen on 2/7/2016.
-     */
-    private class HostSearchViewHolder extends RecyclerView.ViewHolder {
+    private class UserSearchViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView mTitleTextView;
+        public TextView mTitleTextView;
         private TextView mSessionsTextView;
-        private Button mHostButton;
+        private Button mListGamesButton;
+        private Button mQuickJoinButton;
 
         private BoardGame mBoardGame;
 
-        public HostSearchViewHolder(View itemView) {
+        public UserSearchViewHolder(View itemView) {
             super(itemView);
 
             mTitleTextView =
-                    (TextView) itemView.findViewById(R.id.list_item_host_games_game_pic);
+                    (TextView) itemView.findViewById(R.id.list_item_user_games_game_pic);
             mSessionsTextView =
-                    (TextView) itemView.findViewById(R.id.list_item_host_games_game_open);
-            mHostButton =
-                    (Button) itemView.findViewById(R.id.list_item_host_games_button);
-            mHostButton.setOnClickListener(new View.OnClickListener() {
+                    (TextView) itemView.findViewById(R.id.list_item_user_games_game_open);
+            mListGamesButton =
+                    (Button) itemView.findViewById(R.id.list_item_user_games_list_button);
+            mListGamesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    createSession(mTitleTextView.getText().toString());
+                    Intent intent = UserGameActivity
+                            .newIntent(getActivity(), mTitleTextView.getText().toString());
+                    startActivity(intent);
                 }
             });
+            mQuickJoinButton =
+                    (Button) itemView.findViewById(R.id.list_item_user_games_quick_button);
         }
 
         public void bindGame(BoardGame boardGame) {
@@ -212,30 +184,24 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
         }
     }
 
-    /**
-     * HostSearchAdapter works with RecyclerView to bind content to RecyclerView.ViewHolder and
-     * display it to the user.
-     *
-     * Created by Tony Nguyen on 2/7/2016.
-     */
-    public class HostSearchAdapter extends RecyclerView.Adapter<HostSearchViewHolder> {
+    public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchViewHolder> {
 
         private LayoutInflater mLayoutInflater;
         private List<BoardGame> mBoardGames;
 
-        public HostSearchAdapter(Context context, List<BoardGame> boardGames) {
+        public UserSearchAdapter(Context context, List<BoardGame> boardGames) {
             mLayoutInflater = LayoutInflater.from(context);
             mBoardGames = new ArrayList<>(boardGames);
         }
 
         @Override
-        public HostSearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = mLayoutInflater.inflate(R.layout.list_item_host_search, parent, false);
-            return new HostSearchViewHolder(view);
+        public UserSearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = mLayoutInflater.inflate(R.layout.list_item_user_search, parent, false);
+            return new UserSearchViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(HostSearchViewHolder holder, int position) {
+        public void onBindViewHolder(UserSearchViewHolder holder, int position) {
             BoardGame boardGame = mBoardGames.get(position);
             holder.bindGame(boardGame);
         }
@@ -315,8 +281,3 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
         }
     }
 }
-
-
-
-
-

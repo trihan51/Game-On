@@ -49,7 +49,7 @@ public class HostSessionPage extends AppCompatActivity {
                     TextView sessionInfoOutput = (TextView) findViewById(R.id.sessionInfoOutputArea);
                     sessionInfoOutput.setText("");
                     sessionInfoOutput.append("The game is: " + currentGameOnSession.getGameTitle() + "\n");
-                    sessionInfoOutput.append("The host is: " + currentGameOnSession.getHost().getUsername());
+                    sessionInfoOutput.append("The host is: " + currentGameOnSession.getHost());
                 } else {
                     Toast.makeText(HostSessionPage.this, "Error!", Toast.LENGTH_SHORT).show();
                 }

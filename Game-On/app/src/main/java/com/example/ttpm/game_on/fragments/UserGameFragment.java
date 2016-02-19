@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ttpm.game_on.GameOnSession;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.SplashActivity;
 import com.example.ttpm.game_on.models.BoardGame;
@@ -38,8 +39,8 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
             "com.example.ttpm.game_on.board_game_name_id";
 
     private RecyclerView mSearchRecyclerView;
-    private GameSearchAdapter mSearchAdapter;
-    private List<BoardGame> mBoardGames;
+    private SessionSearchAdapter mSearchAdapter;
+    private List<GameOnSession> mGameOnSessions;
 
     private String boardGameName;
 
@@ -77,12 +78,28 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
 
         mSearchRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        BoardGameCollection boardGameCollection = new BoardGameCollection();
-        mBoardGames = boardGameCollection.getBoardGames();
-        queryForSpecificBoardGames();
+        mGameOnSessions = new ArrayList<GameOnSession>();
+        queryForSpecificGameOnSessions();
 
-        mSearchAdapter = new GameSearchAdapter(getActivity(), mBoardGames);
+        mSearchAdapter = new SessionSearchAdapter(getActivity(), mGameOnSessions);
         mSearchRecyclerView.setAdapter(mSearchAdapter);
+    }
+
+    private void queryForSpecificGameOnSessions() {
+        ParseQuery<GameOnSession> query = GameOnSession.getQuery();
+        query.whereEqualTo("gameTitle", boardGameName);
+        query.whereNotEqualTo("host", ParseUser.getCurrentUser());
+        query.findInBackground(new FindCallback<GameOnSession>() {
+            @Override
+            public void done(List<GameOnSession> objects, ParseException e) {
+                if (e == null) {
+                    for (GameOnSession session : objects) {
+                        mGameOnSessions.add(session);
+                        mSearchAdapter.addNewSession(session);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -112,101 +129,82 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
         }
     }
 
-    private void queryForSpecificBoardGames() {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("GameOnSession");
-        query.whereEqualTo("gameTitle", boardGameName);
-        query.whereNotEqualTo("host", ParseUser.getCurrentUser());
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> objects, ParseException e) {
-                if (e == null) {
-                    for (ParseObject boardGameName : objects) {
-                        BoardGame b = new BoardGame();
-                        b.setBoardName(boardGameName.getString("boardName"));
-                        mBoardGames.add(b);
-                        mSearchAdapter.addNewGame(b);
-                    }
-                }
-            }
-        });
-    }
+    private class SessionSearchViewHolder extends RecyclerView.ViewHolder {
 
-    private class GameSearchViewHolder extends RecyclerView.ViewHolder {
+        private GameOnSession mSession;
 
-        public TextView mTitleTextView;
-        private TextView mSessionsTextView;
+        private TextView mSessionIdTextView;
+        private TextView mGameTitleTextView;
         private Button mJoinButton;
 
-        public GameSearchViewHolder(View itemView) {
+        public SessionSearchViewHolder(View itemView) {
             super(itemView);
 
-            mTitleTextView =
-                    (TextView) itemView.findViewById(R.id.list_item_games_game_pic);
-            mSessionsTextView =
-                    (TextView) itemView.findViewById(R.id.list_item_games_game_open);
-            mJoinButton =
-                    (Button) itemView.findViewById(R.id.list_item_games_button);
+            mSessionIdTextView = (TextView) itemView.findViewById(R.id.list_item_session_id);
+            mGameTitleTextView = (TextView) itemView.findViewById(R.id.list_item_game_title);
+            mJoinButton = (Button) itemView.findViewById(R.id.list_item_join_button);
+
             mJoinButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getActivity(), "You joined this open game! Position: "
-                            + Integer.toString(getAdapterPosition()), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "You clicked me!", Toast.LENGTH_SHORT).show();
                 }
             });
         }
 
-        public void bindGame(BoardGame boardGame) {
-            mTitleTextView.setText(boardGameName);
-            mSessionsTextView.setText(Integer.toString(R.id.list_item_host_games_game_open));
+        public void bindSession(GameOnSession session) {
+            mSession = session;
+            mSessionIdTextView.setText(session.getObjectId());
+            mGameTitleTextView.setText(session.getGameTitle());
         }
     }
 
-    public class GameSearchAdapter extends RecyclerView.Adapter<GameSearchViewHolder> {
+    public class SessionSearchAdapter extends RecyclerView.Adapter<SessionSearchViewHolder> {
 
         private LayoutInflater mLayoutInflater;
-        private List<BoardGame> mBoardGames;
+        private List<GameOnSession> mGameOnSessions;
 
-        public GameSearchAdapter(Context context, List<BoardGame> boardGames) {
+        public SessionSearchAdapter(Context context, List<GameOnSession> gameOnSessions) {
             mLayoutInflater = LayoutInflater.from(context);
-            mBoardGames = new ArrayList<>(boardGames);
+            mGameOnSessions = new ArrayList<>(gameOnSessions);
         }
 
         @Override
-        public GameSearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public SessionSearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = mLayoutInflater.inflate(R.layout.list_item_user_game, parent, false);
-            return new GameSearchViewHolder(view);
+            return new SessionSearchViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(GameSearchViewHolder holder, int position) {
-            BoardGame boardGame = mBoardGames.get(position);
-            holder.bindGame(boardGame);
+        public void onBindViewHolder(SessionSearchViewHolder holder, int position) {
+            GameOnSession session = mGameOnSessions.get(position);
+            holder.bindSession(session);
         }
 
         @Override
         public int getItemCount() {
-            return mBoardGames.size();
+            return mGameOnSessions.size();
         }
 
-        public void addNewGame(BoardGame boardGame) {
-            mBoardGames.add(boardGame);
+        public void addNewSession(GameOnSession session) {
+            mGameOnSessions.add(session);
             notifyDataSetChanged();
         }
 
-        public BoardGame removeGame(int position) {
-            BoardGame model = mBoardGames.remove(position);
+        public GameOnSession removeSession(int position) {
+            GameOnSession model = mGameOnSessions.remove(position);
             notifyItemRemoved(position);
             return model;
         }
 
-        public void addGame(int position, BoardGame boardGame) {
-            mBoardGames.add(position, boardGame);
+        public void addSession(int position, GameOnSession session) {
+            mGameOnSessions.add(position, session);
             notifyItemInserted(position);
         }
 
-        public void moveGame(int fromPosition, int toPosition) {
-            BoardGame model = mBoardGames.remove(fromPosition);
-            mBoardGames.add(toPosition, model);
+        public void moveSession(int fromPosition, int toPosition) {
+            GameOnSession model = mGameOnSessions.remove(fromPosition);
+            mGameOnSessions.add(toPosition, model);
             notifyItemMoved(fromPosition, toPosition);
         }
     }

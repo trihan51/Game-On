@@ -17,6 +17,14 @@ public class GameOnSession extends ParseObject {
         // default no-args constructor
     }
 
+    public String getSessionId() {
+        return getString("objectId");
+    }
+
+    public void setSessionId(String sessionId) {
+        put("objectId", sessionId);
+    }
+
     public String getGameTitle() {
         return getString("gameTitle");
     }

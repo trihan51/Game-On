@@ -34,11 +34,18 @@
             android:textSize="16sp" />
 
         <Button
-            android:id="@+id/list_item_user_games_button"
+            android:id="@+id/list_item_user_games_list_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/list_item_user_games_button" />
+            android:text="@string/list_item_user_games_list_button" />
+
+        <Button
+            android:id="@+id/list_item_user_games_quick_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/list_item_user_games_quick_button" />
 
     </LinearLayout>
 

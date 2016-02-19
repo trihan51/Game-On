@@ -41,9 +41,9 @@ public class HomePagerActivity extends AppCompatActivity {
                     case 0:
                         return UserProfileFragment.newInstance();
                     case 1:
-                        return HostSearchFragment.newInstance();
-                    default:
                         return UserSearchFragment.newInstance();
+                    default:
+                        return HostSearchFragment.newInstance();
                 }
             }
 

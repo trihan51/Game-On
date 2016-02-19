@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -183,7 +184,7 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
 
         private TextView mTitleTextView;
         private TextView mSessionsTextView;
-        private TextView mHostButton;
+        private Button mHostButton;
 
         private BoardGame mBoardGame;
 
@@ -195,7 +196,7 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
             mSessionsTextView =
                     (TextView) itemView.findViewById(R.id.list_item_host_games_game_open);
             mHostButton =
-                    (TextView) itemView.findViewById(R.id.list_item_host_games_button);
+                    (Button) itemView.findViewById(R.id.list_item_host_games_button);
             mHostButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

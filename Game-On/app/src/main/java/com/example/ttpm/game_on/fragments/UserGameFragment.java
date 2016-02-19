@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -134,7 +135,7 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
 
         public TextView mTitleTextView;
         private TextView mSessionsTextView;
-        private TextView mJoinButton;
+        private Button mJoinButton;
 
         public GameSearchViewHolder(View itemView) {
             super(itemView);
@@ -144,7 +145,7 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
             mSessionsTextView =
                     (TextView) itemView.findViewById(R.id.list_item_games_game_open);
             mJoinButton =
-                    (TextView) itemView.findViewById(R.id.list_item_games_button);
+                    (Button) itemView.findViewById(R.id.list_item_games_button);
             mJoinButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

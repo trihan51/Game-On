@@ -15,11 +15,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.ttpm.game_on.R;
-import com.example.ttpm.game_on.activities.SplashActivity;
 import com.example.ttpm.game_on.activities.UserGameActivity;
 import com.example.ttpm.game_on.models.BoardGame;
 import com.example.ttpm.game_on.models.BoardGameCollection;
@@ -152,7 +151,8 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
 
         public TextView mTitleTextView;
         private TextView mSessionsTextView;
-        private TextView mJoinButton;
+        private Button mListGamesButton;
+        private Button mQuickJoinButton;
 
         private BoardGame mBoardGame;
 
@@ -163,9 +163,9 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
                     (TextView) itemView.findViewById(R.id.list_item_user_games_game_pic);
             mSessionsTextView =
                     (TextView) itemView.findViewById(R.id.list_item_user_games_game_open);
-            mJoinButton =
-                    (TextView) itemView.findViewById(R.id.list_item_user_games_button);
-            mJoinButton.setOnClickListener(new View.OnClickListener() {
+            mListGamesButton =
+                    (Button) itemView.findViewById(R.id.list_item_user_games_list_button);
+            mListGamesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = UserGameActivity
@@ -173,6 +173,8 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
                     startActivity(intent);
                 }
             });
+            mQuickJoinButton =
+                    (Button) itemView.findViewById(R.id.list_item_user_games_quick_button);
         }
 
         public void bindGame(BoardGame boardGame) {

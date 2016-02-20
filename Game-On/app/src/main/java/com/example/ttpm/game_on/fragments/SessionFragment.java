@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,15 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ttpm.game_on.GameOnSession;
-import com.example.ttpm.game_on.HostSessionPage;
-import com.example.ttpm.game_on.NearbySessionsMain;
-import com.example.ttpm.game_on.PollService;
-import com.example.ttpm.game_on.QueryPreferences;
-import com.example.ttpm.game_on.R;
-import com.example.ttpm.game_on.activities.SessionActivity;
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.HomePagerActivity;
+import com.example.ttpm.game_on.activities.SessionActivity;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -43,6 +37,8 @@ public class SessionFragment extends VisibleFragment {
     private static final String ARG_SESSION_ID = "session_id";
 
     private static final String TAG = "ERROR";
+
+    ParseUser HostOfTheGame = new ParseUser();
 
     private GameOnSession mCurrentGameOnSession;
     private boolean mCurrentUserIsHost;
@@ -94,16 +90,24 @@ public class SessionFragment extends VisibleFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_session, container, false);
 
+
         ParseQuery<GameOnSession> query = GameOnSession.getQuery();
         query.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(getActivity()));
+        query.include("host");
         query.findInBackground(new FindCallback<GameOnSession>() {
             @Override
             public void done(List<GameOnSession> list, ParseException e) {
                 if (e == null) {
+
+                    //Set the host of the game session to the pointer of the User of this session
+                    HostOfTheGame = list.get(0).getParseUser("host");
+
+
                     mCurrentGameOnSession = list.get(0);
                     mCurrentUserIsHost = (mCurrentGameOnSession.getHost().getObjectId() == ParseUser.getCurrentUser().getObjectId());
 
                     sessionInfoOutput = (LinearLayout) view.findViewById(R.id.sessionInfoOutputArea);
+
 
                     displayGameTitle(sessionInfoOutput);
                     displaySessionHost(sessionInfoOutput);
@@ -150,9 +154,10 @@ public class SessionFragment extends VisibleFragment {
     }
 
     private void displaySessionHost(LinearLayout displayArea) {
-        TextView hostNameTextView = new TextView(getActivity());
-        hostNameTextView.append("Host: " + mCurrentGameOnSession.getHost().getEmail());
+       TextView hostNameTextView = new TextView(getActivity());
+        hostNameTextView.append("Host: " + HostOfTheGame.getUsername());
         displayArea.addView(hostNameTextView);
+
     }
 
     private void displaySessionParticipants(LinearLayout displayArea) {

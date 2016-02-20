@@ -26,6 +26,7 @@ import com.parse.ParseUser;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,6 +40,8 @@ public class SessionFragment extends VisibleFragment {
     private static final String TAG = "ERROR";
 
     ParseUser HostOfTheGame = new ParseUser();
+    ParseUser ParticipantInGame = new ParseUser();
+    private List<ParseUser> particks ;
 
     private GameOnSession mCurrentGameOnSession;
     private boolean mCurrentUserIsHost;
@@ -113,6 +116,7 @@ public class SessionFragment extends VisibleFragment {
                     displaySessionHost(sessionInfoOutput);
                     displaySessionParticipants(sessionInfoOutput);
 
+
                     leaveButton = (Button) view.findViewById(R.id.leaveButton);
                     leaveButton.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -160,14 +164,46 @@ public class SessionFragment extends VisibleFragment {
 
     }
 
-    private void displaySessionParticipants(LinearLayout displayArea) {
+    private void displaySessionParticipants( LinearLayout displayArea) {
         JSONArray participants = mCurrentGameOnSession.getParticipants();
+
         int length = participants.length();
+
+        for ( int i = 0; i < length-1; i++) {
+            ParseQuery<ParseUser> query = ParseQuery.getQuery("_User");
+            try {
+                query.whereEqualTo("objectId", participants.getString(i));
+                Log.d("Particiy", participants.getString(i));
+                query.findInBackground(new FindCallback<ParseUser>() {
+                    @Override
+                    public void done(List<ParseUser> objects, ParseException e) {
+                        //ParticipantInGame = objects.get
+                        particks = new ArrayList<ParseUser>();
+                        for (ParseUser users : objects) {
+
+                            particks.add(users);
+
+
+                            System.out.println(particks);
+                        }
+
+                        displaySessionParticipantsEmail(sessionInfoOutput);
+
+                    }
+
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
 
         try {
             for (int i = 0; i < length; i++) {
                 int participantNum = i + 1;
                 TextView participantNameTextView = new TextView(getActivity());
+                //TextView participantNameTextView = new TextView(getActivity());
                 participantNameTextView.setText("Participant " + participantNum + ": " + participants.getString(i));
                 displayArea.addView(participantNameTextView);
             }
@@ -175,6 +211,19 @@ public class SessionFragment extends VisibleFragment {
             e.getStackTrace();
         }
 
+
+    }
+
+    private void displaySessionParticipantsEmail( LinearLayout displayArea)
+    {
+        for ( int i = 0; i< particks.size(); i++)
+        {
+
+            Log.d("partick", particks.get(i).getUsername());
+            TextView participantEmailTextView = new TextView(getActivity());
+            participantEmailTextView.setText("Participant" + ": " + particks.get(i).getUsername());
+            displayArea.addView(participantEmailTextView);
+        }
     }
 
 

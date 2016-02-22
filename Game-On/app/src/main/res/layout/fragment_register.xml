@@ -54,4 +54,17 @@
         android:layout_marginTop="95dp"
         android:textColor="#ffffff"
         android:background="#000000" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/NameTextField"
+        android:textColorHint="#ffffff"
+       android:layout_centerHorizontal="true"
+        android:hint="Enter Name..."
+        android:layout_alignLeft="@+id/register_email_edittext"
+        android:layout_alignStart="@+id/register_email_edittext"
+       />
 </RelativeLayout>

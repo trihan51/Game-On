@@ -117,6 +117,7 @@ public class SessionFragment extends VisibleFragment {
                     displaySessionParticipants(sessionInfoOutput);
 
 
+
                     leaveButton = (Button) view.findViewById(R.id.leaveButton);
                     leaveButton.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -169,7 +170,7 @@ public class SessionFragment extends VisibleFragment {
 
         int length = participants.length();
 
-        for ( int i = 0; i < length-1; i++) {
+        for ( int i = 0; i < length; i++) {
             ParseQuery<ParseUser> query = ParseQuery.getQuery("_User");
             try {
                 query.whereEqualTo("objectId", participants.getString(i));
@@ -183,11 +184,13 @@ public class SessionFragment extends VisibleFragment {
 
                             particks.add(users);
 
+                            displaySessionParticipantsEmail(sessionInfoOutput);
 
-                            System.out.println(particks);
+
+
                         }
 
-                        displaySessionParticipantsEmail(sessionInfoOutput);
+
 
                     }
 
@@ -219,11 +222,13 @@ public class SessionFragment extends VisibleFragment {
         for ( int i = 0; i< particks.size(); i++)
         {
 
+            int particNum = i + 1;
             Log.d("partick", particks.get(i).getUsername());
             TextView participantEmailTextView = new TextView(getActivity());
-            participantEmailTextView.setText("Participant" + ": " + particks.get(i).getUsername());
+            participantEmailTextView.setText("Participant" + particNum + ": " + particks.get(i).getUsername());
             displayArea.addView(participantEmailTextView);
         }
+
     }
 
 

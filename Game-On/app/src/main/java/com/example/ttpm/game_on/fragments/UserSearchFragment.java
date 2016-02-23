@@ -9,6 +9,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,8 +18,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.ttpm.game_on.GameOnSession;
+import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
+import com.example.ttpm.game_on.activities.SessionActivity;
 import com.example.ttpm.game_on.activities.UserGameActivity;
 import com.example.ttpm.game_on.models.BoardGame;
 import com.example.ttpm.game_on.models.BoardGameCollection;
@@ -27,6 +32,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +47,7 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
     private RecyclerView mSearchRecyclerView;
     private UserSearchAdapter mSearchAdapter;
     private List<BoardGame> mBoardGames;
+    private GameOnSession mQuickJoinSession;
 
     public UserSearchFragment() {
     }
@@ -175,6 +182,48 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
             });
             mQuickJoinButton =
                     (Button) itemView.findViewById(R.id.list_item_user_games_quick_button);
+            mQuickJoinButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    quickJoinSession();
+                }
+            });
+        }
+
+        private void quickJoinSession() {
+            ParseQuery<GameOnSession> query = GameOnSession.getQuery();
+            query.whereEqualTo("gameTitle", mTitleTextView.getText());
+            query.whereNotEqualTo("host", ParseUser.getCurrentUser());
+            query.addDescendingOrder("createdAt");
+            query.setLimit(1);
+            query.findInBackground(new FindCallback<GameOnSession>() {
+                @Override
+                public void done(List<GameOnSession> objects, ParseException e) {
+                    if (e == null) {
+                        for (GameOnSession session : objects) {
+                            mQuickJoinSession = session;
+                            mQuickJoinSession.addParticipant
+                                    (ParseUser.getCurrentUser().getObjectId());
+                            mQuickJoinSession.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if (e == null) {
+                                        // Saved Successfully
+                                        QueryPreferences.setStoredSessionId(getActivity(),
+                                                mQuickJoinSession.getObjectId());
+                                        Intent intent = SessionActivity.newIntent(getActivity());
+                                        startActivity(intent);
+                                    } else {
+                                        // The save failed
+                                        Log.d("ERROR",
+                                                "Unable to add current user to session: " + e);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            });
         }
 
         public void bindGame(BoardGame boardGame) {

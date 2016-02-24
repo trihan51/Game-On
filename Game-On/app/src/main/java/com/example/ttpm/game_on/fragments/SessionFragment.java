@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,20 +14,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ttpm.game_on.GameOnSession;
-import com.example.ttpm.game_on.HostSessionPage;
-import com.example.ttpm.game_on.NearbySessionsMain;
-import com.example.ttpm.game_on.PollService;
-import com.example.ttpm.game_on.QueryPreferences;
-import com.example.ttpm.game_on.R;
-import com.example.ttpm.game_on.activities.SessionActivity;
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.HomePagerActivity;
+import com.example.ttpm.game_on.activities.SessionActivity;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.List;
 import java.util.UUID;
@@ -39,10 +36,15 @@ public class SessionFragment extends VisibleFragment {
 
     private static final String ARG_SESSION_ID = "session_id";
 
-    GameOnSession currentGameOnSession;
+    private static final String TAG = "ERROR";
 
-    LinearLayout sessionInfoOutput;
-    Button cancelButton;
+    ParseUser HostOfTheGame = new ParseUser();
+
+    private GameOnSession mCurrentGameOnSession;
+    private boolean mCurrentUserIsHost;
+
+    private LinearLayout sessionInfoOutput;
+    private Button leaveButton;
 
     public static SessionFragment newInstance(UUID sessionId) {
         Bundle args = new Bundle();
@@ -88,19 +90,48 @@ public class SessionFragment extends VisibleFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_session, container, false);
 
+
         ParseQuery<GameOnSession> query = GameOnSession.getQuery();
         query.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(getActivity()));
+        query.include("host");
         query.findInBackground(new FindCallback<GameOnSession>() {
             @Override
             public void done(List<GameOnSession> list, ParseException e) {
                 if (e == null) {
-                    currentGameOnSession = list.get(0);
+
+                    //Set the host of the game session to the pointer of the User of this session
+                    HostOfTheGame = list.get(0).getParseUser("host");
+
+
+                    mCurrentGameOnSession = list.get(0);
+                    mCurrentUserIsHost = (mCurrentGameOnSession.getHost().getObjectId() == ParseUser.getCurrentUser().getObjectId());
+
                     sessionInfoOutput = (LinearLayout) view.findViewById(R.id.sessionInfoOutputArea);
+
 
                     displayGameTitle(sessionInfoOutput);
                     displaySessionHost(sessionInfoOutput);
                     displaySessionParticipants(sessionInfoOutput);
 
+                    leaveButton = (Button) view.findViewById(R.id.leaveButton);
+                    leaveButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (mCurrentUserIsHost) {
+                                mCurrentGameOnSession.deleteInBackground();
+                            } else {
+                                try {
+                                    mCurrentGameOnSession.removeParticipant(ParseUser.getCurrentUser().getObjectId());
+                                    mCurrentGameOnSession.saveInBackground();
+                                } catch (JSONException e) {
+                                    Log.d(TAG, "JSONException occurred: " + e);
+                                }
+                            }
+                            QueryPreferences.setStoredSessionId(getActivity(), null);
+                            Intent intent = new Intent(getActivity(), HomePagerActivity.class);
+                            startActivity(intent);
+                        }
+                    });
                 } else {
                     // It could be either because the session no longer exists or
                     // there really was an error when trying to query Parse.
@@ -113,42 +144,31 @@ public class SessionFragment extends VisibleFragment {
             }
         });
 
-        cancelButton = (Button) view.findViewById(R.id.cancelButton);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentGameOnSession.deleteInBackground();
-
-                QueryPreferences.setStoredSessionId(getActivity(), null);
-
-                Intent intent = new Intent(getActivity(), HomePagerActivity.class);
-                startActivity(intent);
-            }
-        });
-
         return view;
     }
 
     private void displayGameTitle(LinearLayout displayArea) {
         TextView gameTitleTextView = new TextView(getActivity());
-        gameTitleTextView.append("Game Title: " + currentGameOnSession.getGameTitle() + "\n");
+        gameTitleTextView.append("Game Title: " + mCurrentGameOnSession.getGameTitle() + "\n");
         displayArea.addView(gameTitleTextView);
     }
 
     private void displaySessionHost(LinearLayout displayArea) {
-        TextView hostNameTextView = new TextView(getActivity());
-        hostNameTextView.append("Host: " + currentGameOnSession.getHost().getUsername());
+       TextView hostNameTextView = new TextView(getActivity());
+        hostNameTextView.append("Host: " + HostOfTheGame.getUsername());
         displayArea.addView(hostNameTextView);
+
     }
 
     private void displaySessionParticipants(LinearLayout displayArea) {
-        JSONArray participants = currentGameOnSession.getParticipants();
+        JSONArray participants = mCurrentGameOnSession.getParticipants();
         int length = participants.length();
 
         try {
             for (int i = 0; i < length; i++) {
+                int participantNum = i + 1;
                 TextView participantNameTextView = new TextView(getActivity());
-                participantNameTextView.setText("Participant " + i + ": " + participants.getString(i));
+                participantNameTextView.setText("Participant " + participantNum + ": " + participants.getString(i));
                 displayArea.addView(participantNameTextView);
             }
         } catch (org.json.JSONException e) {

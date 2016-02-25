@@ -1,7 +1,9 @@
 package com.example.ttpm.game_on.activities;
 
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,9 +20,13 @@ import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.fragments.HostSearchFragment;
 import com.example.ttpm.game_on.fragments.UserSearchFragment;
 import com.example.ttpm.game_on.fragments.UserProfileFragment;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.parse.ParseUser;
 
 public class HomePagerActivity extends AppCompatActivity {
+
+    private static final int REQUEST_ERROR = 0;
 
     public static Intent newIntent(Context packageContext) {
         Intent intent = new Intent(packageContext, HomePagerActivity.class);
@@ -52,6 +58,27 @@ public class HomePagerActivity extends AppCompatActivity {
                 return 3;
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        int errorCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (errorCode != ConnectionResult.SUCCESS) {
+            Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(errorCode, this, REQUEST_ERROR,
+                    new DialogInterface.OnCancelListener() {
+
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            // if services are unavailable, perform an action
+                            // TODO: 2/24/2016 Need to implement what happens when services are unavailable
+
+                        }
+                    });
+
+            errorDialog.show();
+        }
     }
 
 

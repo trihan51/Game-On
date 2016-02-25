@@ -1,6 +1,7 @@
 package com.example.ttpm.game_on.models;
 
 import com.parse.ParseClassName;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -76,14 +77,13 @@ public class GameOnSession extends ParseObject {
         this.put("Open", status);
     }
 
-    // TODO: 11/15/2015 uncomment the getters and setters below after incorporating location API.
-//    public ParseGeoPoint getLocation() {
-//        return getParseGeoPoint("location");
-//    }
-//
-//    public void setLocation(ParseGeoPoint value) {
-//        put("location", value);
-//    }
+    public ParseGeoPoint getLocation() {
+        return getParseGeoPoint("location");
+    }
+
+    public void setLocation(ParseGeoPoint value) {
+        put("location", value);
+    }
 
     public static ParseQuery<GameOnSession> getQuery() {
         return ParseQuery.getQuery(GameOnSession.class);

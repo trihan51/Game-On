@@ -4,6 +4,7 @@ package com.example.ttpm.game_on.fragments;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,18 +19,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.ttpm.game_on.GameOnSession;
+import com.example.ttpm.game_on.models.GameOnSession;
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.SessionActivity;
-import com.example.ttpm.game_on.activities.SplashActivity;
 import com.example.ttpm.game_on.models.BoardGame;
 import com.example.ttpm.game_on.models.BoardGameCollection;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.parse.FindCallback;
 import com.parse.ParseACL;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -46,10 +50,14 @@ import java.util.List;
  */
 public class HostSearchFragment extends android.support.v4.app.Fragment
         implements SearchView.OnQueryTextListener {
+    private static final String TAG = "HostSearchFragment";
 
     private RecyclerView mSearchRecyclerView;
     private HostSearchAdapter mSearchAdapter;
     private List<BoardGame> mBoardGames;
+
+    private GoogleApiClient mClient;
+    private Location mCurrentLocation;
 
     public HostSearchFragment() {
     }
@@ -63,6 +71,36 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        mClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                    @Override
+                    public void onConnected(Bundle bundle) {
+                        getActivity().invalidateOptionsMenu();
+                        getCurrentLocation();
+                    }
+
+                    @Override
+                    public void onConnectionSuspended(int i) {
+
+                    }
+                })
+                .build();
+    }
+
+    private void getCurrentLocation() {
+        LocationRequest request = LocationRequest.create();
+        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        request.setNumUpdates(1);
+        request.setInterval(0);
+        LocationServices.FusedLocationApi.requestLocationUpdates(mClient, request, new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                Log.i(TAG, "Got a fix: " + location);
+                mCurrentLocation = location;
+            }
+        });
     }
 
     @Override
@@ -88,6 +126,21 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
 
         mSearchAdapter = new HostSearchAdapter(getActivity(), mBoardGames);
         mSearchRecyclerView.setAdapter(mSearchAdapter);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        getActivity().invalidateOptionsMenu();
+        mClient.connect();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        mClient.disconnect();
     }
 
     @Override
@@ -126,33 +179,6 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
                         mBoardGames.add(b);
                         mSearchAdapter.addNewGame(b);
                     }
-                }
-            }
-        });
-    }
-
-    private void createSession(String gameTitle) {
-        final GameOnSession session = new GameOnSession();
-        session.setGameTitle(gameTitle);
-        session.setHost(ParseUser.getCurrentUser());
-        session.setParticipants(new JSONArray());
-
-        ParseACL acl  = new ParseACL();
-        acl.setPublicReadAccess(true);
-        acl.setPublicWriteAccess(true);
-        session.setACL(acl);
-
-        session.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    // Saved Successfully
-                    QueryPreferences.setStoredSessionId(getActivity(), session.getObjectId());
-                    Intent intent = SessionActivity.newIntent(getActivity());
-                    startActivity(intent);
-                } else {
-                    // The save failed
-                    Log.d("ERROR", "Unable to save session in the background: " + e);
                 }
             }
         });
@@ -210,6 +236,35 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
             mTitleTextView.setText(mBoardGame.getBoardName());
             mSessionsTextView.setText(Integer.toString(R.id.list_item_host_games_game_open));
         }
+    }
+
+    private void createSession(String gameTitle) {
+        final GameOnSession session = new GameOnSession();
+        session.setGameTitle(gameTitle);
+        session.setHost(ParseUser.getCurrentUser());
+        session.setParticipants(new JSONArray());
+        session.setOpenStatus(true);
+        session.setLocation(new ParseGeoPoint(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
+
+        ParseACL acl  = new ParseACL();
+        acl.setPublicReadAccess(true);
+        acl.setPublicWriteAccess(true);
+        session.setACL(acl);
+
+        session.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    // Saved Successfully
+                    QueryPreferences.setStoredSessionId(getActivity(), session.getObjectId());
+                    Intent intent = SessionActivity.newIntent(getActivity());
+                    startActivity(intent);
+                } else {
+                    // The save failed
+                    Log.d("ERROR", "Unable to save session in the background: " + e);
+                }
+            }
+        });
     }
 
     /**

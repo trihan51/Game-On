@@ -1,5 +1,6 @@
 package com.example.ttpm.game_on;
 
+import com.example.ttpm.game_on.models.GameOnSession;
 import com.parse.Parse;
 import com.parse.ParseObject;
 

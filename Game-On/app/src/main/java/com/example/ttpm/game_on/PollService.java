@@ -10,13 +10,12 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.os.SystemClock;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.ttpm.game_on.activities.SessionActivity;
+import com.example.ttpm.game_on.models.GameOnSession;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;

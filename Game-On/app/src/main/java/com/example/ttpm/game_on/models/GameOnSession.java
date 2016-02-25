@@ -1,4 +1,4 @@
-package com.example.ttpm.game_on;
+package com.example.ttpm.game_on.models;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
@@ -41,7 +41,6 @@ public class GameOnSession extends ParseObject {
         put("host", value);
     }
 
-    // TODO: 11/15/2015 add a participants property. This can be represented using an ArrayList.
     public JSONArray getParticipants() { return getJSONArray("participants"); }
 
     public void setParticipants(JSONArray participants) {
@@ -69,6 +68,14 @@ public class GameOnSession extends ParseObject {
         this.put("participants", newListOfParticipants);
     }
 
+    public boolean isOpen() {
+        return (this.getBoolean("Open") == true);
+    }
+
+    public void setOpenStatus(boolean status) {
+        this.put("Open", status);
+    }
+
     // TODO: 11/15/2015 uncomment the getters and setters below after incorporating location API.
 //    public ParseGeoPoint getLocation() {
 //        return getParseGeoPoint("location");
@@ -77,8 +84,6 @@ public class GameOnSession extends ParseObject {
 //    public void setLocation(ParseGeoPoint value) {
 //        put("location", value);
 //    }
-
-    // TODO: 11/15/2015 add a createdAt property
 
     public static ParseQuery<GameOnSession> getQuery() {
         return ParseQuery.getQuery(GameOnSession.class);

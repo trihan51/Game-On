@@ -43,7 +43,7 @@
         <activity android:name=".activities.HomePagerActivity" >
         </activity>
         <activity
-            android:name=".GameOnSession"
+            android:name=".models.GameOnSession"
             android:label="@string/title_activity_game_on_session" >
         </activity>
         <activity

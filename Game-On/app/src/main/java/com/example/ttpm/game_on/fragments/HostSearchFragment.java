@@ -18,13 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.ttpm.game_on.GameOnSession;
+import com.example.ttpm.game_on.models.GameOnSession;
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.SessionActivity;
-import com.example.ttpm.game_on.activities.SplashActivity;
 import com.example.ttpm.game_on.models.BoardGame;
 import com.example.ttpm.game_on.models.BoardGameCollection;
 import com.parse.FindCallback;
@@ -136,6 +134,7 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
         session.setGameTitle(gameTitle);
         session.setHost(ParseUser.getCurrentUser());
         session.setParticipants(new JSONArray());
+        session.setOpenStatus(true);
 
         ParseACL acl  = new ParseACL();
         acl.setPublicReadAccess(true);

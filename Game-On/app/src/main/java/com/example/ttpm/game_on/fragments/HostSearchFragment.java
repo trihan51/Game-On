@@ -244,7 +244,7 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
         session.setHost(ParseUser.getCurrentUser());
         session.setParticipants(new JSONArray());
         session.setOpenStatus(true);
-        session.setLocation(new ParseGeoPoint(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
+//        session.setLocation(new ParseGeoPoint(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
 
         ParseACL acl  = new ParseACL();
         acl.setPublicReadAccess(true);

@@ -41,7 +41,8 @@ public class SessionFragment extends VisibleFragment {
 
     ParseUser HostOfTheGame = new ParseUser();
     ParseUser ParticipantInGame = new ParseUser();
-    private List<ParseUser> particks ;
+    private List<ParseUser> particks = new ArrayList<ParseUser>();
+
 
     private GameOnSession mCurrentGameOnSession;
     private boolean mCurrentUserIsHost;
@@ -115,6 +116,9 @@ public class SessionFragment extends VisibleFragment {
                     displayGameTitle(sessionInfoOutput);
                     displaySessionHost(sessionInfoOutput);
                     displaySessionParticipants(sessionInfoOutput);
+                   // displaySessionParticipantsEmail(sessionInfoOutput);
+                    System.out.print(particks.size());
+                    
 
 
 
@@ -169,28 +173,25 @@ public class SessionFragment extends VisibleFragment {
         JSONArray participants = mCurrentGameOnSession.getParticipants();
 
         int length = participants.length();
+        System.out.println("Length of Participants Array is:" + length);
+       // particks = new ArrayList<ParseUser>();
 
-        for ( int i = 0; i < length; i++) {
+        for ( int i = 0; i < length ; i++) {
+            System.out.println("Length of Participants Array is:" + length);
             ParseQuery<ParseUser> query = ParseQuery.getQuery("_User");
             try {
                 query.whereEqualTo("objectId", participants.getString(i));
-                Log.d("Particiy", participants.getString(i));
+
                 query.findInBackground(new FindCallback<ParseUser>() {
                     @Override
                     public void done(List<ParseUser> objects, ParseException e) {
                         //ParticipantInGame = objects.get
-                        particks = new ArrayList<ParseUser>();
+
                         for (ParseUser users : objects) {
 
                             particks.add(users);
-
-                            displaySessionParticipantsEmail(sessionInfoOutput);
-
-
-
                         }
-
-
+                        //displaySessionParticipantsEmail(particks.get(i));
 
                     }
 
@@ -201,14 +202,15 @@ public class SessionFragment extends VisibleFragment {
 
         }
 
-
         try {
-            for (int i = 0; i < length; i++) {
-                int participantNum = i + 1;
+
+            for (int d = 0; d < length; d++) {
+                int participantNum = d + 1;
                 TextView participantNameTextView = new TextView(getActivity());
                 //TextView participantNameTextView = new TextView(getActivity());
-                participantNameTextView.setText("Participant " + participantNum + ": " + participants.getString(i));
+                participantNameTextView.setText("Participant " + participantNum + ": " + participants.getString(d));
                 displayArea.addView(participantNameTextView);
+
             }
         } catch (org.json.JSONException e) {
             e.getStackTrace();
@@ -219,13 +221,32 @@ public class SessionFragment extends VisibleFragment {
 
     private void displaySessionParticipantsEmail( LinearLayout displayArea)
     {
+        for ( int i= 0; i< particks.size(); i++)
+        {
+              int NumberOf = i+1;
+                System.out.println(particks.size());
+                System.out.println("Participant:" + NumberOf + particks.get(i).getObjectId());
+                TextView participantEmailTextView = new TextView(getActivity());
+                participantEmailTextView.setText("Participant" + NumberOf + ": " + particks.get(i).getUsername());
+            displayArea.addView(participantEmailTextView);
+
+
+
+        }
+
+    }
+
+
+    private void displaySessionParticipantsEmailTest(LinearLayout displayArea)
+    {
         for ( int i = 0; i< particks.size(); i++)
         {
 
-            int particNum = i + 1;
-            Log.d("partick", particks.get(i).getUsername());
+            int NumberOf = i + 1;
+            System.out.println(particks.size());
+            System.out.println("Participant:" + NumberOf + particks.get(i).getUsername());
             TextView participantEmailTextView = new TextView(getActivity());
-            participantEmailTextView.setText("Participant" + particNum + ": " + particks.get(i).getUsername());
+            participantEmailTextView.setText("Participant" + NumberOf + ": " + particks.get(i).getUsername());
             displayArea.addView(participantEmailTextView);
         }
 

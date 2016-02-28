@@ -39,6 +39,11 @@
     <string name="list_item_user_games_game_open">No games open</string>
     <string name="list_item_user_games_list_button">See List</string>
     <string name="list_item_user_games_quick_button">Quick Join</string>
+    <string name="radio_na">NA</string> <!-- this string also appears in UserGameFragment.java -->
+    <string name="radio_1">1</string>
+    <string name="radio_2">2</string>
+    <string name="radio_3">5</string>
+    <string name="radio_label_text">Select Radius of Search (in Miles)</string>
 
     <!--Strings for HostSearchFragment.java-->
     <string name="list_item_host_games_game_pic">Picture of Game</string>

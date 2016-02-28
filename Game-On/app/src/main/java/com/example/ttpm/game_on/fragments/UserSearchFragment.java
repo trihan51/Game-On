@@ -17,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.ttpm.game_on.models.GameOnSession;
@@ -43,6 +45,8 @@ import java.util.List;
 public class UserSearchFragment extends android.support.v4.app.Fragment
         implements SearchView.OnQueryTextListener {
 
+    private RadioGroup mRadiusChoicesRadioGroup;
+    private RadioButton mRadiusSelectionRadioButton;
     private RecyclerView mSearchRecyclerView;
     private UserSearchAdapter mSearchAdapter;
     private List<BoardGame> mBoardGames;
@@ -66,6 +70,8 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_search, container, false);
+
+        mRadiusChoicesRadioGroup = (RadioGroup) view.findViewById(R.id.radioGroup);
 
         mSearchRecyclerView = (RecyclerView) view
                 .findViewById(R.id.user_search_recycler_view);
@@ -175,8 +181,13 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
             mListGamesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = UserGameActivity
-                            .newIntent(getActivity(), mTitleTextView.getText().toString());
+                    String gameTitle = mTitleTextView.getText().toString();
+
+                    mRadiusSelectionRadioButton = (RadioButton) getView()
+                            .findViewById(mRadiusChoicesRadioGroup.getCheckedRadioButtonId());
+                    String searchRadius = mRadiusSelectionRadioButton.getText().toString();
+
+                    Intent intent = UserGameActivity.newIntent(getActivity(), gameTitle, searchRadius);
                     startActivity(intent);
                 }
             });

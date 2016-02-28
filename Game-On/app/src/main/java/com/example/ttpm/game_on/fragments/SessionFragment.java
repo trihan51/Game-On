@@ -1,9 +1,12 @@
 package com.example.ttpm.game_on.fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +31,7 @@ import org.json.JSONException;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Tri Han on 2/10/2016.
@@ -35,16 +39,18 @@ import java.util.UUID;
 public class SessionFragment extends VisibleFragment {
 
     private static final String ARG_SESSION_ID = "session_id";
-
     private static final String TAG = "ERROR";
 
-    ParseUser HostOfTheGame = new ParseUser();
-
     private GameOnSession mCurrentGameOnSession;
+    ParseUser HostOfTheGame = new ParseUser();
     private boolean mCurrentUserIsHost;
 
-    private LinearLayout sessionInfoOutput;
-    private Button leaveButton;
+    private LinearLayout mSessionInfoOutput;
+    private TextView mTimerTextView;
+    private Button mConfirmButton;
+    private Button mLeaveButton;
+
+    private CountDownTimer mCountDownTimer;
 
     public static SessionFragment newInstance(UUID sessionId) {
         Bundle args = new Bundle();
@@ -90,7 +96,6 @@ public class SessionFragment extends VisibleFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_session, container, false);
 
-
         ParseQuery<GameOnSession> query = GameOnSession.getQuery();
         query.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(getActivity()));
         query.include("host");
@@ -102,34 +107,53 @@ public class SessionFragment extends VisibleFragment {
                     //Set the host of the game session to the pointer of the User of this session
                     HostOfTheGame = list.get(0).getParseUser("host");
 
-
                     mCurrentGameOnSession = list.get(0);
                     mCurrentUserIsHost = (mCurrentGameOnSession.getHost().getObjectId() == ParseUser.getCurrentUser().getObjectId());
 
-                    sessionInfoOutput = (LinearLayout) view.findViewById(R.id.sessionInfoOutputArea);
+                    mSessionInfoOutput = (LinearLayout) view.findViewById(R.id.sessionInfoOutputArea);
 
+                    displayGameTitle(mSessionInfoOutput);
+                    displaySessionHost(mSessionInfoOutput);
+                    displaySessionParticipants(mSessionInfoOutput);
 
-                    displayGameTitle(sessionInfoOutput);
-                    displaySessionHost(sessionInfoOutput);
-                    displaySessionParticipants(sessionInfoOutput);
+                    mTimerTextView = (TextView) view.findViewById(R.id.timerTextView);
+                    if (!mCurrentUserIsHost) {
+                        mTimerTextView.setText(R.string.message_for_participant);
+                    } else {
+                        startTimer();
+                    }
 
-                    leaveButton = (Button) view.findViewById(R.id.leaveButton);
-                    leaveButton.setOnClickListener(new View.OnClickListener() {
+                    mConfirmButton = (Button) view.findViewById(R.id.confirmButton);
+                    mConfirmButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (mCurrentUserIsHost) {
-                                mCurrentGameOnSession.deleteInBackground();
-                            } else {
-                                try {
-                                    mCurrentGameOnSession.removeParticipant(ParseUser.getCurrentUser().getObjectId());
-                                    mCurrentGameOnSession.saveInBackground();
-                                } catch (JSONException e) {
-                                    Log.d(TAG, "JSONException occurred: " + e);
-                                }
-                            }
-                            QueryPreferences.setStoredSessionId(getActivity(), null);
-                            Intent intent = new Intent(getActivity(), HomePagerActivity.class);
-                            startActivity(intent);
+                            mCountDownTimer.cancel();
+                            // user has confirmed to start session. do appropriate actions here.
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setMessage(R.string.session_confirmed_message)
+                                    .setTitle(R.string.session_confirmed_title)
+                                    .setPositiveButton(R.string.dialog_confirmed_button_text, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            mCurrentGameOnSession.setOpenStatus(false);
+                                            mCurrentGameOnSession.saveInBackground();
+                                            QueryPreferences.setStoredSessionId(getActivity(), null);
+                                            sendUserBackToHomePagerActivity();
+                                        }
+                                    });
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+                        }
+                    });
+
+                    if (!mCurrentUserIsHost) {
+                        mConfirmButton.setVisibility(View.GONE);
+                    }
+
+                    mLeaveButton = (Button) view.findViewById(R.id.leaveButton);
+                    mLeaveButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            performLeaveActions();
                         }
                     });
                 } else {
@@ -174,8 +198,62 @@ public class SessionFragment extends VisibleFragment {
         } catch (org.json.JSONException e) {
             e.getStackTrace();
         }
-
     }
 
+    private void startTimer() {
+
+        long thirtyMinutes = 1000 * 60 * 30; // (1000 milliseconds/sec * 60 sec/min * 30 min)
+        long minute = 1000 * 60;
+        long tickLength = 1000; // 1 second
+
+        mCountDownTimer = new CountDownTimer(minute, tickLength) {
+            public void onTick(long millisUntilFinished) {
+                mTimerTextView.setText("" + String.format("%d:%d",
+                        TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
+                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+            }
+
+            public void onFinish() {
+                mTimerTextView.setText(R.string.timed_out_text);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(R.string.session_timed_out_message)
+                        .setTitle(R.string.session_timed_out_title)
+                        .setPositiveButton(R.string.dialog_timed_out_button_text, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                performLeaveActions();
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        };
+        mCountDownTimer.start();
+    }
+
+    private void performLeaveActions() {
+        removeCurrentUserFromSession();
+        sendUserBackToHomePagerActivity();
+    }
+
+    private void removeCurrentUserFromSession() {
+        if (mCurrentUserIsHost) {
+            mCurrentGameOnSession.deleteInBackground();
+        } else {
+            try {
+                mCurrentGameOnSession.removeParticipant(ParseUser.getCurrentUser().getObjectId());
+                mCurrentGameOnSession.saveInBackground();
+            } catch (JSONException e) {
+                Log.d(TAG, "JSONException occurred: " + e);
+            }
+        }
+        QueryPreferences.setStoredSessionId(getActivity(), null);
+    }
+
+    private void sendUserBackToHomePagerActivity() {
+        Intent intent = new Intent(getActivity(), HomePagerActivity.class);
+        startActivity(intent);
+    }
 
 }

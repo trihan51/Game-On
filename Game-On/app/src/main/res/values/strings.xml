@@ -61,7 +61,17 @@
 
     <!-- Strings for SessionFragment.java -->
     <string name="session_header_text">Current Session Info</string>
+    <string name="message_for_participant">Please enjoy your game!</string>
+    <string name="confirm_button_text">Confirm</string>
     <string name="leave_button_text">Leave</string>
+    <string name="session_confirmed_message">Please enjoy your game session!</string>
+    <string name="session_confirmed_title">Session Confirmed</string>
+    <string name="dialog_confirmed_button_text">Game On!</string>
+    <string name="timed_out_text">Timed Out</string>
+    <string name="session_timed_out_message">Your current session has timed out. Please host a new one.</string>
+    <string name="session_timed_out_title">Session Time Out</string>
+    <string name="dialog_timed_out_button_text">OK</string>
+
 
     <!-- Strings for DisabledFragment.java -->
     <string name="disabled_text">You are currently in an open session.</string>

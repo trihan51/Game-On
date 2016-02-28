@@ -90,6 +90,7 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
         ParseQuery<GameOnSession> query = GameOnSession.getQuery();
         query.whereEqualTo("gameTitle", boardGameName);
         query.whereNotEqualTo("host", ParseUser.getCurrentUser());
+        query.whereEqualTo("Open", true);
         query.findInBackground(new FindCallback<GameOnSession>() {
             @Override
             public void done(List<GameOnSession> objects, ParseException e) {
@@ -107,6 +108,10 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_main, menu);
+        if (QueryPreferences.getStoredSessionId(getActivity()) == null) {
+            MenuItem currentSessionMenuItem = menu.findItem(R.id.menu_action_current_session);
+            currentSessionMenuItem.setVisible(false);
+        }
     }
 
     @Override
@@ -124,6 +129,10 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
                     Intent intent = new Intent(getActivity(), SplashActivity.class);
                     startActivity(intent);
                 }
+                return true;
+            case R.id.menu_action_current_session:
+                Intent intent = SessionActivity.newIntent(getActivity());
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -148,7 +157,6 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
             mJoinButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     // Add user to current session
                     mSession.addParticipant(ParseUser.getCurrentUser().getObjectId());
                     mSession.saveInBackground(new SaveCallback() {
@@ -165,10 +173,6 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
                             }
                         }
                     });
-
-                    Toast.makeText(getActivity(), "You clicked me!", Toast.LENGTH_SHORT).show();
-                    
-
                 }
             });
         }

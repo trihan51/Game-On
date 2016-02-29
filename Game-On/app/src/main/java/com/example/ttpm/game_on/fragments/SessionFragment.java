@@ -16,11 +16,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ttpm.game_on.models.GameOnSession;
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.HomePagerActivity;
 import com.example.ttpm.game_on.activities.SessionActivity;
+import com.example.ttpm.game_on.models.GameOnSession;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -29,6 +29,7 @@ import com.parse.ParseUser;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -44,6 +45,7 @@ public class SessionFragment extends VisibleFragment {
     private GameOnSession mCurrentGameOnSession;
     ParseUser HostOfTheGame = new ParseUser();
     private boolean mCurrentUserIsHost;
+    private List<ParseUser> particks = new ArrayList<ParseUser>();
 
     private LinearLayout mSessionInfoOutput;
     private TextView mTimerTextView;
@@ -188,6 +190,35 @@ public class SessionFragment extends VisibleFragment {
         JSONArray participants = mCurrentGameOnSession.getParticipants();
         int length = participants.length();
 
+        System.out.println("Length of Participants Array is:" + length);
+        // particks = new ArrayList<ParseUser>();
+
+        for ( int i = 0; i < length ; i++) {
+            System.out.println("Length of Participants Array is:" + length);
+            ParseQuery<ParseUser> query = ParseQuery.getQuery("_User");
+            try {
+                query.whereEqualTo("objectId", participants.getString(i));
+
+                query.findInBackground(new FindCallback<ParseUser>() {
+                    @Override
+                    public void done(List<ParseUser> objects, ParseException e) {
+                        //ParticipantInGame = objects.get
+
+                        for (ParseUser users : objects) {
+
+                            particks.add(users);
+                        }
+                        displaySessionParticipantsEmail(mSessionInfoOutput);
+
+                    }
+
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
         try {
             for (int i = 0; i < length; i++) {
                 int participantNum = i + 1;
@@ -230,6 +261,23 @@ public class SessionFragment extends VisibleFragment {
             }
         };
         mCountDownTimer.start();
+    }
+
+    private void displaySessionParticipantsEmail( LinearLayout displayArea)
+    {
+        for ( int i= 0; i< particks.size(); i++)
+        {
+            int NumberOf = i+1;
+            System.out.println(particks.size());
+            System.out.println("Participant:" + NumberOf + particks.get(i).getObjectId());
+            TextView participantEmailTextView = new TextView(getActivity());
+            participantEmailTextView.setText("Participant" + NumberOf + ": " + particks.get(i).getUsername());
+            displayArea.addView(participantEmailTextView);
+
+
+
+        }
+
     }
 
     private void performLeaveActions() {

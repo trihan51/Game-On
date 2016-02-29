@@ -206,7 +206,7 @@ public class SessionFragment extends VisibleFragment {
         long minute = 1000 * 60;
         long tickLength = 1000; // 1 second
 
-        mCountDownTimer = new CountDownTimer(minute, tickLength) {
+        mCountDownTimer = new CountDownTimer(thirtyMinutes, tickLength) {
             public void onTick(long millisUntilFinished) {
                 mTimerTextView.setText("" + String.format("%d:%d",
                         TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),

@@ -2,6 +2,7 @@ package com.example.ttpm.game_on.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +25,7 @@ import com.example.ttpm.game_on.activities.SessionActivity;
 import com.example.ttpm.game_on.activities.SplashActivity;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -36,18 +38,23 @@ import java.util.List;
  */
 public class UserGameFragment extends android.support.v4.app.Fragment{
 
-    private static final String ARG_BOARD_GAME_NAME_ID =
-            "com.example.ttpm.game_on.board_game_name_id";
+    private static final String ARG_BOARD_GAME_NAME_ID = "com.example.ttpm.game_on.board_game_name_id";
+    private static final String ARG_SEARCH_RADIUS = "com.example.ttpm.game_on.search_radius";
+    private static final String ARG_CURRENT_LOCATION = "com.example.ttpm.game_on.current_location";
 
     private RecyclerView mSearchRecyclerView;
     private SessionSearchAdapter mSearchAdapter;
     private List<GameOnSession> mGameOnSessions;
 
     private String boardGameName;
+    private String mSearchRadius;
+    private Location mCurrentLocation;
 
-    public static UserGameFragment newInstance(String boardGameName) {
+    public static UserGameFragment newInstance(String boardGameName, String searchRadius, Location currentLocation) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_BOARD_GAME_NAME_ID, boardGameName);
+        args.putSerializable(ARG_SEARCH_RADIUS, searchRadius);
+        args.putParcelable(ARG_CURRENT_LOCATION, currentLocation);
 
         UserGameFragment fragment = new UserGameFragment();
         fragment.setArguments(args);
@@ -59,6 +66,8 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         boardGameName = (String) getArguments().getSerializable(ARG_BOARD_GAME_NAME_ID);
+        mSearchRadius = (String) getArguments().getSerializable(ARG_SEARCH_RADIUS);
+        mCurrentLocation = (Location) getArguments().getParcelable(ARG_CURRENT_LOCATION);
         Toast.makeText(getActivity(), boardGameName, Toast.LENGTH_SHORT).show();
     }
 
@@ -67,8 +76,7 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_game, container, false);
 
-        mSearchRecyclerView = (RecyclerView) view
-                .findViewById(R.id.user_game_recycler_view);
+        mSearchRecyclerView = (RecyclerView) view.findViewById(R.id.user_game_recycler_view);
 
         return view;
     }
@@ -91,6 +99,14 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
         query.whereEqualTo("gameTitle", boardGameName);
         query.whereNotEqualTo("host", ParseUser.getCurrentUser());
         query.whereEqualTo("Open", true);
+
+        if (!mSearchRadius.equals(getResources().getString(R.string.radio_na))) {
+            query.whereWithinMiles(
+                    "location",
+                    new ParseGeoPoint(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()),
+                    Double.valueOf(mSearchRadius));
+        }
+
         query.findInBackground(new FindCallback<GameOnSession>() {
             @Override
             public void done(List<GameOnSession> objects, ParseException e) {

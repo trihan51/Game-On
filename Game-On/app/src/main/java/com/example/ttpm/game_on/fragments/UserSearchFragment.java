@@ -4,6 +4,7 @@ package com.example.ttpm.game_on.fragments;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.ttpm.game_on.models.GameOnSession;
@@ -36,36 +39,50 @@ import com.parse.SaveCallback;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
 public class UserSearchFragment extends android.support.v4.app.Fragment
         implements SearchView.OnQueryTextListener {
 
+    private static final String ARG_CURRENT_LOCATION = "com.example.ttpm.game_on.current_location";
+
+    private RadioGroup mRadiusChoicesRadioGroup;
+    private RadioButton mRadiusSelectionRadioButton;
     private RecyclerView mSearchRecyclerView;
     private UserSearchAdapter mSearchAdapter;
     private List<BoardGame> mBoardGames;
     private GameOnSession mQuickJoinSession;
 
+    private Location mCurrentLocation;
+
     public UserSearchFragment() {
     }
 
-    public static UserSearchFragment newInstance()
+    public static UserSearchFragment newInstance(Location currentLocation)
     {
-        return new UserSearchFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_CURRENT_LOCATION, currentLocation);
+
+        UserSearchFragment fragment = new UserSearchFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        mCurrentLocation = (Location) getArguments().getParcelable(ARG_CURRENT_LOCATION);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_search, container, false);
+
+        mRadiusChoicesRadioGroup = (RadioGroup) view.findViewById(R.id.radioGroup);
 
         mSearchRecyclerView = (RecyclerView) view
                 .findViewById(R.id.user_search_recycler_view);
@@ -175,8 +192,17 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
             mListGamesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = UserGameActivity
-                            .newIntent(getActivity(), mTitleTextView.getText().toString());
+                    String gameTitle = mTitleTextView.getText().toString();
+
+                    mRadiusSelectionRadioButton = (RadioButton) getView()
+                            .findViewById(mRadiusChoicesRadioGroup.getCheckedRadioButtonId());
+                    String searchRadius = mRadiusSelectionRadioButton.getText().toString();
+
+                    Intent intent = UserGameActivity.newIntent(
+                            getActivity(),
+                            gameTitle,
+                            searchRadius,
+                            mCurrentLocation);
                     startActivity(intent);
                 }
             });

@@ -2,6 +2,7 @@ package com.example.ttpm.game_on.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,6 +40,7 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
 
     private static final String ARG_BOARD_GAME_NAME_ID = "com.example.ttpm.game_on.board_game_name_id";
     private static final String ARG_SEARCH_RADIUS = "com.example.ttpm.game_on.search_radius";
+    private static final String ARG_CURRENT_LOCATION = "com.example.ttpm.game_on.current_location";
 
     private RecyclerView mSearchRecyclerView;
     private SessionSearchAdapter mSearchAdapter;
@@ -46,11 +48,13 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
 
     private String boardGameName;
     private String mSearchRadius;
+    private Location mCurrentLocation;
 
-    public static UserGameFragment newInstance(String boardGameName, String searchRadius) {
+    public static UserGameFragment newInstance(String boardGameName, String searchRadius, Location currentLocation) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_BOARD_GAME_NAME_ID, boardGameName);
         args.putSerializable(ARG_SEARCH_RADIUS, searchRadius);
+        args.putParcelable(ARG_CURRENT_LOCATION, currentLocation);
 
         UserGameFragment fragment = new UserGameFragment();
         fragment.setArguments(args);
@@ -63,6 +67,7 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
         setHasOptionsMenu(true);
         boardGameName = (String) getArguments().getSerializable(ARG_BOARD_GAME_NAME_ID);
         mSearchRadius = (String) getArguments().getSerializable(ARG_SEARCH_RADIUS);
+        mCurrentLocation = (Location) getArguments().getParcelable(ARG_CURRENT_LOCATION);
         Toast.makeText(getActivity(), boardGameName, Toast.LENGTH_SHORT).show();
     }
 
@@ -96,8 +101,10 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
         query.whereEqualTo("Open", true);
 
         if (!mSearchRadius.equals(getResources().getString(R.string.radio_na))) {
-            // default location specified in ParseGeoPoint is San Jose State University
-            query.whereWithinMiles("location", new ParseGeoPoint(37.335264,-121.883239), Double.valueOf(mSearchRadius));
+            query.whereWithinMiles(
+                    "location",
+                    new ParseGeoPoint(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()),
+                    Double.valueOf(mSearchRadius));
         }
 
         query.findInBackground(new FindCallback<GameOnSession>() {

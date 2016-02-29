@@ -51,20 +51,25 @@ import java.util.List;
 public class HostSearchFragment extends android.support.v4.app.Fragment
         implements SearchView.OnQueryTextListener {
     private static final String TAG = "HostSearchFragment";
+    private static final String ARG_CURRENT_LOCATION = "com.example.ttpm.game_on.current_location";
 
     private RecyclerView mSearchRecyclerView;
     private HostSearchAdapter mSearchAdapter;
     private List<BoardGame> mBoardGames;
 
-    private GoogleApiClient mClient;
     private Location mCurrentLocation;
 
     public HostSearchFragment() {
     }
 
-    public static HostSearchFragment newInstance()
+    public static HostSearchFragment newInstance(Location currentLocation)
     {
-        return new HostSearchFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_CURRENT_LOCATION, currentLocation);
+
+        HostSearchFragment fragment = new HostSearchFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -72,45 +77,13 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        mClient = new GoogleApiClient.Builder(getActivity())
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                    @Override
-                    public void onConnected(Bundle bundle) {
-                        getActivity().invalidateOptionsMenu();
-                        getCurrentLocation();
-                    }
-
-                    @Override
-                    public void onConnectionSuspended(int i) {
-
-                    }
-                })
-                .build();
-    }
-
-    private void getCurrentLocation() {
-        LocationRequest request = LocationRequest.create();
-        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        request.setNumUpdates(1);
-        request.setInterval(0);
-        LocationServices.FusedLocationApi.requestLocationUpdates(mClient, request, new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                Log.i(TAG, "Got a fix: " + location);
-                mCurrentLocation = location;
-            }
-        });
+        mCurrentLocation = (Location) getArguments().getParcelable(ARG_CURRENT_LOCATION);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_host_search, container, false);
-
-        mSearchRecyclerView = (RecyclerView) view
-                .findViewById(R.id.host_search_recycler_view);
-
+        mSearchRecyclerView = (RecyclerView) view.findViewById(R.id.host_search_recycler_view);
         return view;
     }
 
@@ -126,21 +99,6 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
 
         mSearchAdapter = new HostSearchAdapter(getActivity(), mBoardGames);
         mSearchRecyclerView.setAdapter(mSearchAdapter);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        getActivity().invalidateOptionsMenu();
-        mClient.connect();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        mClient.disconnect();
     }
 
     @Override

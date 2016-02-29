@@ -19,6 +19,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCrFOLImTBZ76YLjjg1fWoZ6p38reuSbTg"/>
         <activity
             android:name=".activities.SplashActivity"
             android:label="@string/app_name" >

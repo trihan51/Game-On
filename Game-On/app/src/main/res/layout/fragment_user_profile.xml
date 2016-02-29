@@ -19,7 +19,7 @@
         android:textSize="16sp" />
 
     <com.parse.ParseImageView
-        android:layout_width="100dp"
+        android:layout_width="200dp"
         android:layout_height="100dp"
         android:id="@+id/user_profile_profile_parse_image_view"
         android:layout_below="@+id/user_profile_welcome_message"

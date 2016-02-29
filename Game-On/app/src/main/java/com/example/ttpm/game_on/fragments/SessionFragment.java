@@ -21,6 +21,12 @@ import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.HomePagerActivity;
 import com.example.ttpm.game_on.activities.SessionActivity;
 import com.example.ttpm.game_on.models.GameOnSession;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.LatLng;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -51,6 +57,8 @@ public class SessionFragment extends VisibleFragment {
     private TextView mTimerTextView;
     private Button mConfirmButton;
     private Button mLeaveButton;
+     GoogleMap mMap;
+    MapView mapView;
 
     private CountDownTimer mCountDownTimer;
 
@@ -97,6 +105,23 @@ public class SessionFragment extends VisibleFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_session, container, false);
+
+        // Gets the MapView from the XML layout and creates it
+        mapView = (MapView) view.findViewById(R.id.mapview);
+        mapView.onCreate(savedInstanceState);
+
+        // Gets to GoogleMap from the MapView and does initialization stuff
+        mMap = mapView.getMap();
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMap.setMyLocationEnabled(true);
+
+        // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
+        MapsInitializer.initialize(getActivity());
+
+        // Updates the location and zoom of the MapView
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(37.339, -121.894), 10);
+        mMap.animateCamera(cameraUpdate);
+
 
         ParseQuery<GameOnSession> query = GameOnSession.getQuery();
         query.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(getActivity()));
@@ -171,6 +196,24 @@ public class SessionFragment extends VisibleFragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        mapView.onResume();
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
     }
 
     private void displayGameTitle(LinearLayout displayArea) {

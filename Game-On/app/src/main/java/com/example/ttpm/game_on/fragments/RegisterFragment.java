@@ -24,6 +24,7 @@ public class RegisterFragment extends android.support.v4.app.Fragment {
 
     private EditText mUsernameField;
     private EditText mPasswordField;
+    private EditText mNameField;
     private EditText mRepeatPasswordField;
 
     @Override
@@ -39,6 +40,7 @@ public class RegisterFragment extends android.support.v4.app.Fragment {
         mUsernameField = (EditText) view.findViewById(R.id.register_email_edittext);
         mPasswordField = (EditText) view.findViewById(R.id.register_password_edittext);
         mRepeatPasswordField = (EditText) view.findViewById(R.id.register_repeat_password_edittext);
+        mNameField = (EditText)view.findViewById(R.id.NameTextField);
 
         Button registerButton = (Button) view.findViewById(R.id.register_register_button);
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -48,24 +50,26 @@ public class RegisterFragment extends android.support.v4.app.Fragment {
                 String email = mUsernameField.getText().toString().trim();
                 String password = mPasswordField.getText().toString().trim();
                 String repeatPassword = mRepeatPasswordField.getText().toString().trim();
+                String namechosen = mNameField.getText().toString().trim();
 
                 Pattern domainPattern = Pattern.compile("\\S+(@sjsu\\.edu)$");
                 boolean domainValid = domainPattern.matcher(email).matches();
 
                 boolean passwordMatches = password.equals(repeatPassword);
 
-                login(email, password, passwordMatches, domainValid);
+                login(email, password,namechosen, passwordMatches, domainValid);
             }
         });
 
         return view;
     }
 
-    public void login(String email, String password, boolean passwordMatches, boolean domainValid) {
+    public void login(String email, String password,String namechosen, boolean passwordMatches, boolean domainValid) {
         if (passwordMatches && domainValid) {
             ParseUser user = new ParseUser();
             user.setPassword(password);
             user.setUsername(email);
+            user.put("Name", namechosen);
 
             user.signUpInBackground(new SignUpCallback() {
                 @Override

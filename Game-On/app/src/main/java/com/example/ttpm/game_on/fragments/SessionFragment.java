@@ -27,8 +27,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -57,7 +60,7 @@ public class SessionFragment extends VisibleFragment {
     private TextView mTimerTextView;
     private Button mConfirmButton;
     private Button mLeaveButton;
-     GoogleMap mMap;
+    GoogleMap mMap;
     MapView mapView;
 
     private CountDownTimer mCountDownTimer;
@@ -115,12 +118,16 @@ public class SessionFragment extends VisibleFragment {
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.setMyLocationEnabled(true);
 
+
+
+
         // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
         MapsInitializer.initialize(getActivity());
 
         // Updates the location and zoom of the MapView
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(37.339, -121.894), 10);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(37.3353, -121.8813), 15);
         mMap.animateCamera(cameraUpdate);
+
 
 
         ParseQuery<GameOnSession> query = GameOnSession.getQuery();
@@ -226,6 +233,7 @@ public class SessionFragment extends VisibleFragment {
        TextView hostNameTextView = new TextView(getActivity());
         hostNameTextView.append("Host: " + HostOfTheGame.getUsername());
         displayArea.addView(hostNameTextView);
+        updateHostMarkers();
 
     }
 
@@ -314,7 +322,7 @@ public class SessionFragment extends VisibleFragment {
             System.out.println(particks.size());
             System.out.println("Participant:" + NumberOf + particks.get(i).getObjectId());
             TextView participantEmailTextView = new TextView(getActivity());
-            participantEmailTextView.setText("Participant" + NumberOf + ": " + particks.get(i).getUsername());
+            participantEmailTextView.setText("Participant " + NumberOf + ": " + particks.get(i).getUsername());
             displayArea.addView(participantEmailTextView);
 
 
@@ -345,6 +353,20 @@ public class SessionFragment extends VisibleFragment {
     private void sendUserBackToHomePagerActivity() {
         Intent intent = new Intent(getActivity(), HomePagerActivity.class);
         startActivity(intent);
+    }
+
+    private void updateHostMarkers()
+    {
+        ParseGeoPoint point = mCurrentGameOnSession.getLocation();
+
+
+            Marker marker = mMap.addMarker(
+                    new MarkerOptions()
+                            .position(new LatLng(point.getLatitude(),point.getLongitude()))
+                            .title("Host")
+            );
+
+
     }
 
 }

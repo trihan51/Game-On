@@ -79,13 +79,7 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
 
         mProfileImageView = (ParseImageView)
                 view.findViewById(R.id.user_profile_profile_parse_image_view);
-        ParseFile currentObject = ParseUser.getCurrentUser().getParseFile("profilePicture");
-        mProfileImageView.setParseFile(currentObject);
-        mProfileImageView.loadInBackground(new GetDataCallback() {
-            @Override
-            public void done(byte[] data, ParseException e) {
-            }
-        });
+        updateProfilePicture();
 
         mPictureChangeButton = (ImageButton)
                 view.findViewById(R.id.user_profile_change_profile_picture_button);
@@ -112,24 +106,31 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
     }
 
     private void selectImage() {
+        // Dialogbox items
         final CharSequence[] items = { "Take Photo", "Choose from Gallery", "Cancel" };
 
+        // Building the Dialogbox
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
         builder.setTitle("Upload Profile Picture");
+        // Wire up the buttons inside Dialogbox
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                // Check for camera request
                 if (items[which].equals("Take Photo")) {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(intent, REQUEST_CAMERA);
+                // Check for gallery request
                 } else if (items[which].equals("Choose from Gallery")) {
                     Intent intent = new Intent(
                             Intent.ACTION_PICK,
                             MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    // Select only images from storage
                     intent.setType("image/*");
                     startActivityForResult(
                             Intent.createChooser(intent, "Select File"),
                             SELECT_FILE);
+                // Check for cancel request
                 } else if (items[which].equals("Cancel")) {
                     dialog.dismiss();
                 }
@@ -139,7 +140,7 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
     }
 
     private void onCaptureImageResult(Intent data) {
-        // Finds image stored after camera picture taken
+        // Cast data taken from camera into an image
         Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
         // Converts image to bytes
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -160,20 +161,26 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
         }
 
         uploadToParse(bytes);
-        mProfileImageView.setImageBitmap(thumbnail);
     }
 
     private void onSelectFromGalleryResult(Intent data) {
+        // Access Android local db to retrieve images
         Uri selectedImageUri = data.getData();
+        // Number of columns to present all data retrieved from uri
         String[] projection = { MediaStore.MediaColumns.DATA };
-        CursorLoader cursorLoader = new CursorLoader(this.getActivity(), selectedImageUri, projection,
+        CursorLoader cursorLoader = new CursorLoader(
+                this.getActivity(),
+                selectedImageUri,
+                projection,
                 null, null, null);
         Cursor cursor = cursorLoader.loadInBackground();
         int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
         cursor.moveToFirst();
 
+        // Image resource location chosen by user
         String selectedImagePath = cursor.getString(column_index);
 
+        // Manipulates image
         Bitmap bm;
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -188,8 +195,7 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
         options.inJustDecodeBounds = false;
         bm = BitmapFactory.decodeFile(selectedImagePath, options);
 
-        mProfileImageView.setImageBitmap(bm);
-
+        // Compress image
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         uploadToParse(bytes);
@@ -210,8 +216,20 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
         // Save the user
         currentUser.saveInBackground();
 
+        updateProfilePicture();
+
         Toast.makeText(this.getActivity(), "Image uploaded!",
                 Toast.LENGTH_SHORT).show();
+    }
+
+    private void updateProfilePicture() {
+        ParseFile currentObject = ParseUser.getCurrentUser().getParseFile("profilePicture");
+        mProfileImageView.setParseFile(currentObject);
+        mProfileImageView.loadInBackground(new GetDataCallback() {
+            @Override
+            public void done(byte[] data, ParseException e) {
+            }
+        });
     }
 }
 

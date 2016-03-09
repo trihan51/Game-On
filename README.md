@@ -1,2 +1,4 @@
-# Game-On
-Source code for the android mobile application Game On.
+# Game On
+A mobile meetup app for offline events.
+
+Currently only supports board games!

@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="com.example.ttpm.game_on.PRIVATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".Gameon"
@@ -47,6 +48,8 @@
         <activity android:name=".activities.ForgotPasswordActivity" >
         </activity>
         <activity android:name=".activities.HomePagerActivity" >
+        </activity>
+        <activity android:name=".activities.CameraActivity" >
         </activity>
         <activity
             android:name=".models.GameOnSession"

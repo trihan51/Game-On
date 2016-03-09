@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ttpm.game_on.R;
+import com.example.ttpm.game_on.activities.CameraActivity;
 import com.example.ttpm.game_on.activities.SplashActivity;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
@@ -118,8 +119,10 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 // Check for camera request
                 if (items[which].equals("Take Photo")) {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(intent, REQUEST_CAMERA);
+                    Intent intent = new Intent(getActivity(), CameraActivity.class);
+                    startActivity(intent);
+//                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                    startActivityForResult(intent, REQUEST_CAMERA);
                 // Check for gallery request
                 } else if (items[which].equals("Choose from Gallery")) {
                     Intent intent = new Intent(

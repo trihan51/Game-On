@@ -238,7 +238,7 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
                                         // Saved Successfully
                                         QueryPreferences.setStoredSessionId(getActivity(),
                                                 mQuickJoinSession.getObjectId());
-                                        Intent intent = SessionActivity.newIntent(getActivity());
+                                        Intent intent = SessionActivity.newIntent(getActivity(), mCurrentLocation);
                                         startActivity(intent);
                                     } else {
                                         // The save failed

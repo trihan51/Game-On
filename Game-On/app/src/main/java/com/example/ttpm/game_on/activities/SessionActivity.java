@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -28,14 +29,24 @@ import java.util.UUID;
 
 public class SessionActivity extends SingleFragmentActivity {
 
+    private static final String EXTRA_CURRENT_LOCATION = "com.example.ttpm.game_on.current_location";
+
     public static Intent newIntent(Context packageContext) {
         Intent intent = new Intent(packageContext, SessionActivity.class);
         return intent;
     }
 
+    public static Intent newIntent(Context packageContext,
+                                   Location currentLocation) {
+        Intent intent = new Intent(packageContext, SessionActivity.class);
+        intent.putExtra(EXTRA_CURRENT_LOCATION, currentLocation);
+        return intent;
+    }
+
     @Override
     protected Fragment createFragment() {
-        return new SessionFragment();
+        Location currentLocation = (Location) getIntent().getParcelableExtra(EXTRA_CURRENT_LOCATION);
+        return SessionFragment.newInstance(currentLocation);
     }
 
     @Override

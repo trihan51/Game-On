@@ -215,7 +215,7 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
                 if (e == null) {
                     // Saved Successfully
                     QueryPreferences.setStoredSessionId(getActivity(), session.getObjectId());
-                    Intent intent = SessionActivity.newIntent(getActivity());
+                    Intent intent = SessionActivity.newIntent(getActivity(), mCurrentLocation);
                     startActivity(intent);
                 } else {
                     // The save failed

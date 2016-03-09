@@ -147,7 +147,7 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
                 }
                 return true;
             case R.id.menu_action_current_session:
-                Intent intent = SessionActivity.newIntent(getActivity());
+                Intent intent = SessionActivity.newIntent(getActivity(), mCurrentLocation);
                 startActivity(intent);
                 return true;
             default:
@@ -181,7 +181,7 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
                             if (e == null) {
                                 // Saved Successfully
                                 QueryPreferences.setStoredSessionId(getActivity(), mSession.getObjectId());
-                                Intent intent = SessionActivity.newIntent(getActivity());
+                                Intent intent = SessionActivity.newIntent(getActivity(), mCurrentLocation);
                                 startActivity(intent);
                             } else {
                                 // The save failed

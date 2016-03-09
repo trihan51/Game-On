@@ -2,6 +2,7 @@ package com.example.ttpm.game_on.fragments;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
@@ -48,7 +49,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class SessionFragment extends VisibleFragment {
 
-    private static final String ARG_SESSION_ID = "session_id";
+    private static final String ARG_CURRENT_LOCATION = "com.example.ttpm.game_on.current_location";
+
     private static final String TAG = "ERROR";
 
     private GameOnSession mCurrentGameOnSession;
@@ -60,17 +62,20 @@ public class SessionFragment extends VisibleFragment {
     private TextView mTimerTextView;
     private Button mConfirmButton;
     private Button mLeaveButton;
-    GoogleMap mMap;
-    MapView mapView;
+
+    private GoogleMap mMap;
+    private MapView mapView;
+    private Location mCurrentLocation;
 
     private CountDownTimer mCountDownTimer;
 
-    public static SessionFragment newInstance(UUID sessionId) {
+    public static SessionFragment newInstance(Location currentLocation) {
         Bundle args = new Bundle();
-        args.putSerializable(ARG_SESSION_ID, sessionId);
+        args.putParcelable(ARG_CURRENT_LOCATION, currentLocation);
 
         SessionFragment fragment = new SessionFragment();
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -103,6 +108,7 @@ public class SessionFragment extends VisibleFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mCurrentLocation = (Location) getArguments().getParcelable(ARG_CURRENT_LOCATION);
     }
 
     @Override
@@ -118,17 +124,12 @@ public class SessionFragment extends VisibleFragment {
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.setMyLocationEnabled(true);
 
-
-
-
         // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
         MapsInitializer.initialize(getActivity());
 
         // Updates the location and zoom of the MapView
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(37.3353, -121.8813), 15);
         mMap.animateCamera(cameraUpdate);
-
-
 
         ParseQuery<GameOnSession> query = GameOnSession.getQuery();
         query.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(getActivity()));

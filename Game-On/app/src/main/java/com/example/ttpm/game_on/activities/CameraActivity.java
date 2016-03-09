@@ -29,14 +29,18 @@ import java.util.Date;
  */
 public class CameraActivity extends Activity {
     private static final int ACTIVITY_START_CAMERA_APP = 1111;
+    private String GALLERY_LOCATION = "Game On";
 
     private ImageView mPhotoCapturedImageView;
     private String mImageFileLocation = "";
+    private File mGalleryFolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+
+        createImageGallery();
 
         mPhotoCapturedImageView = (ImageView) findViewById(R.id.camera_capture_image_image_view);
     }
@@ -64,13 +68,21 @@ public class CameraActivity extends Activity {
         }
     }
 
+    private void createImageGallery() {
+        File storageDirectory =
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        mGalleryFolder = new File(storageDirectory, GALLERY_LOCATION);
+
+        if(!mGalleryFolder.exists()) {
+            mGalleryFolder.mkdirs();
+        }
+    }
+
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "IMAGE_" + timeStamp + "_";
-        File storageDirectory =
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 
-        File image = File.createTempFile(imageFileName, ".jpg", storageDirectory);
+        File image = File.createTempFile(imageFileName, ".jpg", mGalleryFolder);
         mImageFileLocation = image.getAbsolutePath();
 
         return image;

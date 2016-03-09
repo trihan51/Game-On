@@ -12,10 +12,11 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
-    <ImageView
-        android:id="@+id/camera_capture_image_image_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/camera_take_photo_button" />
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/camera_activity_recycler_view"
+        android:layout_above="@id/camera_take_photo_button"
+        />
 
 </RelativeLayout>

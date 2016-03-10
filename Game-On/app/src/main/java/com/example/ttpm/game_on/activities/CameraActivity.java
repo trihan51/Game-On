@@ -4,15 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
@@ -21,6 +18,8 @@ import android.widget.ImageView;
 
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.adapters.ImageAdapter;
+import com.parse.ParseFile;
+import com.parse.ParseUser;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,14 +40,12 @@ public class CameraActivity extends Activity {
     private static final int ACTIVITY_START_CAMERA_APP = 1111;
     private String GALLERY_LOCATION = "Game On";
 
-    private ImageView mPhotoCapturedImageView;
-    private String mImageFileLocation = "";
     private File mGalleryFolder;
     private static int mColumnCount = 3;
     private static int mImageWidth;
     private static int mImageHeight;
     private static LruCache<String, Bitmap> mMemoryCache;
-    private static Set<SoftReference<Bitmap>> mReuseableBitmaps;
+    private static Set<SoftReference<Bitmap>> mReusableBitmaps;
 
     private RecyclerView mRecyclerView;
 
@@ -65,8 +62,7 @@ public class CameraActivity extends Activity {
         mImageHeight = mImageWidth * 4 / 3;
 
         mRecyclerView = (RecyclerView) findViewById(R.id.camera_activity_recycler_view);
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 1);
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, mColumnCount);
         mRecyclerView.setLayoutManager(layoutManager);
         RecyclerView.Adapter imageAdapter =
                 new ImageAdapter(sortFilesToLatest(mGalleryFolder), mImageWidth, mImageHeight);
@@ -81,7 +77,7 @@ public class CameraActivity extends Activity {
             protected void entryRemoved(boolean evicted, String key, Bitmap oldValue, Bitmap newValue) {
                 super.entryRemoved(evicted, key, oldValue, newValue);
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-                    mReuseableBitmaps.add(new SoftReference<>(oldValue));
+                    mReusableBitmaps.add(new SoftReference<>(oldValue));
                 }
             }
 
@@ -92,7 +88,7 @@ public class CameraActivity extends Activity {
         };
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-            mReuseableBitmaps = Collections.synchronizedSet(new HashSet<SoftReference<Bitmap>>());
+            mReusableBitmaps = Collections.synchronizedSet(new HashSet<SoftReference<Bitmap>>());
         }
     }
 
@@ -114,11 +110,29 @@ public class CameraActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        File[] mostRecentGalleryFolder = sortFilesToLatest(mGalleryFolder);
+
         if(requestCode == ACTIVITY_START_CAMERA_APP && resultCode == RESULT_OK) {
             RecyclerView.Adapter newImageAdapter =
-                    new ImageAdapter(sortFilesToLatest(mGalleryFolder), mImageWidth, mImageHeight);
+                    new ImageAdapter(mostRecentGalleryFolder, mImageWidth, mImageHeight);
             mRecyclerView.swapAdapter(newImageAdapter, false);
         }
+
+        uploadToParse(mostRecentGalleryFolder[0]);
+    }
+
+    private void uploadToParse(File profileImage) {
+        // Create the ParseFile
+        ParseFile file = new ParseFile(profileImage);
+        // Upload the image to Parse
+        file.saveInBackground();
+        // Retrieve current user
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        // Finds profilePicture column in User table and inserts the image
+        currentUser.put("profilePicture", file);
+        // Save the user
+        currentUser.saveInBackground();
     }
 
     private void createImageGallery() {
@@ -139,58 +153,6 @@ public class CameraActivity extends Activity {
         mImageFileLocation = image.getAbsolutePath();
 
         return image;
-    }
-
-    private Bitmap setReducedImageSize() {
-        int targetImageViewWidth = mPhotoCapturedImageView.getWidth();
-        int targetImageViewHeight = mPhotoCapturedImageView.getHeight();
-
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(mImageFileLocation, bmOptions);
-        int cameraImageWidth = bmOptions.outWidth;
-        int cameraImageHeight = bmOptions.outHeight;
-
-        // Get scale factor between original image and image view
-        int scaleFactor = Math.min(
-                cameraImageWidth / targetImageViewWidth,
-                cameraImageHeight / targetImageViewHeight);
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inJustDecodeBounds = false;
-
-        return BitmapFactory.decodeFile(mImageFileLocation, bmOptions);
-    }
-
-    private void rotateImage(Bitmap bitmap) {
-        ExifInterface exifInterface = null;
-        try {
-            exifInterface = new ExifInterface(mImageFileLocation);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        int orientation = exifInterface.getAttributeInt(
-                ExifInterface.TAG_ORIENTATION,
-                ExifInterface.ORIENTATION_UNDEFINED);
-        Matrix matrix = new Matrix();
-        switch (orientation) {
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                matrix.setRotate(90);
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                matrix.setRotate(180);
-                break;
-            default:
-        }
-
-        Bitmap rotatedBitmap = Bitmap.createBitmap(
-                bitmap,
-                0, 0,
-                bitmap.getWidth(),
-                bitmap.getHeight(),
-                matrix,
-                true);
-        mPhotoCapturedImageView.setImageBitmap(rotatedBitmap);
     }
 
     private File[] sortFilesToLatest(File fileImagesDir) {
@@ -242,12 +204,12 @@ public class CameraActivity extends Activity {
                 options.inSampleSize == 1;
     }
 
-    public static Bitmap getBitmapFromReuseableSet(BitmapFactory.Options options) {
+    public static Bitmap getBitmapFromReusableSet(BitmapFactory.Options options) {
         Bitmap bitmap = null;
-        if(mReuseableBitmaps != null && !mReuseableBitmaps.isEmpty()) {
-            synchronized (mReuseableBitmaps) {
+        if(mReusableBitmaps != null && !mReusableBitmaps.isEmpty()) {
+            synchronized (mReusableBitmaps) {
                 Bitmap item;
-                Iterator<SoftReference<Bitmap>> iterator = mReuseableBitmaps.iterator();
+                Iterator<SoftReference<Bitmap>> iterator = mReusableBitmaps.iterator();
                 while(iterator.hasNext()) {
                     item = iterator.next().get();
                     if(item != null && item.isMutable()) {

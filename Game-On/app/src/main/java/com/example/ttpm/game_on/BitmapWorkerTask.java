@@ -23,7 +23,7 @@ public class BitmapWorkerTask extends AsyncTask<File, Void, Bitmap> {
     private File mImageFile;
 
     public BitmapWorkerTask(ImageView imageView, int imageWidth, int imageHeight) {
-        imageViewReferences = new WeakReference<ImageView>(imageView);
+        imageViewReferences = new WeakReference<>(imageView);
         TARGET_IMAGE_VIEW_HEIGHT = imageHeight;
         TARGET_IMAGE_VIEW_WIDTH = imageWidth;
     }
@@ -31,9 +31,9 @@ public class BitmapWorkerTask extends AsyncTask<File, Void, Bitmap> {
     @Override
     protected Bitmap doInBackground(File... params) {
         mImageFile = params[0];
-//        return decodeBitmapFromFile(params[0]);
         Bitmap bitmap = decodeBitmapFromFile(mImageFile);
         CameraActivity.setBitmapToMemoryCache(mImageFile.getName(), bitmap);
+
         return bitmap;
     }
 
@@ -90,7 +90,7 @@ public class BitmapWorkerTask extends AsyncTask<File, Void, Bitmap> {
 
     private static void addInBitmapOptions(BitmapFactory.Options options) {
         options.inMutable = true;
-        Bitmap bitmap = CameraActivity.getBitmapFromReuseableSet(options);
+        Bitmap bitmap = CameraActivity.getBitmapFromReusableSet(options);
         if(bitmap != null) {
             options.inBitmap = bitmap;
         }

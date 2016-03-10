@@ -98,9 +98,7 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            if(requestCode == REQUEST_CAMERA) {
-                onCaptureImageResult(data);
-            } else if (requestCode == SELECT_FILE) {
+            if (requestCode == SELECT_FILE) {
                 onSelectFromGalleryResult(data);
             }
         }
@@ -121,8 +119,6 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
                 if (items[which].equals("Take Photo")) {
                     Intent intent = new Intent(getActivity(), CameraActivity.class);
                     startActivity(intent);
-//                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                    startActivityForResult(intent, REQUEST_CAMERA);
                 // Check for gallery request
                 } else if (items[which].equals("Choose from Gallery")) {
                     Intent intent = new Intent(
@@ -140,30 +136,6 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
             }
         });
         builder.show();
-    }
-
-    private void onCaptureImageResult(Intent data) {
-        // Cast data taken from camera into an image
-        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-        // Converts image to bytes
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        // Compress image to lower quality scale 1 - 100
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-
-        // Save and store image to phone directory
-        File destination = new File(Environment.getExternalStorageDirectory(),
-                System.currentTimeMillis() + ".jpg");
-        FileOutputStream fo;
-        try {
-            destination.createNewFile();
-            fo = new FileOutputStream(destination);
-            fo.write(bytes.toByteArray());
-            fo.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        uploadToParse(bytes);
     }
 
     private void onSelectFromGalleryResult(Intent data) {

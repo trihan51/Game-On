@@ -49,8 +49,6 @@ import java.io.IOException;
  */
 public class UserProfileFragment extends android.support.v4.app.Fragment {
 
-    private static int PICK_IMAGE_REQUEST = 1;
-    private static int REQUEST_CAMERA = 0;
     private static int SELECT_FILE = 1;
 
     protected TextView mWelcomeMessageTextView;

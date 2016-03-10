@@ -40,6 +40,7 @@ public class CameraActivity extends Activity {
     private static final int ACTIVITY_START_CAMERA_APP = 1111;
     private String GALLERY_LOCATION = "Game On";
 
+    private String mImageFileLocation = "";
     private File mGalleryFolder;
     private static int mColumnCount = 3;
     private static int mImageWidth;

@@ -6,11 +6,13 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.ttpm.game_on.BitmapWorkerTask;
@@ -19,6 +21,7 @@ import com.example.ttpm.game_on.activities.CameraActivity;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 /**
  * Created by Tony on 3/9/2016.
@@ -60,7 +63,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mImageWidth, mImageHeight);
         imageView.setLayoutParams(params);
 
-        return new ViewHolder(imageView);
+        return new ViewHolder(imageView, mImageFiles);
     }
 
     @Override
@@ -93,11 +96,19 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageView;
+        private File[] files;
 
-        public ViewHolder(View view) {
+        public ViewHolder(View view, File[] imageFiles) {
             super(view);
+            files = imageFiles;
 
             imageView = (ImageView) view;
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("GAMEONSESSION", "pic: " + files[getAdapterPosition()]);
+                }
+            });
         }
 
         public ImageView getImageView() {

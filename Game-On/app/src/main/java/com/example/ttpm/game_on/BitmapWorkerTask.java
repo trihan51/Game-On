@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
+import com.example.ttpm.game_on.adapters.ImageAdapter;
+
 import java.io.File;
 import java.lang.ref.WeakReference;
 
@@ -17,6 +19,7 @@ public class BitmapWorkerTask extends AsyncTask<File, Void, Bitmap> {
     final static int TARGET_IMAGE_VIEW_WIDTH = 200;
 
     WeakReference<ImageView> imageViewReferences;
+    private File mImageFile;
 
     public BitmapWorkerTask(ImageView imageView) {
         imageViewReferences = new WeakReference<ImageView>(imageView);
@@ -24,16 +27,28 @@ public class BitmapWorkerTask extends AsyncTask<File, Void, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(File... params) {
+        mImageFile = params[0];
         return decodeBitmapFromFile(params[0]);
     }
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         super.onPostExecute(bitmap);
+        /*
         if(bitmap != null && imageViewReferences != null) {
             ImageView viewImage = imageViewReferences.get();
             if(viewImage != null) {
                 viewImage.setImageBitmap(bitmap);
+            }
+        }*/
+        if(isCancelled()) {
+            bitmap = null;
+        }
+        if(bitmap != null && imageViewReferences != null) {
+            ImageView imageView = imageViewReferences.get();
+            BitmapWorkerTask bitmapWorkerTask = ImageAdapter.getBitmapWorkerTask(imageView);
+            if(this == bitmapWorkerTask && imageView != null) {
+                imageView.setImageBitmap(bitmap);
             }
         }
     }
@@ -61,7 +76,11 @@ public class BitmapWorkerTask extends AsyncTask<File, Void, Bitmap> {
         BitmapFactory.decodeFile(imageFile.getAbsolutePath(), bmOptions);
         bmOptions.inSampleSize = calculateInSampleSize(bmOptions);
         bmOptions.inJustDecodeBounds = false;
-        
+
         return BitmapFactory.decodeFile(imageFile.getAbsolutePath(), bmOptions);
+    }
+
+    public File getImageFile() {
+        return mImageFile;
     }
 }

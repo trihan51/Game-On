@@ -1,7 +1,10 @@
 package com.example.ttpm.game_on.adapters;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,15 +16,34 @@ import com.example.ttpm.game_on.BitmapWorkerTask;
 import com.example.ttpm.game_on.R;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 
 /**
  * Created by Tony on 3/9/2016.
  */
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
-    private File[] mImageFiles;
     private static int mImageWidth;
     private static int mImageHeight;
+
+    private File[] mImageFiles;
+    private Bitmap placeHolderBitmap;
+
+    // Class that holds a reference to the BitmapWorkerTask object
+    public static class AsyncDrawable extends BitmapDrawable {
+        final WeakReference<BitmapWorkerTask> taskReference;
+
+        public AsyncDrawable(Resources resources,
+                             Bitmap bitmap,
+                             BitmapWorkerTask bitmapWorkerTask) {
+            super(resources, bitmap);
+            taskReference = new WeakReference(bitmapWorkerTask);
+        }
+
+        public BitmapWorkerTask getBitmapWorkerTask() {
+            return taskReference.get();
+        }
+    }
 
     public ImageAdapter(File[] folderFiles, int imageWidth, int imageHeight) {
         mImageFiles = folderFiles;
@@ -41,8 +63,14 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         File imageFile = mImageFiles[position];
-        BitmapWorkerTask workerTask = new BitmapWorkerTask(holder.getImageView());
-        workerTask.execute(imageFile);
+        if(checkBitmapWorkerTask(imageFile, holder.getImageView())) {
+            BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(holder.getImageView());
+            AsyncDrawable asyncDrawable = new AsyncDrawable(holder.getImageView().getResources(),
+                    placeHolderBitmap,
+                    bitmapWorkerTask);
+            holder.getImageView().setImageDrawable(asyncDrawable);
+            bitmapWorkerTask.execute(imageFile);
+        }
     }
 
     @Override
@@ -62,5 +90,31 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         public ImageView getImageView() {
             return imageView;
         }
+    }
+
+    public static boolean checkBitmapWorkerTask(File imageFile, ImageView imageView) {
+        BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+        if(bitmapWorkerTask != null) {
+            final File workerFile = bitmapWorkerTask.getImageFile();
+            if(workerFile != null) {
+                if(workerFile != imageFile) {
+                    bitmapWorkerTask.cancel(true);
+                } else {
+                    // bitmapworkertask file is the same as the imageview is expecting
+                    // so do nothing
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
+        Drawable drawable = imageView.getDrawable();
+        if(drawable instanceof AsyncDrawable) {
+            AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
+            return asyncDrawable.getBitmapWorkerTask();
+        }
+        return null;
     }
 }

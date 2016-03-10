@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 
 import com.example.ttpm.game_on.BitmapWorkerTask;
 import com.example.ttpm.game_on.R;
+import com.example.ttpm.game_on.activities.CameraActivity;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -63,7 +64,11 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         File imageFile = mImageFiles[position];
-        if(checkBitmapWorkerTask(imageFile, holder.getImageView())) {
+
+        Bitmap bitmap = CameraActivity.getBitmapFromMemoryCache(imageFile.getName());
+        if(bitmap != null) {
+            holder.getImageView().setImageBitmap(bitmap);
+        } else if(checkBitmapWorkerTask(imageFile, holder.getImageView())) {
             BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(holder.getImageView());
             AsyncDrawable asyncDrawable = new AsyncDrawable(holder.getImageView().getResources(),
                     placeHolderBitmap,

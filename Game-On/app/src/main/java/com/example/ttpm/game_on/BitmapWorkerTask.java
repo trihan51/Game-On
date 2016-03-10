@@ -3,8 +3,10 @@ package com.example.ttpm.game_on;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.widget.ImageView;
 
+import com.example.ttpm.game_on.activities.CameraActivity;
 import com.example.ttpm.game_on.adapters.ImageAdapter;
 
 import java.io.File;
@@ -28,19 +30,16 @@ public class BitmapWorkerTask extends AsyncTask<File, Void, Bitmap> {
     @Override
     protected Bitmap doInBackground(File... params) {
         mImageFile = params[0];
-        return decodeBitmapFromFile(params[0]);
+//        return decodeBitmapFromFile(params[0]);
+        Bitmap bitmap = decodeBitmapFromFile(mImageFile);
+        CameraActivity.setBitmapToMemoryCache(mImageFile.getName(), bitmap);
+        return bitmap;
     }
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         super.onPostExecute(bitmap);
-        /*
-        if(bitmap != null && imageViewReferences != null) {
-            ImageView viewImage = imageViewReferences.get();
-            if(viewImage != null) {
-                viewImage.setImageBitmap(bitmap);
-            }
-        }*/
+
         if(isCancelled()) {
             bitmap = null;
         }
@@ -77,10 +76,22 @@ public class BitmapWorkerTask extends AsyncTask<File, Void, Bitmap> {
         bmOptions.inSampleSize = calculateInSampleSize(bmOptions);
         bmOptions.inJustDecodeBounds = false;
 
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+            addInBitmapOptions(bmOptions);
+        }
+
         return BitmapFactory.decodeFile(imageFile.getAbsolutePath(), bmOptions);
     }
 
     public File getImageFile() {
         return mImageFile;
+    }
+
+    private static void addInBitmapOptions(BitmapFactory.Options options) {
+        options.inMutable = true;
+        Bitmap bitmap = CameraActivity.getBitmapFromReuseableSet(options);
+        if(bitmap != null) {
+            options.inBitmap = bitmap;
+        }
     }
 }

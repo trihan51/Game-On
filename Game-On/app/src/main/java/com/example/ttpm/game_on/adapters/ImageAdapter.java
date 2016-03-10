@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
 import com.example.ttpm.game_on.BitmapWorkerTask;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.CameraActivity;
@@ -55,6 +56,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ImageView imageView = new ImageView(parent.getContext());
+        // programmatically create the xml layout file instead of inflating one
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mImageWidth, mImageHeight);
         imageView.setLayoutParams(params);
 
@@ -65,17 +67,23 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
         File imageFile = mImageFiles[position];
 
-        Bitmap bitmap = CameraActivity.getBitmapFromMemoryCache(imageFile.getName());
+        Glide.with(holder.getImageView().getContext())
+                .load(imageFile)
+                .centerCrop()
+                .into(holder.getImageView());
+
+        /*Bitmap bitmap = CameraActivity.getBitmapFromMemoryCache(imageFile.getName());
         if(bitmap != null) {
             holder.getImageView().setImageBitmap(bitmap);
         } else if(checkBitmapWorkerTask(imageFile, holder.getImageView())) {
-            BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(holder.getImageView());
+            BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(holder.getImageView(),
+                    mImageWidth, mImageHeight);
             AsyncDrawable asyncDrawable = new AsyncDrawable(holder.getImageView().getResources(),
                     placeHolderBitmap,
                     bitmapWorkerTask);
             holder.getImageView().setImageDrawable(asyncDrawable);
             bitmapWorkerTask.execute(imageFile);
-        }
+        }*/
     }
 
     @Override

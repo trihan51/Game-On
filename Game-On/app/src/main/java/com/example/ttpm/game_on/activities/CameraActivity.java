@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
@@ -64,7 +65,8 @@ public class CameraActivity extends Activity {
         mImageHeight = mImageWidth * 4 / 3;
 
         mRecyclerView = (RecyclerView) findViewById(R.id.camera_activity_recycler_view);
-        GridLayoutManager layoutManager = new GridLayoutManager(this, mColumnCount);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 1);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mRecyclerView.setLayoutManager(layoutManager);
         RecyclerView.Adapter imageAdapter =
                 new ImageAdapter(sortFilesToLatest(mGalleryFolder), mImageWidth, mImageHeight);

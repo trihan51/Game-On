@@ -15,8 +15,10 @@ import android.util.DisplayMetrics;
 import android.util.LruCache;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.ttpm.game_on.R;
+import com.example.ttpm.game_on.RecyclerViewClickPositionInterface;
 import com.example.ttpm.game_on.adapters.ImageAdapter;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -36,8 +38,9 @@ import java.util.Set;
 /**
  * Created by Tony on 3/9/2016.
  */
-public class CameraActivity extends Activity {
+public class CameraActivity extends Activity implements RecyclerViewClickPositionInterface {
     private static final int ACTIVITY_START_CAMERA_APP = 1111;
+    private static final String IMAGE_FILE_LOCATION = "image_file_location";
     private String GALLERY_LOCATION = "Game On";
 
     private String mImageFileLocation = "";
@@ -66,7 +69,7 @@ public class CameraActivity extends Activity {
         GridLayoutManager layoutManager = new GridLayoutManager(this, mColumnCount);
         mRecyclerView.setLayoutManager(layoutManager);
         RecyclerView.Adapter imageAdapter =
-                new ImageAdapter(sortFilesToLatest(mGalleryFolder), mImageWidth, mImageHeight);
+                new ImageAdapter(sortFilesToLatest(mGalleryFolder), mImageWidth, mImageHeight, this);
         mRecyclerView.setAdapter(imageAdapter);
 
         final int maxMemorySize = (int) Runtime.getRuntime().maxMemory() / 1024;
@@ -116,7 +119,7 @@ public class CameraActivity extends Activity {
 
         if(requestCode == ACTIVITY_START_CAMERA_APP && resultCode == RESULT_OK) {
             RecyclerView.Adapter newImageAdapter =
-                    new ImageAdapter(mostRecentGalleryFolder, mImageWidth, mImageHeight);
+                    new ImageAdapter(mostRecentGalleryFolder, mImageWidth, mImageHeight, this);
             mRecyclerView.swapAdapter(newImageAdapter, false);
         }
 
@@ -227,5 +230,13 @@ public class CameraActivity extends Activity {
         }
 
         return bitmap;
+    }
+
+    @Override
+    public void getRecyclerViewAdapterPosition(int position) {
+        Intent sendFileAddressIntent = new Intent(this, SingleImageActivity.class);
+        sendFileAddressIntent.putExtra(IMAGE_FILE_LOCATION,
+                sortFilesToLatest(mGalleryFolder)[position].toString());
+        startActivity(sendFileAddressIntent);
     }
 }

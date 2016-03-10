@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.ttpm.game_on.BitmapWorkerTask;
 import com.example.ttpm.game_on.R;
+import com.example.ttpm.game_on.RecyclerViewClickPositionInterface;
 import com.example.ttpm.game_on.activities.CameraActivity;
 
 import java.io.File;
@@ -33,6 +34,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     private File[] mImageFiles;
     private Bitmap placeHolderBitmap;
+    private static RecyclerViewClickPositionInterface mPositionInterface;
 
     // Class that holds a reference to the BitmapWorkerTask object
     public static class AsyncDrawable extends BitmapDrawable {
@@ -50,10 +52,14 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         }
     }
 
-    public ImageAdapter(File[] folderFiles, int imageWidth, int imageHeight) {
+    public ImageAdapter(File[] folderFiles,
+                        int imageWidth,
+                        int imageHeight,
+                        RecyclerViewClickPositionInterface positionInterface) {
         mImageFiles = folderFiles;
         mImageWidth = imageWidth;
         mImageHeight = imageHeight;
+        mPositionInterface = positionInterface;
     }
 
     @Override
@@ -94,7 +100,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         return mImageFiles.length;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private ImageView imageView;
         private File[] files;
 
@@ -102,17 +108,17 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
             super(view);
             files = imageFiles;
 
+            view.setOnClickListener(this);
             imageView = (ImageView) view;
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d("GAMEONSESSION", "pic: " + files[getAdapterPosition()]);
-                }
-            });
         }
 
         public ImageView getImageView() {
             return imageView;
+        }
+
+        @Override
+        public void onClick(View v) {
+            mPositionInterface.getRecyclerViewAdapterPosition(this.getAdapterPosition());
         }
     }
 

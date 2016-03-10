@@ -51,6 +51,8 @@
         </activity>
         <activity android:name=".activities.CameraActivity" >
         </activity>
+        <activity android:name=".activities.SingleImageActivity">
+        </activity>
         <activity
             android:name=".models.GameOnSession"
             android:label="@string/title_activity_game_on_session" >

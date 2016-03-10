@@ -1,4 +1,4 @@
-package com.example.ttpm.game_on;
+package com.example.ttpm.game_on.async;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

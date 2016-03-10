@@ -14,11 +14,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.example.ttpm.game_on.R;
-import com.example.ttpm.game_on.RecyclerViewClickPositionInterface;
+import com.example.ttpm.game_on.interfaces.RecyclerViewClickPositionInterface;
 import com.example.ttpm.game_on.adapters.ImageAdapter;
 import com.parse.ParseFile;
 import com.parse.ParseUser;

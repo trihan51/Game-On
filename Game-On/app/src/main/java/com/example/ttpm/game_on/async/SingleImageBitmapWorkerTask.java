@@ -1,4 +1,4 @@
-package com.example.ttpm.game_on;
+package com.example.ttpm.game_on.async;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,7 +7,6 @@ import android.os.Build;
 import android.widget.ImageView;
 
 import com.example.ttpm.game_on.activities.CameraActivity;
-import com.example.ttpm.game_on.adapters.ImageAdapter;
 
 import java.io.File;
 import java.lang.ref.WeakReference;

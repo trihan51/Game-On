@@ -3,11 +3,15 @@ package com.example.ttpm.game_on.activities;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.example.ttpm.game_on.SingleImageBitmapWorkerTask;
+import com.example.ttpm.game_on.async.SingleImageBitmapWorkerTask;
+import com.parse.ParseFile;
+import com.parse.ParseUser;
 
 import java.io.File;
 
@@ -61,10 +65,27 @@ public class SingleImageActivity extends Activity {
         // Setting RelativeLayout as content view
         setContentView(relativeLayout, rlp);
 
-        File imageFile = new File(getIntent().getStringExtra(IMAGE_FILE_LOCATION));
+        final File imageFile = new File(getIntent().getStringExtra(IMAGE_FILE_LOCATION));
 
         SingleImageBitmapWorkerTask workerTask =
                 new SingleImageBitmapWorkerTask(imageView, width, height);
         workerTask.execute(imageFile);
+
+        useAsProfilePicButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("GAMEONSESSION", "Pic #: " + imageFile.getAbsolutePath());
+                // Create the ParseFile
+                ParseFile file = new ParseFile(imageFile);
+                // Upload the image to Parse
+                file.saveInBackground();
+                // Retrieve current user
+                ParseUser currentUser = ParseUser.getCurrentUser();
+                // Finds profilePicture column in User table and inserts the image
+                currentUser.put("profilePicture", file);
+                // Save the user
+                currentUser.saveInBackground();
+            }
+        });
     }
 }

@@ -134,6 +134,7 @@ public class SessionFragment extends VisibleFragment {
         ParseQuery<GameOnSession> query = GameOnSession.getQuery();
         query.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(getActivity()));
         query.include("host");
+
         query.findInBackground(new FindCallback<GameOnSession>() {
             @Override
             public void done(List<GameOnSession> list, ParseException e) {

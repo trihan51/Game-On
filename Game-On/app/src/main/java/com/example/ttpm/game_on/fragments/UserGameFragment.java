@@ -99,6 +99,17 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
         query.whereEqualTo("gameTitle", boardGameName);
         query.whereNotEqualTo("host", ParseUser.getCurrentUser());
         query.whereEqualTo("Open", true);
+        /*
+         //name of the seconday table
+       query.include("User");
+        query.whereEqualTo("host","objectID");
+         */
+
+
+
+      // query.include("email");
+       //query.include("participants");
+
 
         if (!mSearchRadius.equals(getResources().getString(R.string.radio_na))) {
             query.whereWithinMiles(
@@ -158,16 +169,19 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
     private class SessionSearchViewHolder extends RecyclerView.ViewHolder {
 
         private GameOnSession mSession;
-
-        private TextView mSessionIdTextView;
+        private TextView mHostEmailTextView;
         private TextView mGameTitleTextView;
+        private TextView mSessionIdTextView;
+       // private TextView mnumOfParticipantsTextView;
         private Button mJoinButton;
 
         public SessionSearchViewHolder(View itemView) {
             super(itemView);
 
-            mSessionIdTextView = (TextView) itemView.findViewById(R.id.list_item_session_id);
+           mSessionIdTextView = (TextView) itemView.findViewById(R.id.list_item_session_id);
+            mHostEmailTextView = (TextView) itemView.findViewById(R.id.list_item_host_email);
             mGameTitleTextView = (TextView) itemView.findViewById(R.id.list_item_game_title);
+          //  mnumOfParticipantsTextView = (TextView) itemView.findViewById(R.id.list_item_session_id);
             mJoinButton = (Button) itemView.findViewById(R.id.list_item_join_button);
 
             mJoinButton.setOnClickListener(new View.OnClickListener() {
@@ -193,10 +207,15 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
             });
         }
 
+
         public void bindSession(GameOnSession session) {
             mSession = session;
-            mSessionIdTextView.setText(session.getObjectId());
+
+           //mSessionIdTextView.setText(session.getObjectId());
+            mSessionIdTextView.setText(session.getNumberOfParticipants());
+            mHostEmailTextView.setText(session.getHostEmail());
             mGameTitleTextView.setText(session.getGameTitle());
+           // mnumOfParticipantsTextView.setText(session.getNumberOfParticipants());
         }
     }
 

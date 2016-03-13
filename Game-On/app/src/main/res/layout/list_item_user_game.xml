@@ -30,6 +30,13 @@
             android:layout_weight="1"
             android:textAlignment="center"
             android:textSize="16sp" />
+        <TextView
+            android:id="@+id/list_item_host_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/list_item_join_button"

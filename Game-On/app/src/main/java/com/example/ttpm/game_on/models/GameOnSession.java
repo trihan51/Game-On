@@ -26,6 +26,23 @@ public class GameOnSession extends ParseObject {
         put("objectId", sessionId);
     }
 
+    public  String getHostName(){return getString("Name");}
+
+    public void  setHostName(String hostName){put("Name",hostName);}
+
+    public String getHostEmail() { ParseUser currentUser = ParseUser.getCurrentUser();
+        String currentuse = currentUser.getUsername();
+        return currentuse;}
+
+    public void setHostEmail(String hostEmail) {put("email", hostEmail);}
+
+    public  void setNumberOfParticipants(String numberOfParticipants){put("participants",numberOfParticipants);}
+    public  String getNumberOfParticipants(){
+    int getParticipantsNumber = getParticipants().length();
+    return String.valueOf(getParticipantsNumber);}
+
+
+
     public String getGameTitle() {
         return getString("gameTitle");
     }
@@ -88,4 +105,6 @@ public class GameOnSession extends ParseObject {
     public static ParseQuery<GameOnSession> getQuery() {
         return ParseQuery.getQuery(GameOnSession.class);
     }
-}
+
+
+    }

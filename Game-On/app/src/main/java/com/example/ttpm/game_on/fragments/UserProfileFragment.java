@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.CameraActivity;
 import com.parse.GetCallback;
@@ -31,6 +33,11 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -195,33 +202,50 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
             public void done(ParseUser object, ParseException e) {
                 if(e == null) {
                     ParseFile picture = object.getParseFile("profilePicture");
-                    if(picture == null) {
-                        Log.d("GAMEONSESSION", "Picture is null");
-                        return;
-                    }
+                    String parseFileName = picture.getName();
+                    final String pictureName = getPictureName(parseFileName);
 
                     picture.getDataInBackground(new GetDataCallback() {
                         @Override
                         public void done(byte[] data, ParseException e) {
                             if(e == null) {
                                 if(data.length == 0) {
-                                    Log.d("GAMEONSESSION", "Data found, but nothing to extract");
+                                    Log.d("GAMEON", "Data found, but nothing to extract");
                                     return;
                                 }
-                                Log.d("GAMEONSESSION", "File found! Can set to imageview");
+                                Log.d("GAMEON", "File found! Can set to imageview");
 
                                 Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                                mProfileImageView.setImageBitmap(bitmap);
+                                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), pictureName);
+                                try {
+                                    OutputStream os = new FileOutputStream(file);
+                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+                                    os.flush();
+                                    os.close();
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                }
+
+                                Glide.with(getContext()).load(file).into(mProfileImageView);
                             } else {
-                                Log.d("GAMEONSESSION", "Parsefile contains no data");
+                                Log.d("GAMEON", "Parsefile contains no data");
                             }
                         }
                     });
                 } else {
-                    Log.d("GAMEONSESSION", "No user found");
+                    Log.d("GAMEON", "No user found");
                 }
             }
         });
+    }
+
+    private String getPictureName(String input) {
+        Log.d("GAMEONSESSION", input);
+        String regexPattern = "(IMAGE)[\\s\\S]*";
+        Pattern pattern = Pattern.compile(regexPattern);
+        Matcher matcher = pattern.matcher(input);
+        matcher.find();
+        return matcher.group(0);
     }
 }
 

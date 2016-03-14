@@ -4,6 +4,7 @@ package com.example.ttpm.game_on.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,6 +29,7 @@ import com.bumptech.glide.Glide;
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.CameraActivity;
+import com.example.ttpm.game_on.activities.HomePagerActivity;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
@@ -114,7 +116,7 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
 
     private void selectImage() {
         // Dialogbox items
-        final CharSequence[] items = { "Take Photo", "Choose from Gallery", "Cancel" };
+        final CharSequence[] items = { "Take Photo", "Choose from Gallery", "Remove Photo", "Cancel" };
 
         // Building the Dialogbox
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
@@ -127,7 +129,7 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
                 if (items[which].equals("Take Photo")) {
                     Intent intent = new Intent(getActivity(), CameraActivity.class);
                     startActivity(intent);
-                // Check for gallery request
+                    // Check for gallery request
                 } else if (items[which].equals("Choose from Gallery")) {
                     Intent intent = new Intent(
                             Intent.ACTION_PICK,
@@ -137,8 +139,11 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
                     startActivityForResult(
                             Intent.createChooser(intent, "Select File"),
                             SELECT_FILE);
-                // Check for cancel request
-                } else if (items[which].equals("Cancel")) {
+                    // Check for cancel request
+                } else if(items[which].equals("Remove Photo")) {
+                    removeProfilePictureFromParse();
+                    dialog.dismiss();
+                } else if(items[which].equals("Cancel")) {
                     dialog.dismiss();
                 }
             }
@@ -216,36 +221,38 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
             public void done(ParseUser object, ParseException e) {
                 if(e == null) {
                     ParseFile picture = object.getParseFile("profilePicture");
-                    String parseFileName = picture.getName();
-                    final String pictureName = getPictureName(parseFileName);
+                    if(picture != null) {
+                        String parseFileName = picture.getName();
+                        final String pictureName = getPictureName(parseFileName);
 
-                    picture.getDataInBackground(new GetDataCallback() {
-                        @Override
-                        public void done(byte[] data, ParseException e) {
-                            if(e == null) {
-                                if(data.length == 0) {
-                                    Log.d("GAMEON", "Data found, but nothing to extract");
-                                    return;
+                        picture.getDataInBackground(new GetDataCallback() {
+                            @Override
+                            public void done(byte[] data, ParseException e) {
+                                if (e == null) {
+                                    if (data.length == 0) {
+                                        Log.d("GAMEON", "Data found, but nothing to extract");
+                                        return;
+                                    }
+                                    Log.d("GAMEON", "File found! Can set to imageview");
+
+                                    Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                                    File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), pictureName);
+                                    try {
+                                        OutputStream os = new FileOutputStream(file);
+                                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+                                        os.flush();
+                                        os.close();
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                    }
+
+                                    Glide.with(getContext()).load(file).into(mProfileImageView);
+                                } else {
+                                    Log.d("GAMEON", "Parsefile contains no data");
                                 }
-                                Log.d("GAMEON", "File found! Can set to imageview");
-
-                                Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), pictureName);
-                                try {
-                                    OutputStream os = new FileOutputStream(file);
-                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
-                                    os.flush();
-                                    os.close();
-                                } catch (Exception ex) {
-                                    ex.printStackTrace();
-                                }
-
-                                Glide.with(getContext()).load(file).into(mProfileImageView);
-                            } else {
-                                Log.d("GAMEON", "Parsefile contains no data");
                             }
-                        }
-                    });
+                        });
+                    }
                 } else {
                     Log.d("GAMEON", "No user found");
                 }
@@ -260,6 +267,22 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
         Matcher matcher = pattern.matcher(input);
         matcher.find();
         return matcher.group(0);
+    }
+
+    private void removeProfilePictureFromParse() {
+        ParseUser user = ParseUser.getCurrentUser();
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.getInBackground(user.getObjectId(), new GetCallback<ParseUser>() {
+            @Override
+            public void done(ParseUser object, ParseException e) {
+                if(e == null) {
+                    object.remove("profilePicture");
+                    object.saveInBackground();
+                }
+            }
+        });
+        Intent intent = new Intent(this.getContext(), HomePagerActivity.class);
+        startActivity(intent);
     }
 }
 

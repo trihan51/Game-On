@@ -36,6 +36,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -176,8 +178,11 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
     private void uploadToParse(ByteArrayOutputStream stream) {
         byte[] image = stream.toByteArray();
 
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "IMAGE_" + timeStamp + "_";
+
         // Create the ParseFile
-        ParseFile file = new ParseFile(System.currentTimeMillis() + ".jpg", image);
+        ParseFile file = new ParseFile(imageFileName + ".jpg", image);
         // Upload the image to Parse
         file.saveInBackground();
 

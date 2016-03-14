@@ -1,6 +1,7 @@
 package com.example.ttpm.game_on.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -85,7 +86,14 @@ public class SingleImageActivity extends Activity {
                 currentUser.put("profilePicture", file);
                 // Save the user
                 currentUser.saveInBackground();
+
+                returnToUserProfile();
             }
         });
+    }
+
+    private void returnToUserProfile() {
+        Intent intent = HomePagerActivity.newIntent(this);
+        startActivity(intent);
     }
 }

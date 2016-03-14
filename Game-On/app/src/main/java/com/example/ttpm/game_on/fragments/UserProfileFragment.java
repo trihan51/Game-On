@@ -14,15 +14,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.CameraActivity;
 import com.parse.GetCallback;
@@ -87,6 +90,12 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
                 selectImage();
             }
         });
+
+        final View vv = (View) view.findViewById(R.id.user_profile_coordinator_layout);
+        if(QueryPreferences.isNewProfilePic(this.getContext())) {
+            Snackbar.make(vv, "Image Uploaded", Snackbar.LENGTH_SHORT).show();
+            QueryPreferences.setNewProfilePic(this.getContext(), false);
+        }
 
         updateProfilePicture();
 

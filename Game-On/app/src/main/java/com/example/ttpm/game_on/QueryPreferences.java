@@ -10,6 +10,7 @@ public class QueryPreferences {
 
     private static final String PREF_SESSION_ID = "sessionId";
     private static final String PREF_IS_ALARM_ON = "isAlarmOn";
+    private static final String PREF_IS_NEW_PROFILE_PIC = "isNewProfilePic";
 
     public static String getStoredSessionId(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context).getString(PREF_SESSION_ID, null);
@@ -34,4 +35,15 @@ public class QueryPreferences {
                 .apply();
     }
 
+    public static boolean isNewProfilePic(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(PREF_IS_NEW_PROFILE_PIC, false);
+    }
+
+    public static void setNewProfilePic(Context context, boolean isSet) {
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putBoolean(PREF_IS_NEW_PROFILE_PIC, isSet)
+                .apply();
+    }
 }

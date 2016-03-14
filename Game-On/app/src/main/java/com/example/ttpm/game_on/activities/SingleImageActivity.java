@@ -3,6 +3,8 @@ package com.example.ttpm.game_on.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.async.SingleImageBitmapWorkerTask;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -93,6 +96,7 @@ public class SingleImageActivity extends Activity {
     }
 
     private void returnToUserProfile() {
+        QueryPreferences.setNewProfilePic(this, true);
         Intent intent = HomePagerActivity.newIntent(this);
         startActivity(intent);
     }

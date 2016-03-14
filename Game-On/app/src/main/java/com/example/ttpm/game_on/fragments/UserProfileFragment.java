@@ -12,36 +12,27 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.CameraActivity;
-import com.example.ttpm.game_on.activities.SplashActivity;
+import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseImageView;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 /**
@@ -52,7 +43,7 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
     private static int SELECT_FILE = 1;
 
     protected TextView mWelcomeMessageTextView;
-    protected ParseImageView mProfileImageView;
+    protected CircleImageView mProfileImageView;
     protected ImageButton mPictureChangeButton;
 
     public UserProfileFragment() {
@@ -76,9 +67,8 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
         mWelcomeMessageTextView = (TextView) view.findViewById(R.id.user_profile_welcome_message);
         mWelcomeMessageTextView.setText(ParseUser.getCurrentUser().getUsername());
 
-        mProfileImageView = (ParseImageView)
-                view.findViewById(R.id.user_profile_profile_parse_image_view);
-        updateProfilePicture();
+        mProfileImageView = (CircleImageView)
+                view.findViewById(R.id.user_profile_profile_image_view);
 
         mPictureChangeButton = (ImageButton)
                 view.findViewById(R.id.user_profile_change_profile_picture_button);
@@ -88,6 +78,8 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
                 selectImage();
             }
         });
+
+        updateProfilePicture();
 
         return view;
     }
@@ -196,11 +188,38 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
     }
 
     private void updateProfilePicture() {
-        ParseFile currentObject = ParseUser.getCurrentUser().getParseFile("profilePicture");
-        mProfileImageView.setParseFile(currentObject);
-        mProfileImageView.loadInBackground(new GetDataCallback() {
+        ParseUser user = ParseUser.getCurrentUser();
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.getInBackground(user.getObjectId(), new GetCallback<ParseUser>() {
             @Override
-            public void done(byte[] data, ParseException e) {
+            public void done(ParseUser object, ParseException e) {
+                if(e == null) {
+                    ParseFile picture = object.getParseFile("profilePicture");
+                    if(picture == null) {
+                        Log.d("GAMEONSESSION", "Picture is null");
+                        return;
+                    }
+
+                    picture.getDataInBackground(new GetDataCallback() {
+                        @Override
+                        public void done(byte[] data, ParseException e) {
+                            if(e == null) {
+                                if(data.length == 0) {
+                                    Log.d("GAMEONSESSION", "Data found, but nothing to extract");
+                                    return;
+                                }
+                                Log.d("GAMEONSESSION", "File found! Can set to imageview");
+
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                                mProfileImageView.setImageBitmap(bitmap);
+                            } else {
+                                Log.d("GAMEONSESSION", "Parsefile contains no data");
+                            }
+                        }
+                    });
+                } else {
+                    Log.d("GAMEONSESSION", "No user found");
+                }
             }
         });
     }

@@ -27,7 +27,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
@@ -41,7 +43,6 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -66,6 +67,9 @@ public class SessionFragment extends VisibleFragment {
     private GoogleMap mMap;
     private MapView mapView;
     private Location mCurrentLocation;
+    CameraUpdate cu;
+
+    LatLngBounds.Builder builder;
 
     private CountDownTimer mCountDownTimer;
 
@@ -235,7 +239,7 @@ public class SessionFragment extends VisibleFragment {
        TextView hostNameTextView = new TextView(getActivity());
         hostNameTextView.append("Host: " + HostOfTheGame.getUsername());
         displayArea.addView(hostNameTextView);
-        updateHostMarkers();
+       // updateHostMarkers();
 
     }
 
@@ -282,6 +286,8 @@ public class SessionFragment extends VisibleFragment {
         } catch (org.json.JSONException e) {
             e.getStackTrace();
         }
+
+        updateUserMarker();
     }
 
     private void startTimer() {
@@ -359,16 +365,71 @@ public class SessionFragment extends VisibleFragment {
 
     private void updateHostMarkers()
     {
-        ParseGeoPoint point = mCurrentGameOnSession.getLocation();
+        /*ParseGeoPoint point = mCurrentGameOnSession.getLocation();
 
 
             Marker marker = mMap.addMarker(
                     new MarkerOptions()
-                            .position(new LatLng(point.getLatitude(),point.getLongitude()))
+                            .position(new LatLng(point.getLatitude(), point.getLongitude()))
                             .title("Host")
-            );
+            ); */
+
 
 
     }
+
+    private void updateUserMarker()
+    {
+
+        Marker marker1 = mMap.addMarker(
+                new MarkerOptions()
+                        .position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()))
+                        .title("You")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+        );
+
+        ParseGeoPoint point = mCurrentGameOnSession.getLocation();
+
+
+        Marker marker = mMap.addMarker(
+                new MarkerOptions()
+                        .position(new LatLng(point.getLatitude(), point.getLongitude()))
+                        .title("Host")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+        );
+
+        List<Marker> markersList = new ArrayList<Marker>();
+        markersList.add(marker1);
+        markersList.add(marker);
+
+        builder = new LatLngBounds.Builder();
+        for (Marker m : markersList) {
+            builder.include(m.getPosition());
+        }
+
+        int padding = 50;
+        /**create the bounds from latlngBuilder to set into map camera*/
+        LatLngBounds bounds = builder.build();
+        /**create the camera with bounds and padding to set into map*/
+        cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+        /**call the map call back to know map is loaded or not*/
+        mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                /**set animated zoom camera into map*/
+                mMap.animateCamera(cu);
+
+            }
+        });
+
+
+
+
+
+
+
+    }
+
+
 
 }

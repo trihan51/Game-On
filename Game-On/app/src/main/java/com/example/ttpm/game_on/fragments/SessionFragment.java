@@ -395,6 +395,7 @@ public class SessionFragment extends VisibleFragment {
                 new MarkerOptions()
                         .position(new LatLng(point.getLatitude(), point.getLongitude()))
                         .title("Host")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
         );
 
         List<Marker> markersList = new ArrayList<Marker>();

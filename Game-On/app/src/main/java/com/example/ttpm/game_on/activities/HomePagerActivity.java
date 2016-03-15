@@ -225,7 +225,7 @@ public class HomePagerActivity extends AppCompatActivity {
                 }
                 return true;
             case R.id.menu_action_current_session:
-                Intent intent = SessionActivity.newIntent(this);
+                Intent intent = SessionActivity.newIntent(this, mCurrentLocation);
                 startActivity(intent);
                 return true;
             default:

@@ -26,22 +26,32 @@ public class GameOnSession extends ParseObject {
         put("objectId", sessionId);
     }
 
-    public  String getHostName(){return getString("Name");}
+    public  String getHostName(){
+        return getString("Name");
+    }
 
-    public void  setHostName(String hostName){put("Name",hostName);}
+    public void  setHostName(String hostName){
+        put("Name",hostName);
+    }
 
-    public String getHostEmail() { ParseUser currentUser = ParseUser.getCurrentUser();
+    public String getHostEmail() {
+        ParseUser currentUser = ParseUser.getCurrentUser();
         String currentuse = currentUser.getUsername();
-        return currentuse;}
+        return currentuse;
+    }
 
-    public void setHostEmail(String hostEmail) {put("email", hostEmail);}
+    public void setHostEmail(String hostEmail) {
+        put("email", hostEmail);
+    }
 
-    public  void setNumberOfParticipants(String numberOfParticipants){put("participants",numberOfParticipants);}
-    public  String getNumberOfParticipants(){
-    int getParticipantsNumber = getParticipants().length();
-    return String.valueOf(getParticipantsNumber);}
+    public  void setNumberOfParticipants(String numberOfParticipants) {
+        put("participants",numberOfParticipants);
+    }
 
-
+    public String getNumberOfParticipants() {
+        int getParticipantsNumber = getParticipants().length();
+        return String.valueOf(getParticipantsNumber);
+    }
 
     public String getGameTitle() {
         return getString("gameTitle");
@@ -65,10 +75,26 @@ public class GameOnSession extends ParseObject {
         put("participants", participants);
     }
 
-    public void addParticipant(String userId) {
+    public void addParticipant(String userId)  {
         JSONArray participants = this.getParticipants();
-        participants.put(userId);
-        this.put("partipants", participants);
+        try {
+            if (!userIdIsAlreadyIn(participants, userId)) {
+                participants.put(userId);
+            }
+        } catch (org.json.JSONException jsonException) {
+            jsonException.printStackTrace();
+        }
+        this.put("participants", participants);
+    }
+
+    private boolean userIdIsAlreadyIn(JSONArray participants, String userId) throws org.json.JSONException {
+        int numOfParticipants = participants.length();
+        for (int i = 0; i < numOfParticipants; i++) {
+            if (participants.get(i).equals(userId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void removeParticipant(String userId) throws org.json.JSONException {
@@ -105,6 +131,4 @@ public class GameOnSession extends ParseObject {
     public static ParseQuery<GameOnSession> getQuery() {
         return ParseQuery.getQuery(GameOnSession.class);
     }
-
-
-    }
+}

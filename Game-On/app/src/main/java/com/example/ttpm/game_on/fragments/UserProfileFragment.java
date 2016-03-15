@@ -252,6 +252,11 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
                                 }
                             }
                         });
+                    } else {
+                        Glide.with(getContext())
+                                .load("")
+                                .placeholder(R.drawable.com_parse_ui_facebook_login_logo)
+                                .into(mProfileImageView);
                     }
                 } else {
                     Log.d("GAMEON", "No user found");
@@ -281,8 +286,7 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
                 }
             }
         });
-        Intent intent = new Intent(this.getContext(), HomePagerActivity.class);
-        startActivity(intent);
+        updateProfilePicture();
     }
 }
 

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -34,6 +35,10 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
+
+import io.karim.MaterialTabs;
+
 public class HomePagerActivity extends AppCompatActivity {
 
     private static final String TAG = "HomePagerActivity";
@@ -52,6 +57,11 @@ public class HomePagerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_pager);
+
+        ViewPager viewPager = (ViewPager) findViewById(R.id.activity_home_pager_view_pager);
+        viewPager.setAdapter(new SamplePageAdapter(getSupportFragmentManager(), 3));
+        MaterialTabs tabs = (MaterialTabs) findViewById(R.id.material_tabs);
+        tabs.setViewPager(viewPager);
 
         setCurrentLocationToDefault();
 
@@ -145,26 +155,25 @@ public class HomePagerActivity extends AppCompatActivity {
         HomePagerActivity.this.invalidateOptionsMenu();
         mClient.connect();
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.activity_home_pager_view_pager);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
-            @Override
-            public Fragment getItem(int position) {
-                switch (position) {
-                    case 0:
-                        return UserProfileFragment.newInstance();
-                    case 1:
-                        return UserSearchFragment.newInstance(mCurrentLocation);
-                    default:
-                        return HostSearchFragment.newInstance(mCurrentLocation);
-                }
-            }
-
-            @Override
-            public int getCount() {
-                return 3;
-            }
-        });
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
+//            @Override
+//            public Fragment getItem(int position) {
+//                switch (position) {
+//                    case 0:
+//                        return UserProfileFragment.newInstance();
+//                    case 1:
+//                        return UserSearchFragment.newInstance(mCurrentLocation);
+//                    default:
+//                        return HostSearchFragment.newInstance(mCurrentLocation);
+//                }
+//            }
+//
+//            @Override
+//            public int getCount() {
+//                return 3;
+//            }
+//        });
     }
 
     @Override
@@ -230,6 +239,43 @@ public class HomePagerActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public class SamplePageAdapter extends FragmentPagerAdapter {
+
+        private final String[] TITLES = {"Profile", "Join", "Host"};
+
+        private final ArrayList<String> mTitles;
+
+        public SamplePageAdapter(FragmentManager fm, int numberOfTabs){
+            super(fm);
+            mTitles = new ArrayList<>();
+            for (int i = 0; i < numberOfTabs; i++) {
+                mTitles.add(TITLES[i]);
+            }
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mTitles.get(position);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return UserProfileFragment.newInstance();
+                case 1:
+                    return UserSearchFragment.newInstance(mCurrentLocation);
+                default:
+                    return HostSearchFragment.newInstance(mCurrentLocation);
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return mTitles.size();
         }
     }
 }

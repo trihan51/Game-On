@@ -59,6 +59,7 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
     protected TextView mWelcomeMessageTextView;
     protected CircleImageView mProfileImageView;
     protected ImageButton mPictureChangeButton;
+    protected View mUploadSnackbar;
 
     public UserProfileFragment() {
     }
@@ -93,9 +94,9 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
             }
         });
 
-        final View vv = (View) view.findViewById(R.id.user_profile_coordinator_layout);
+        mUploadSnackbar = (View) view.findViewById(R.id.user_profile_coordinator_layout);
         if(QueryPreferences.isNewProfilePic(this.getContext())) {
-            Snackbar.make(vv, "Image Uploaded", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(mUploadSnackbar, "Image Uploaded", Snackbar.LENGTH_SHORT).show();
             QueryPreferences.setNewProfilePic(this.getContext(), false);
         }
 
@@ -209,8 +210,7 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
 
         updateProfilePicture();
 
-        Toast.makeText(this.getActivity(), "Image uploaded!",
-                Toast.LENGTH_SHORT).show();
+        Snackbar.make(mUploadSnackbar, "Image Uploaded", Snackbar.LENGTH_SHORT).show();
     }
 
     private void updateProfilePicture() {
@@ -219,48 +219,48 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
         query.getInBackground(user.getObjectId(), new GetCallback<ParseUser>() {
             @Override
             public void done(ParseUser object, ParseException e) {
-                if(e == null) {
-                    ParseFile picture = object.getParseFile("profilePicture");
-                    if(picture != null) {
-                        String parseFileName = picture.getName();
-                        final String pictureName = getPictureName(parseFileName);
+            if(e == null) {
+                ParseFile picture = object.getParseFile("profilePicture");
+                if(picture != null) {
+                    String parseFileName = picture.getName();
+                    final String pictureName = getPictureName(parseFileName);
 
-                        picture.getDataInBackground(new GetDataCallback() {
-                            @Override
-                            public void done(byte[] data, ParseException e) {
-                                if (e == null) {
-                                    if (data.length == 0) {
-                                        Log.d("GAMEON", "Data found, but nothing to extract");
-                                        return;
-                                    }
-                                    Log.d("GAMEON", "File found! Can set to imageview");
-
-                                    Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                                    File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), pictureName);
-                                    try {
-                                        OutputStream os = new FileOutputStream(file);
-                                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
-                                        os.flush();
-                                        os.close();
-                                    } catch (Exception ex) {
-                                        ex.printStackTrace();
-                                    }
-
-                                    Glide.with(getContext()).load(file).into(mProfileImageView);
-                                } else {
-                                    Log.d("GAMEON", "Parsefile contains no data");
+                    picture.getDataInBackground(new GetDataCallback() {
+                        @Override
+                        public void done(byte[] data, ParseException e) {
+                            if (e == null) {
+                                if (data.length == 0) {
+                                    Log.d("GAMEON", "Data found, but nothing to extract");
+                                    return;
                                 }
+                                Log.d("GAMEON", "File found! Can set to imageview");
+
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), pictureName);
+                                try {
+                                    OutputStream os = new FileOutputStream(file);
+                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+                                    os.flush();
+                                    os.close();
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                }
+
+                                Glide.with(getContext()).load(file).into(mProfileImageView);
+                            } else {
+                                Log.d("GAMEON", "Parsefile contains no data");
                             }
-                        });
-                    } else {
-                        Glide.with(getContext())
-                                .load("")
-                                .placeholder(R.drawable.com_parse_ui_facebook_login_logo)
-                                .into(mProfileImageView);
-                    }
+                        }
+                    });
                 } else {
-                    Log.d("GAMEON", "No user found");
+                    Glide.with(getContext())
+                            .load("")
+                            .placeholder(R.drawable.com_parse_ui_facebook_login_logo)
+                            .into(mProfileImageView);
                 }
+            } else {
+                Log.d("GAMEON", "No user found");
+            }
             }
         });
     }
@@ -280,13 +280,15 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
         query.getInBackground(user.getObjectId(), new GetCallback<ParseUser>() {
             @Override
             public void done(ParseUser object, ParseException e) {
-                if(e == null) {
+                if (e == null) {
                     object.remove("profilePicture");
                     object.saveInBackground();
                 }
             }
         });
+
         updateProfilePicture();
+        Snackbar.make(mUploadSnackbar, "Image Removed", Snackbar.LENGTH_SHORT).show();
     }
 }
 

@@ -15,6 +15,7 @@ import android.util.DisplayMetrics;
 import android.util.LruCache;
 import android.view.View;
 
+import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.interfaces.RecyclerViewClickPositionInterface;
 import com.example.ttpm.game_on.adapters.ImageAdapter;
@@ -135,6 +136,10 @@ public class CameraActivity extends Activity implements RecyclerViewClickPositio
         currentUser.put("profilePicture", file);
         // Save the user
         currentUser.saveInBackground();
+
+        QueryPreferences.setNewProfilePic(this, true);
+        Intent intent = HomePagerActivity.newIntent(this);
+        startActivity(intent);
     }
 
     private void createImageGallery() {

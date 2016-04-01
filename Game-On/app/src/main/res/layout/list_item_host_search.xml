@@ -1,45 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="2dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:paddingRight="12dp"
+            android:paddingLeft="12dp"
+            android:paddingBottom="4dp"
+            android:background="#FAFAFA">
+
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:id="@+id/list_item_user_frame"
+                android:background="#212121">
+                <ImageView
+                    android:id="@+id/list_item_host_games_game_pic"
+                    android:layout_width="match_parent"
+                    android:layout_height="130dp" />
 
-    <TextView
-        android:id="@+id/list_item_host_games_game_pic"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/list_item_host_games_game_pic"
-        android:textAlignment="center"
-        android:textSize="48sp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="bottom"
+                    android:padding="12dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/list_item_host_games_game_pic"
-        android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+                    <TextView
+                        android:id="@+id/list_item_host_games_game_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:textColor="#EEEEEE"
+                        tools:text="Game Name"/>
+                </LinearLayout>
+            </FrameLayout>
 
-        <TextView
-            android:id="@+id/list_item_host_games_game_open"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:text="@string/list_item_host_games_game_open"
-            android:textSize="16sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@+id/list_item_user_frame"
+                android:paddingTop="4dp"
+                android:paddingLeft="-4dp">
 
-        <Button
-            android:id="@+id/list_item_host_games_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/list_item_host_games_button" />
+                <com.gc.materialdesign.views.ButtonRectangle
+                    android:id="@+id/list_item_host_games_list_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="54dp"
+                    android:text="@string/list_item_host_games_button" />
 
-    </LinearLayout>
-
-</RelativeLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

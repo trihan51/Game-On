@@ -43,7 +43,7 @@
     <string name="radio_1">1</string>
     <string name="radio_2">2</string>
     <string name="radio_3">5</string>
-    <string name="radio_label_text">Select Radius of Search (in Miles)</string>
+    <string name="radio_label_text">Search Radius (miles)</string>
 
     <!--Strings for HostSearchFragment.java-->
     <string name="list_item_host_games_game_pic">Picture of Game</string>

@@ -17,7 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.ttpm.game_on.models.GameOnSession;
@@ -26,10 +26,7 @@ import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.SessionActivity;
 import com.example.ttpm.game_on.models.BoardGame;
 import com.example.ttpm.game_on.models.BoardGameCollection;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
+import com.gc.materialdesign.views.ButtonRectangle;
 import com.parse.FindCallback;
 import com.parse.ParseACL;
 import com.parse.ParseException;
@@ -166,33 +163,32 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
      */
     private class HostSearchViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView mTitleTextView;
-        private TextView mSessionsTextView;
-        private Button mHostButton;
+        private ImageView mBoardGameImageView;
+        private TextView mBoardGameTextView;
+        private ButtonRectangle mHostButton;
 
         private BoardGame mBoardGame;
 
         public HostSearchViewHolder(View itemView) {
             super(itemView);
 
-            mTitleTextView =
-                    (TextView) itemView.findViewById(R.id.list_item_host_games_game_pic);
-            mSessionsTextView =
-                    (TextView) itemView.findViewById(R.id.list_item_host_games_game_open);
+            mBoardGameImageView =
+                    (ImageView) itemView.findViewById(R.id.list_item_host_games_game_pic);
+            mBoardGameTextView =
+                    (TextView) itemView.findViewById(R.id.list_item_host_games_game_name);
             mHostButton =
-                    (Button) itemView.findViewById(R.id.list_item_host_games_button);
+                    (ButtonRectangle) itemView.findViewById(R.id.list_item_host_games_list_button);
             mHostButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    createSession(mTitleTextView.getText().toString());
+                    createSession(mBoardGame.getBoardName());
                 }
             });
         }
 
         public void bindGame(BoardGame boardGame) {
             mBoardGame = boardGame;
-            mTitleTextView.setText(mBoardGame.getBoardName());
-            mSessionsTextView.setText(Integer.toString(R.id.list_item_host_games_game_open));
+            mBoardGameTextView.setText(mBoardGame.getBoardName());
         }
     }
 

@@ -17,7 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -29,6 +29,8 @@ import com.example.ttpm.game_on.activities.SessionActivity;
 import com.example.ttpm.game_on.activities.UserGameActivity;
 import com.example.ttpm.game_on.models.BoardGame;
 import com.example.ttpm.game_on.models.BoardGameCollection;
+import com.gc.materialdesign.views.ButtonRectangle;
+import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -173,26 +175,29 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
 
     private class UserSearchViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView mTitleTextView;
+        public ImageView mBoardGameImageView;
+        private TextView mBoardGameTextView;
         private TextView mSessionsTextView;
-        private Button mListGamesButton;
-        private Button mQuickJoinButton;
+        private ButtonRectangle mListGamesButton;
+        private ButtonRectangle mQuickJoinButton;
 
         private BoardGame mBoardGame;
 
         public UserSearchViewHolder(View itemView) {
             super(itemView);
 
-            mTitleTextView =
-                    (TextView) itemView.findViewById(R.id.list_item_user_games_game_pic);
+            mBoardGameImageView =
+                    (ImageView) itemView.findViewById(R.id.list_item_user_games_game_pic);
+            mBoardGameTextView =
+                    (TextView) itemView.findViewById(R.id.list_item_host_games_game_name);
             mSessionsTextView =
                     (TextView) itemView.findViewById(R.id.list_item_user_games_game_open);
             mListGamesButton =
-                    (Button) itemView.findViewById(R.id.list_item_user_games_list_button);
+                    (ButtonRectangle) itemView.findViewById(R.id.list_item_user_games_list_button);
             mListGamesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String gameTitle = mTitleTextView.getText().toString();
+                    String gameTitle = mBoardGameTextView.getText().toString();
 
                     mRadiusSelectionRadioButton = (RadioButton) getView()
                             .findViewById(mRadiusChoicesRadioGroup.getCheckedRadioButtonId());
@@ -207,7 +212,7 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
                 }
             });
             mQuickJoinButton =
-                    (Button) itemView.findViewById(R.id.list_item_user_games_quick_button);
+                    (ButtonRectangle) itemView.findViewById(R.id.list_item_user_games_quick_button);
             mQuickJoinButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -218,7 +223,7 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
 
         private void quickJoinSession() {
             ParseQuery<GameOnSession> query = GameOnSession.getQuery();
-            query.whereEqualTo("gameTitle", mTitleTextView.getText());
+            query.whereEqualTo("gameTitle", mBoardGameTextView.getText());
             query.whereNotEqualTo("host", ParseUser.getCurrentUser());
 
             query.addDescendingOrder("createdAt");
@@ -255,8 +260,25 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
 
         public void bindGame(BoardGame boardGame) {
             mBoardGame = boardGame;
-            mTitleTextView.setText(mBoardGame.getBoardName());
-            mSessionsTextView.setText(Integer.toString(R.id.list_item_host_games_game_open));
+            mBoardGameTextView.setText(mBoardGame.getBoardName());
+            setAmountOfOpenSessions(mBoardGame.getBoardName());
+        }
+
+        public void setAmountOfOpenSessions(String boardGame) {
+            final String boardName = boardGame;
+
+            ParseQuery<GameOnSession> query = GameOnSession.getQuery();
+            query.whereEqualTo("gameTitle", boardName);
+            query.countInBackground(new CountCallback() {
+                @Override
+                public void done(int count, ParseException e) {
+                    if (e == null) {
+                        mSessionsTextView.setText(Integer.toString(count) + " open");
+                    } else {
+                        Log.e("setAmtOpenSessions", "Get count of sessions failed");
+                    }
+                }
+            });
         }
     }
 

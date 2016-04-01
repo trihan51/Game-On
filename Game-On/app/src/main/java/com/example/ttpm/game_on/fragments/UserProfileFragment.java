@@ -25,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
@@ -117,39 +118,38 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
 
     private void selectImage() {
         // Dialogbox items
-        final CharSequence[] items = { "Take Photo", "Choose from Gallery", "Remove Photo", "Cancel" };
+        final CharSequence[] items = { "Take Photo", "Choose from Gallery", "Remove Photo" };
 
-        // Building the Dialogbox
-        AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
-        builder.setTitle("Upload Profile Picture");
-        // Wire up the buttons inside Dialogbox
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Check for camera request
-                if (items[which].equals("Take Photo")) {
-                    Intent intent = new Intent(getActivity(), CameraActivity.class);
-                    startActivity(intent);
+        MaterialDialog.Builder b = new MaterialDialog.Builder(this.getActivity())
+            .title("Upload Picture")
+            .items(items)
+            .itemsCallback(new MaterialDialog.ListCallback() {
+                @Override
+                public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                    // Check for camera request
+                    if (items[which].equals("Take Photo")) {
+                        Intent intent = new Intent(getActivity(), CameraActivity.class);
+                        startActivity(intent);
                     // Check for gallery request
-                } else if (items[which].equals("Choose from Gallery")) {
-                    Intent intent = new Intent(
-                            Intent.ACTION_PICK,
-                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    // Select only images from storage
-                    intent.setType("image/*");
-                    startActivityForResult(
-                            Intent.createChooser(intent, "Select File"),
-                            SELECT_FILE);
-                    // Check for cancel request
-                } else if(items[which].equals("Remove Photo")) {
-                    removeProfilePictureFromParse();
-                    dialog.dismiss();
-                } else if(items[which].equals("Cancel")) {
-                    dialog.dismiss();
+                    } else if (items[which].equals("Choose from Gallery")) {
+                        Intent intent = new Intent(
+                                Intent.ACTION_PICK,
+                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        // Select only images from storage
+                        intent.setType("image/*");
+                        startActivityForResult(
+                                Intent.createChooser(intent, "Select File"),
+                                SELECT_FILE);
+                        // Check for cancel request
+                    } else if (items[which].equals("Remove Photo")) {
+                        removeProfilePictureFromParse();
+                        dialog.dismiss();
+                    }
                 }
-            }
-        });
-        builder.show();
+            });
+
+        MaterialDialog d = b.build();
+        d.show();
     }
 
     private void onSelectFromGalleryResult(Intent data) {

@@ -12,6 +12,29 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="120dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:id="@+id/user_game_image_view"
+                android:background="#212121" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/user_game_game_name"
+                android:layout_gravity="center"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:textColor="#EEEEEE"
+                android:text="Chess"
+                tools:text="Board Name"/>
+
+        </FrameLayout>
+
         <android.support.v7.widget.RecyclerView
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/user_game_recycler_view"

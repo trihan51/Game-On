@@ -35,9 +35,7 @@ public class GameOnSession extends ParseObject {
     }
 
     public String getHostEmail() {
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        String currentuse = currentUser.getUsername();
-        return currentuse;
+        return "Host placeholder";
     }
 
     public void setHostEmail(String hostEmail) {

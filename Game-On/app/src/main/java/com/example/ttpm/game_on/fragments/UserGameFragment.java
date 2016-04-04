@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +46,8 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
     private RecyclerView mSearchRecyclerView;
     private SessionSearchAdapter mSearchAdapter;
     private List<GameOnSession> mGameOnSessions;
+    private TextView mBoardGameTextView;
+    private ImageView mBoardGameImageView;
 
     private String boardGameName;
     private String mSearchRadius;
@@ -84,6 +87,10 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mBoardGameImageView = (ImageView) view.findViewById(R.id.user_game_image_view);
+        mBoardGameTextView = (TextView) view.findViewById(R.id.user_game_game_name);
+        mBoardGameTextView.setText(boardGameName);
 
         mSearchRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -169,19 +176,18 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
     private class SessionSearchViewHolder extends RecyclerView.ViewHolder {
 
         private GameOnSession mSession;
-        private TextView mHostEmailTextView;
-        private TextView mGameTitleTextView;
-        private TextView mSessionIdTextView;
-       // private TextView mnumOfParticipantsTextView;
+        private ImageView mHostImageView;
+        private TextView mHostNameTextView;
+        private TextView mNumOfParticipantsTextView;
         private Button mJoinButton;
 
         public SessionSearchViewHolder(View itemView) {
             super(itemView);
 
-           mSessionIdTextView = (TextView) itemView.findViewById(R.id.list_item_session_id);
-            mHostEmailTextView = (TextView) itemView.findViewById(R.id.list_item_host_email);
-            mGameTitleTextView = (TextView) itemView.findViewById(R.id.list_item_game_title);
-          //  mnumOfParticipantsTextView = (TextView) itemView.findViewById(R.id.list_item_session_id);
+            mHostImageView = (ImageView) itemView.findViewById(R.id.list_item_user_image_view);
+            mHostNameTextView = (TextView) itemView.findViewById(R.id.list_item_host_name);
+            mNumOfParticipantsTextView =
+                    (TextView) itemView.findViewById(R.id.list_item_participant_count);
             mJoinButton = (Button) itemView.findViewById(R.id.list_item_join_button);
 
             mJoinButton.setOnClickListener(new View.OnClickListener() {
@@ -211,11 +217,8 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
         public void bindSession(GameOnSession session) {
             mSession = session;
 
-           //mSessionIdTextView.setText(session.getObjectId());
-            mSessionIdTextView.setText(session.getNumberOfParticipants());
-            mHostEmailTextView.setText(session.getHostEmail());
-            mGameTitleTextView.setText(session.getGameTitle());
-           // mnumOfParticipantsTextView.setText(session.getNumberOfParticipants());
+            mHostNameTextView.setText(session.getHostEmail());
+            mNumOfParticipantsTextView.setText(session.getNumberOfParticipants());
         }
     }
 

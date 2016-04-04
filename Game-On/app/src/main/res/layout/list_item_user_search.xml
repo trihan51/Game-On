@@ -26,6 +26,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/list_item_user_frame"
                 android:background="#212121">
+
                 <ImageView
                     android:id="@+id/list_item_user_games_game_pic"
                     android:layout_width="match_parent"

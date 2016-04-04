@@ -225,6 +225,7 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
             ParseQuery<GameOnSession> query = GameOnSession.getQuery();
             query.whereEqualTo("gameTitle", mBoardGameTextView.getText());
             query.whereNotEqualTo("host", ParseUser.getCurrentUser());
+            query.whereEqualTo("Open", true);
 
             query.addDescendingOrder("createdAt");
             query.setLimit(1);
@@ -269,6 +270,8 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
 
             ParseQuery<GameOnSession> query = GameOnSession.getQuery();
             query.whereEqualTo("gameTitle", boardName);
+            query.whereNotEqualTo("host", ParseUser.getCurrentUser());
+            query.whereEqualTo("Open", true);
             query.countInBackground(new CountCallback() {
                 @Override
                 public void done(int count, ParseException e) {

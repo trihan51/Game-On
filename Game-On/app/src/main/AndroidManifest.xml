@@ -58,10 +58,6 @@
             android:label="@string/title_activity_game_on_session" >
         </activity>
         <activity
-            android:name=".HostSessionPage"
-            android:label="@string/title_activity_host_session_page" >
-        </activity>
-        <activity
             android:name=".activities.SessionActivity"
             android:label="@string/title_activity_session"
             android:parentActivityName=".activities.HomePagerActivity">

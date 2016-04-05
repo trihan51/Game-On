@@ -34,10 +34,6 @@ public class GameOnSession extends ParseObject {
         put("Name",hostName);
     }
 
-    public String getHostEmail() {
-        return "Host placeholder";
-    }
-
     public void setHostEmail(String hostEmail) {
         put("email", hostEmail);
     }

@@ -27,6 +27,7 @@ import com.example.ttpm.game_on.activities.SplashActivity;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -217,7 +218,19 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
         public void bindSession(GameOnSession session) {
             mSession = session;
 
-            mHostNameTextView.setText(session.getHostEmail());
+            ParseUser host = mSession.getHost();
+            ParseQuery<ParseUser> u = ParseUser.getQuery();
+            u.whereEqualTo("objectId", host.getObjectId());
+            u.findInBackground(new FindCallback<ParseUser>() {
+                @Override
+                public void done(List<ParseUser> objects, ParseException e) {
+                    if(e == null) {
+                        mHostNameTextView.setText(objects.get(0).getUsername());
+                    } else {
+                        mHostNameTextView.setText("No host found");
+                    }
+                }
+            });
             mNumOfParticipantsTextView.setText(session.getNumberOfParticipants());
         }
     }

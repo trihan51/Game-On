@@ -43,7 +43,7 @@ public class GameOnSession extends ParseObject {
     }
 
     public String getNumberOfParticipants() {
-        int getParticipantsNumber = getParticipants().length();
+        int getParticipantsNumber = getParticipants().length() + 1;
         return String.valueOf(getParticipantsNumber);
     }
 

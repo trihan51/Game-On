@@ -24,6 +24,7 @@ import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.SessionActivity;
 import com.example.ttpm.game_on.activities.SplashActivity;
+import com.gc.materialdesign.views.ButtonRectangle;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
@@ -31,6 +32,9 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -180,7 +184,7 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
         private ImageView mHostImageView;
         private TextView mHostNameTextView;
         private TextView mNumOfParticipantsTextView;
-        private Button mJoinButton;
+        private ButtonRectangle mJoinButton;
 
         public SessionSearchViewHolder(View itemView) {
             super(itemView);
@@ -189,7 +193,7 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
             mHostNameTextView = (TextView) itemView.findViewById(R.id.list_item_host_name);
             mNumOfParticipantsTextView =
                     (TextView) itemView.findViewById(R.id.list_item_participant_count);
-            mJoinButton = (Button) itemView.findViewById(R.id.list_item_join_button);
+            mJoinButton = (ButtonRectangle) itemView.findViewById(R.id.list_item_join_button);
 
             mJoinButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -218,20 +222,53 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
         public void bindSession(GameOnSession session) {
             mSession = session;
 
+            bindHostName(mSession);
+            bindNumOfPlayers(mSession);
+
+            mNumOfParticipantsTextView.setText(session.getNumberOfParticipants());
+        }
+
+        public void bindHostName(GameOnSession session) {
+            mSession = session;
+
             ParseUser host = mSession.getHost();
-            ParseQuery<ParseUser> u = ParseUser.getQuery();
-            u.whereEqualTo("objectId", host.getObjectId());
-            u.findInBackground(new FindCallback<ParseUser>() {
+            ParseQuery<ParseUser> query = ParseUser.getQuery();
+            query.whereEqualTo("objectId", host.getObjectId());
+            query.findInBackground(new FindCallback<ParseUser>() {
                 @Override
                 public void done(List<ParseUser> objects, ParseException e) {
-                    if(e == null) {
+                    if (e == null) {
                         mHostNameTextView.setText(objects.get(0).getUsername());
                     } else {
                         mHostNameTextView.setText("No host found");
                     }
                 }
             });
-            mNumOfParticipantsTextView.setText(session.getNumberOfParticipants());
+        }
+
+        public void bindNumOfPlayers(GameOnSession session) {
+            mSession = session;
+
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("BoardGames");
+            query.whereEqualTo("boardName", mSession.getGameTitle());
+            query.findInBackground(new FindCallback<ParseObject>() {
+                @Override
+                public void done(List<ParseObject> objects, ParseException e) {
+                    if (e == null) {
+                        JSONArray arr = objects.get(0).getJSONArray("maxPlayers");
+                        String maxPlayers = "";
+                        try {
+                            maxPlayers = arr.getString(arr.length()-1);
+                        } catch (JSONException ex) {
+                            ex.printStackTrace();
+                        }
+                        mNumOfParticipantsTextView.append("/" + maxPlayers + " players");
+                    } else {
+                        Log.e("GAMEONSESSION", "No array of maximum participants found");
+                    }
+                }
+            });
+            Log.d("GAMEONSESSION", mSession.getGameTitle());
         }
     }
 

@@ -12,16 +12,21 @@ import android.widget.Toast;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.ForgotPasswordActivity;
 import com.example.ttpm.game_on.activities.HomePagerActivity;
+import com.gc.materialdesign.views.ButtonFlat;
 import com.parse.LogInCallback;
 import com.parse.ParseUser;
+import com.rengwuxian.materialedittext.MaterialAutoCompleteTextView;
+import com.rengwuxian.materialedittext.MaterialEditText;
+
+import mehdi.sakout.fancybuttons.FancyButton;
 
 /**
  * Created by Tony on 2/17/2016.
  */
 public class LoginFragment extends android.support.v4.app.Fragment {
 
-    private EditText mEmailField;
-    private EditText mPasswordField;
+    private MaterialEditText mEmailField;
+    private MaterialEditText mPasswordField;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,10 +38,10 @@ public class LoginFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        mEmailField = (EditText) view.findViewById(R.id.login_email_edittext);
-        mPasswordField = (EditText) view.findViewById(R.id.login_password_edittext);
+        mEmailField = (MaterialEditText) view.findViewById(R.id.login_email_edittext);
+        mPasswordField = (MaterialEditText) view.findViewById(R.id.login_password_edittext);
 
-        Button loginButton = (Button) view.findViewById(R.id.login_login_button);
+        FancyButton loginButton = (FancyButton) view.findViewById(R.id.login_login_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,7 +64,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
             }
         });
 
-        Button forgotPasswordButton = (Button) view.findViewById(R.id.login_forgot_password_button);
+        FancyButton forgotPasswordButton = (FancyButton) view.findViewById(R.id.login_forgot_password_button);
         forgotPasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

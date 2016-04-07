@@ -17,8 +17,8 @@
     <string name="fragment_splash_register_button">Register</string>
 
     <!--Strings for LoginFragment.java-->
-    <string name="fragment_login_email">Enter e-mail…</string>
-    <string name="fragment_login_password">Enter password…</string>
+    <string name="fragment_login_email">Email Address</string>
+    <string name="fragment_login_password">Password</string>
     <string name="fragment_login_login_button">Login</string>
     <string name="fragment_login_forgot_password_button">Forgot Password?</string>
 

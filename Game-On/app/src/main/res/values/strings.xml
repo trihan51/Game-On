@@ -20,7 +20,7 @@
     <string name="fragment_login_username">Username</string>
     <string name="fragment_login_password">Password</string>
     <string name="fragment_login_login_button">Login</string>
-    <string name="fragment_login_forgot_password_button">Forgot Password?</string>
+    <string name="fragment_login_forgot_password_button">Forgot Password</string>
 
     <!--Strings for RegisterFragment.java-->
     <string name="fragment_register_email">Email Address</string>

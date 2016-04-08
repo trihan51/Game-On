@@ -11,7 +11,6 @@
         android:orientation="vertical"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
-        android:paddingBottom="64dp"
         android:gravity="center_vertical"
         android:layout_above="@+id/login_login_button">
 
@@ -52,7 +51,7 @@
 
     <mehdi.sakout.fancybuttons.FancyButton
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="90dp"
         app:fb_text="@string/fragment_login_login_button"
         android:id="@+id/login_login_button"
         android:layout_above="@+id/login_forgot_password_button"
@@ -62,7 +61,7 @@
 
     <mehdi.sakout.fancybuttons.FancyButton
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="90dp"
         app:fb_text="@string/fragment_login_forgot_password_button"
         android:id="@+id/login_forgot_password_button"
         android:layout_alignParentBottom="true"

@@ -8,8 +8,7 @@
               android:paddingRight="16dp"
               android:paddingTop="16dp"
               android:paddingBottom="16dp"
-              android:background="@color/Darkprimarycolor"
-              app:layout_behavior="@string/appbar_scrolling_view_behavior">
+              android:background="@color/colorPrimary" >
 
     <LinearLayout
         android:layout_width="wrap_content"

@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Darkprimarycolor" >
+    android:background="@color/colorPrimary" >
 
     <TextView
         android:text="@string/app_name"
@@ -25,7 +25,7 @@
         android:layout_above="@+id/splash_register_button"
         app:fb_textColor="#FFFFFF"
         app:fb_textSize="32sp"
-        app:fb_defaultColor="#2979FF"/>
+        app:fb_defaultColor="@color/colorPrimaryLight"/>
 
     <mehdi.sakout.fancybuttons.FancyButton
         android:layout_width="match_parent"

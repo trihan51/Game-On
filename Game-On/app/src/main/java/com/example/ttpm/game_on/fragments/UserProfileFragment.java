@@ -141,7 +141,6 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
     }
 
     private void selectImage() {
-        // Dialogbox items
         final CharSequence[] items = { "Take Photo", "Choose from Gallery", "Remove Photo" };
 
         MaterialDialog.Builder b = new MaterialDialog.Builder(this.getActivity())

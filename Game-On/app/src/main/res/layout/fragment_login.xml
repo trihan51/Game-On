@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Darkprimarycolor" >
+    android:background="@color/colorPrimary" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,7 +57,7 @@
         android:layout_above="@+id/login_forgot_password_button"
         app:fb_textColor="#FFFFFF"
         app:fb_textSize="32sp"
-        app:fb_defaultColor="#2979FF"/>
+        app:fb_defaultColor="@color/colorPrimaryLight"/>
 
     <mehdi.sakout.fancybuttons.FancyButton
         android:layout_width="match_parent"

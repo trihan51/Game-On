@@ -66,8 +66,8 @@
 
     <!-- Strings for SessionFragment.java -->
     <string name="session_header_text">Current Session Info</string>
-    <string name="message_for_participant">Please enjoy your game!</string>
-    <string name="confirm_button_text">Confirm</string>
+    <string name="time_left">30 minutes left</string>
+    <string name="confirm_button_text">Game On</string>
     <string name="leave_button_text">Leave</string>
     <string name="session_confirmed_message">Please enjoy your game session!</string>
     <string name="session_confirmed_title">Session Confirmed</string>

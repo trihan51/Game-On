@@ -1,46 +1,37 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.UserSearchFragment"
-    android:background="@color/colorPrimary">
+    android:orientation="vertical"
+    android:background="@color/colorPrimary" >
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp">
 
-        <FrameLayout
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="120dp">
+            android:layout_height="120dp"
+            android:id="@+id/user_game_image_view"
+            android:background="#212121" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:id="@+id/user_game_image_view"
-                android:background="#212121" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/user_game_game_name"
+            android:layout_gravity="center"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="#EEEEEE"
+            android:text="Chess"
+            tools:text="Board Name"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/user_game_game_name"
-                android:layout_gravity="center"
-                android:textSize="32sp"
-                android:textStyle="bold"
-                android:textColor="#EEEEEE"
-                android:text="Chess"
-                tools:text="Board Name"/>
+    </FrameLayout>
 
-        </FrameLayout>
-
-        <android.support.v7.widget.RecyclerView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/user_game_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
-
-
-</RelativeLayout>
+    <android.support.v7.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/user_game_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

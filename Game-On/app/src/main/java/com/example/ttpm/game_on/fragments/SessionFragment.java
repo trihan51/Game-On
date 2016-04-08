@@ -55,7 +55,7 @@ public class SessionFragment extends VisibleFragment {
     private static final String TAG = "ERROR";
 
     private GameOnSession mCurrentGameOnSession;
-    ParseUser HostOfTheGame = new ParseUser();
+    ParseUser sessionHostName = new ParseUser();
     private boolean mCurrentUserIsHost;
     private List<ParseUser> particks = new ArrayList<ParseUser>();
 
@@ -145,20 +145,23 @@ public class SessionFragment extends VisibleFragment {
                 if (e == null) {
 
                     //Set the host of the game session to the pointer of the User of this session
-                    HostOfTheGame = list.get(0).getParseUser("host");
+                    sessionHostName = list.get(0).getParseUser("host");
 
                     mCurrentGameOnSession = list.get(0);
                     mCurrentUserIsHost = (mCurrentGameOnSession.getHost().getObjectId() == ParseUser.getCurrentUser().getObjectId());
 
-                    mSessionInfoOutput = (LinearLayout) view.findViewById(R.id.sessionInfoOutputArea);
+                    mSessionInfoOutput = (LinearLayout) view.findViewById(R.id.session_participant_container);
 
-                    displayGameTitle(mSessionInfoOutput);
-                    displaySessionHost(mSessionInfoOutput);
+                    TextView boardGameTextView = (TextView) view.findViewById(R.id.session_game_game_name);
+                    boardGameTextView.setText(mCurrentGameOnSession.getGameTitle());
+                    TextView hostNameTextView = (TextView) view.findViewById(R.id.session_game_host_name);
+                    hostNameTextView.setText("Host: " + sessionHostName.getUsername());
+
                     displaySessionParticipants(mSessionInfoOutput);
 
                     mTimerTextView = (TextView) view.findViewById(R.id.timerTextView);
                     if (!mCurrentUserIsHost) {
-                        mTimerTextView.setText(R.string.message_for_participant);
+                        mTimerTextView.setText(R.string.time_left);
                     } else {
                         startTimer();
                     }
@@ -229,51 +232,30 @@ public class SessionFragment extends VisibleFragment {
         mapView.onLowMemory();
     }
 
-    private void displayGameTitle(LinearLayout displayArea) {
-        TextView gameTitleTextView = new TextView(getActivity());
-        gameTitleTextView.append("Game Title: " + mCurrentGameOnSession.getGameTitle() + "\n");
-        displayArea.addView(gameTitleTextView);
-    }
-
-    private void displaySessionHost(LinearLayout displayArea) {
-       TextView hostNameTextView = new TextView(getActivity());
-        hostNameTextView.append("Host: " + HostOfTheGame.getUsername());
-        displayArea.addView(hostNameTextView);
-       // updateHostMarkers();
-
-    }
-
     private void displaySessionParticipants(LinearLayout displayArea) {
         JSONArray participants = mCurrentGameOnSession.getParticipants();
         int length = participants.length();
-
         System.out.println("Length of Participants Array is:" + length);
         // particks = new ArrayList<ParseUser>();
 
         for ( int i = 0; i < length ; i++) {
-            System.out.println("Length of Participants Array is:" + length);
-            ParseQuery<ParseUser> query = ParseQuery.getQuery("_User");
+            ParseQuery<ParseUser> query = ParseQuery.getQuery("User");
             try {
                 query.whereEqualTo("objectId", participants.getString(i));
-
                 query.findInBackground(new FindCallback<ParseUser>() {
                     @Override
                     public void done(List<ParseUser> objects, ParseException e) {
                         //ParticipantInGame = objects.get
-
                         for (ParseUser users : objects) {
-
                             particks.add(users);
                         }
                         displaySessionParticipantsEmail(mSessionInfoOutput);
-
                     }
 
                 });
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
 
         try {
@@ -332,11 +314,7 @@ public class SessionFragment extends VisibleFragment {
             TextView participantEmailTextView = new TextView(getActivity());
             participantEmailTextView.setText("Participant " + NumberOf + ": " + particks.get(i).getUsername());
             displayArea.addView(participantEmailTextView);
-
-
-
         }
-
     }
 
     private void performLeaveActions() {
@@ -421,15 +399,5 @@ public class SessionFragment extends VisibleFragment {
 
             }
         });
-
-
-
-
-
-
-
     }
-
-
-
 }

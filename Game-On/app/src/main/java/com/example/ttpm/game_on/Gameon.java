@@ -4,7 +4,7 @@ import com.example.ttpm.game_on.models.GameOnSession;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
-public class Gameon extends android.app.Application {
+public class GameOn extends android.app.Application {
 
 
     public void onCreate() {

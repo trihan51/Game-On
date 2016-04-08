@@ -1,43 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:background="@color/Darkprimarycolor"
-    tools:context="com.example.ttpm.game_on.activities.SplashActivity" >
+    android:background="@color/Darkprimarycolor" >
 
     <TextView
         android:text="@string/app_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="86dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:id="@+id/textView"
-        android:textColor="#fbfafa" />
+        android:layout_above="@+id/splash_login_button"
+        android:textColor="#FFFFFF"
+        android:textSize="72sp"
+        android:textStyle="bold"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/fragment_splash_login_button"
+    <mehdi.sakout.fancybuttons.FancyButton
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        app:fb_text="@string/fragment_splash_login_button"
         android:id="@+id/splash_login_button"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp" />
+        android:layout_above="@+id/splash_register_button"
+        app:fb_textColor="#FFFFFF"
+        app:fb_textSize="32sp"
+        app:fb_defaultColor="#2979FF"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/fragment_splash_register_button"
+    <mehdi.sakout.fancybuttons.FancyButton
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
         android:id="@+id/splash_register_button"
-        android:layout_below="@+id/splash_login_button"
-        android:layout_alignLeft="@+id/splash_login_button"
-        android:layout_alignStart="@+id/splash_login_button"
-        android:layout_marginTop="69dp" />
+        android:layout_alignParentBottom="true"
+        app:fb_text="@string/fragment_splash_register_button"
+        app:fb_textColor="#FFFFFF"
+        app:fb_textSize="32sp"
+        app:fb_defaultColor="#f44336" />
 
 </RelativeLayout>

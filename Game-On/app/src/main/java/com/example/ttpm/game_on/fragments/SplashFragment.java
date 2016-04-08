@@ -16,6 +16,8 @@ import com.example.ttpm.game_on.activities.LoginActivity;
 import com.example.ttpm.game_on.activities.RegisterActivity;
 import com.parse.ParseUser;
 
+import mehdi.sakout.fancybuttons.FancyButton;
+
 /**
  * Created by Tony on 2/17/2016.
  */
@@ -36,7 +38,7 @@ public class SplashFragment extends android.support.v4.app.Fragment{
             startActivity(gomainscreen);
         }
 
-        Button loginButton = (Button) view.findViewById(R.id.splash_login_button);
+        FancyButton loginButton = (FancyButton) view.findViewById(R.id.splash_login_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,7 +47,7 @@ public class SplashFragment extends android.support.v4.app.Fragment{
             }
         });
 
-        Button registerButton = (Button) view.findViewById(R.id.splash_register_button);
+        FancyButton registerButton = (FancyButton) view.findViewById(R.id.splash_register_button);
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

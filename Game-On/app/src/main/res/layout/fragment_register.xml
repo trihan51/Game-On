@@ -1,58 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Darkprimarycolor"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.ttpm.game_on.activities.RegisterActivity">
+    android:background="@color/Darkprimarycolor" >
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:ems="10"
-        android:id="@+id/register_email_edittext"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="85dp"
-        android:hint="@string/fragment_register_email"
-        android:textColorHint="#ffffff" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:gravity="center_vertical"
+        android:layout_above="@+id/register_register_button">
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/register_password_edittext"
-        android:layout_below="@+id/register_email_edittext"
-        android:layout_centerHorizontal="true"
-        android:hint="@string/fragment_register_password"
-        android:textColorHint="#ffffff" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/register_repeat_password_edittext"
-        android:layout_below="@+id/register_password_edittext"
-        android:layout_centerHorizontal="true"
-        android:hint="@string/fragment_register_password_confirm"
-        android:textColorHint="#ffffff" />
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:ems="10"
+                android:id="@+id/register_firstname_edittext"
+                android:hint="@string/fragment_register_firstname"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:layout_marginRight="4dp"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="First Name"
+                app:met_floatingLabelTextSize="18sp"
+                app:met_primaryColor="#FF5722"
+                app:met_underlineColor="#FFAB91"
+                app:met_textColorHint="#FFFFFF"
+                app:met_textColor="#FFFFFF" />
 
-    <EditText
-        android:hint="Please enter your name.."
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:text=""
-        android:ems="10"
-        android:id="@+id/NameTextField"
-        android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/register_email_edittext"
-        android:layout_alignEnd="@+id/register_email_edittext"
-        android:textColorHint="#ffffff" />
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:ems="10"
+                android:id="@+id/register_lastname_edittext"
+                android:hint="@string/fragment_register_lastname"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:layout_marginLeft="4dp"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Last Name"
+                app:met_floatingLabelTextSize="18sp"
+                app:met_primaryColor="#FF5722"
+                app:met_underlineColor="#FFAB91"
+                app:met_textColorHint="#FFFFFF"
+                app:met_textColor="#FFFFFF" />
+        </LinearLayout>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:ems="10"
+            android:id="@+id/register_username_edittext"
+            android:hint="@string/fragment_register_username"
+            android:textStyle="bold"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelText="Username"
+            app:met_floatingLabelTextSize="18sp"
+            app:met_primaryColor="#FF5722"
+            app:met_underlineColor="#FFAB91"
+            app:met_textColorHint="#FFFFFF"
+            app:met_textColor="#FFFFFF" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:id="@+id/register_email_edittext"
+            android:hint="@string/fragment_register_email"
+            android:textStyle="bold"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelText="Email Address"
+            app:met_floatingLabelTextSize="18sp"
+            app:met_primaryColor="#FF5722"
+            app:met_underlineColor="#FFAB91"
+            app:met_textColorHint="#FFFFFF"
+            app:met_textColor="#FFFFFF" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:fontFamily="sans-serif"
+            android:ems="10"
+            android:id="@+id/register_password_edittext"
+            android:hint="@string/fragment_login_password"
+            android:textStyle="bold"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelText="Password"
+            app:met_floatingLabelTextSize="18sp"
+            app:met_primaryColor="#FF5722"
+            app:met_underlineColor="#FFAB91"
+            app:met_textColorHint="#FFFFFF"
+            app:met_textColor="#FFFFFF" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:fontFamily="sans-serif"
+            android:ems="10"
+            android:id="@+id/register_repeat_password_edittext"
+            android:hint="@string/fragment_register_password_confirm"
+            android:textStyle="bold"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelText="Reenter password"
+            app:met_floatingLabelTextSize="18sp"
+            app:met_primaryColor="#FF5722"
+            app:met_underlineColor="#FFAB91"
+            app:met_textColorHint="#FFFFFF"
+            app:met_textColor="#FFFFFF" />
+
+    </LinearLayout>
 
     <mehdi.sakout.fancybuttons.FancyButton
         android:layout_width="match_parent"

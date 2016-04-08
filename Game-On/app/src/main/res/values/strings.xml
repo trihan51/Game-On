@@ -17,15 +17,15 @@
     <string name="fragment_splash_register_button">Register</string>
 
     <!--Strings for LoginFragment.java-->
-    <string name="fragment_login_email">Email Address</string>
+    <string name="fragment_login_username">Username</string>
     <string name="fragment_login_password">Password</string>
     <string name="fragment_login_login_button">Login</string>
     <string name="fragment_login_forgot_password_button">Forgot Password?</string>
 
     <!--Strings for RegisterFragment.java-->
-    <string name="fragment_register_email">Enter e-mail address…</string>
-    <string name="fragment_register_password">Enter password…</string>
-    <string name="fragment_register_password_confirm">Reenter password…</string>
+    <string name="fragment_register_email">Email Address</string>
+    <string name="fragment_register_password">Password</string>
+    <string name="fragment_register_password_confirm">Reenter password</string>
     <string name="fragment_register_register_button">Register</string>
 
     <!--Strings for ForgotPassword.java-->
@@ -91,5 +91,8 @@
     <string name="session_update_text">Session has changed. Click here to check it out!</string>
     <string name="session_cancelled_title">Session Cancelled</string>
     <string name="session_cancelled_text">We\'re sorry, but your current session has been cancelled.</string>
+    <string name="fragment_register_firstname">First Name</string>
+    <string name="fragment_register_lastname">Last Name</string>
+    <string name="fragment_register_username">Username</string>
 
 </resources>

@@ -5,17 +5,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.ForgotPasswordActivity;
 import com.example.ttpm.game_on.activities.HomePagerActivity;
-import com.gc.materialdesign.views.ButtonFlat;
 import com.parse.LogInCallback;
 import com.parse.ParseUser;
-import com.rengwuxian.materialedittext.MaterialAutoCompleteTextView;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import mehdi.sakout.fancybuttons.FancyButton;
@@ -38,7 +34,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        mEmailField = (MaterialEditText) view.findViewById(R.id.login_email_edittext);
+        mEmailField = (MaterialEditText) view.findViewById(R.id.login_username_edittext);
         mPasswordField = (MaterialEditText) view.findViewById(R.id.login_password_edittext);
 
         FancyButton loginButton = (FancyButton) view.findViewById(R.id.login_login_button);

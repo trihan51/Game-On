@@ -14,18 +14,23 @@ import com.example.ttpm.game_on.activities.HomePagerActivity;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.regex.Pattern;
+
+import mehdi.sakout.fancybuttons.FancyButton;
 
 /**
  * Created by Tony on 2/17/2016.
  */
 public class RegisterFragment extends android.support.v4.app.Fragment {
 
-    private EditText mUsernameField;
-    private EditText mPasswordField;
-    private EditText mNameField;
-    private EditText mRepeatPasswordField;
+    private MaterialEditText mFirstNameField;
+    private MaterialEditText mLastNameField;
+    private MaterialEditText mUsernameField;
+    private MaterialEditText mEmailField;
+    private MaterialEditText mPasswordField;
+    private MaterialEditText mRepeatPasswordField;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,48 +42,53 @@ public class RegisterFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_register, container, false);
 
-        mUsernameField = (EditText) view.findViewById(R.id.register_email_edittext);
-        mPasswordField = (EditText) view.findViewById(R.id.register_password_edittext);
-        mRepeatPasswordField = (EditText) view.findViewById(R.id.register_repeat_password_edittext);
-        mNameField = (EditText)view.findViewById(R.id.NameTextField);
+        mFirstNameField = (MaterialEditText) view.findViewById(R.id.register_firstname_edittext);
+        mLastNameField = (MaterialEditText) view.findViewById(R.id.register_lastname_edittext);
+        mUsernameField = (MaterialEditText) view.findViewById(R.id.register_username_edittext);
+        mEmailField = (MaterialEditText) view.findViewById(R.id.register_email_edittext);
+        mPasswordField = (MaterialEditText) view.findViewById(R.id.register_password_edittext);
+        mRepeatPasswordField = (MaterialEditText) view.findViewById(R.id.register_repeat_password_edittext);
 
-        Button registerButton = (Button) view.findViewById(R.id.register_register_button);
+        FancyButton registerButton = (FancyButton) view.findViewById(R.id.register_register_button);
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String email = mUsernameField.getText().toString().trim();
+                String firstName = mFirstNameField.getText().toString().trim();
+                String lastName = mLastNameField.getText().toString().trim();
+                String username = mUsernameField.getText().toString().trim();
+                String email = mEmailField.getText().toString().trim();
                 String password = mPasswordField.getText().toString().trim();
                 String repeatPassword = mRepeatPasswordField.getText().toString().trim();
-                String namechosen = mNameField.getText().toString().trim();
 
                 Pattern domainPattern = Pattern.compile("\\S+(@sjsu\\.edu)$");
                 boolean domainValid = domainPattern.matcher(email).matches();
 
                 boolean passwordMatches = password.equals(repeatPassword);
 
-                login(email, password,namechosen, passwordMatches, domainValid);
+                login(firstName, lastName, username, email, password, passwordMatches, domainValid);
             }
         });
 
         return view;
     }
 
-    public void login(String email, String password,String namechosen, boolean passwordMatches, boolean domainValid) {
+    public void login(String firstName, String lastName, String username,
+                      String email, String password, boolean passwordMatches, boolean domainValid) {
         if (passwordMatches && domainValid) {
             ParseUser user = new ParseUser();
             user.setPassword(password);
-            user.setUsername(email);
-            user.put("Name", namechosen);
+            user.setUsername(username);
+            user.setEmail(email);
+            user.put("firstName", firstName);
+            user.put("lastName", lastName);
 
             user.signUpInBackground(new SignUpCallback() {
                 @Override
                 public void done(ParseException e) {
                     if (e == null) {
-                        Toast.makeText(getActivity(), "Success!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getActivity(), HomePagerActivity.class);
                         startActivity(intent);
-
                     } else {
                         Toast.makeText(getActivity(), "There was an error!", Toast.LENGTH_SHORT).show();
                     }

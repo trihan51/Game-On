@@ -18,22 +18,24 @@
         <com.rengwuxian.materialedittext.MaterialEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
+            android:inputType="text"
             android:ems="10"
-            android:id="@+id/login_email_edittext"
-            android:hint="@string/fragment_login_email"
+            android:id="@+id/login_username_edittext"
+            android:hint="@string/fragment_login_username"
             android:textStyle="bold"
             app:met_floatingLabel="highlight"
             app:met_floatingLabelText="Email Address"
             app:met_floatingLabelTextSize="18sp"
             app:met_primaryColor="#FF5722"
             app:met_underlineColor="#FFAB91"
-            app:met_textColorHint="#FFFFFF" />
+            app:met_textColorHint="#FFFFFF"
+            app:met_textColor="#FFFFFF" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
+            android:fontFamily="sans-serif"
             android:ems="10"
             android:id="@+id/login_password_edittext"
             android:hint="@string/fragment_login_password"
@@ -43,7 +45,8 @@
             app:met_floatingLabelTextSize="18sp"
             app:met_primaryColor="#FF5722"
             app:met_underlineColor="#FFAB91"
-            app:met_textColorHint="#FFFFFF" />
+            app:met_textColorHint="#FFFFFF"
+            app:met_textColor="#FFFFFF" />
 
     </LinearLayout>
 

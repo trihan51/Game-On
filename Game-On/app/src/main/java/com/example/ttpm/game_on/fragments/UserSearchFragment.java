@@ -17,10 +17,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ttpm.game_on.models.GameOnSession;
 import com.example.ttpm.game_on.QueryPreferences;
@@ -49,8 +51,6 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
 
     private static final String ARG_CURRENT_LOCATION = "com.example.ttpm.game_on.current_location";
 
-    private RadioGroup mRadiusChoicesRadioGroup;
-    private RadioButton mRadiusSelectionRadioButton;
     private RecyclerView mSearchRecyclerView;
     private UserSearchAdapter mSearchAdapter;
     private List<BoardGame> mBoardGames;
@@ -83,8 +83,6 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_search, container, false);
-
-        mRadiusChoicesRadioGroup = (RadioGroup) view.findViewById(R.id.radioGroup);
 
         mSearchRecyclerView = (RecyclerView) view
                 .findViewById(R.id.user_search_recycler_view);
@@ -128,6 +126,12 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
         mSearchAdapter.animateTo(filteredBoardGameList);
         mSearchRecyclerView.scrollToPosition(0);
         return true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        queryForAllOpenUniqueBoardGames();
     }
 
     private void queryForAllOpenUniqueBoardGames() {
@@ -199,9 +203,7 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
                 public void onClick(View v) {
                     String gameTitle = mBoardGameTextView.getText().toString();
 
-                    mRadiusSelectionRadioButton = (RadioButton) getView()
-                            .findViewById(mRadiusChoicesRadioGroup.getCheckedRadioButtonId());
-                    String searchRadius = mRadiusSelectionRadioButton.getText().toString();
+                    String searchRadius = QueryPreferences.getSearchRange(getContext());
 
                     Intent intent = UserGameActivity.newIntent(
                             getActivity(),

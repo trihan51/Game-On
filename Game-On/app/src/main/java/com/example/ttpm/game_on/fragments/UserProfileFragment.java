@@ -2,11 +2,8 @@ package com.example.ttpm.game_on.fragments;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.CursorLoader;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -20,17 +17,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.CameraActivity;
-import com.example.ttpm.game_on.activities.HomePagerActivity;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
@@ -57,10 +53,11 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
 
     private static int SELECT_FILE = 1;
 
-    protected TextView mWelcomeMessageTextView;
+    protected TextView mUsernameTextView;
     protected CircleImageView mProfileImageView;
     protected ImageButton mPictureChangeButton;
     protected View mUploadSnackbar;
+    private RadioGroup mSearchRangeRadioGroup;
 
     public UserProfileFragment() {
     }
@@ -80,8 +77,8 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
-        mWelcomeMessageTextView = (TextView) view.findViewById(R.id.user_profile_welcome_message);
-        mWelcomeMessageTextView.setText(ParseUser.getCurrentUser().getUsername());
+        mUsernameTextView = (TextView) view.findViewById(R.id.user_profile_username);
+        mUsernameTextView.setText(ParseUser.getCurrentUser().getUsername());
 
         mProfileImageView = (CircleImageView)
                 view.findViewById(R.id.user_profile_profile_image_view);
@@ -95,6 +92,16 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
             }
         });
 
+        mSearchRangeRadioGroup = (RadioGroup) view.findViewById(R.id.user_profile_radio_group);
+        setRadiusRadioButton();
+        mSearchRangeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton selectedSearchRange = (RadioButton) group.findViewById(checkedId);
+                QueryPreferences.setSearchRange(getContext(), selectedSearchRange.getText().toString());
+            }
+        });
+
         mUploadSnackbar = (View) view.findViewById(R.id.user_profile_coordinator_layout);
         if(QueryPreferences.isNewProfilePic(this.getContext())) {
             Snackbar.make(mUploadSnackbar, "Image Uploaded", Snackbar.LENGTH_SHORT).show();
@@ -104,6 +111,23 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
         updateProfilePicture();
 
         return view;
+    }
+
+    private void setRadiusRadioButton(){
+        String selectedSearchRange = QueryPreferences.getSearchRange(getContext());
+        if(!selectedSearchRange.isEmpty()) {
+            for (int i = 0; i < mSearchRangeRadioGroup.getChildCount(); i++) {
+                RadioButton btn = (RadioButton) mSearchRangeRadioGroup.getChildAt(i);
+                if (btn.getText().toString().equals(selectedSearchRange)) {
+                    btn.setChecked(true);
+                } else {
+                    btn.setChecked(false);
+                }
+            }
+        } else {
+            RadioButton btn = (RadioButton) mSearchRangeRadioGroup.getChildAt(3);
+            btn.setChecked(true);
+        }
     }
 
     @Override

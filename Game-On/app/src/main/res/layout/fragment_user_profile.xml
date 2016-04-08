@@ -7,38 +7,85 @@
     android:background="@color/Darkprimarycolor"
     tools:context="com.example.ttpm.game_on.fragments.UserProfileFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/user_profile_welcome_message"
-        android:layout_alignParentTop="true"
-        android:paddingTop="16dp"
-        android:paddingLeft="6dp"
-        android:layout_centerHorizontal="true"
-        android:textSize="16sp" />
-
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/user_profile_profile_image_view"
-        android:layout_below="@+id/user_profile_welcome_message"
-        android:layout_centerHorizontal="true"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginTop="60dp"
+        android:id="@+id/user_profile_profile_image_view"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
         android:padding="1dp"
-        android:src="@drawable/com_parse_ui_facebook_login_logo"
+        android:src="@drawable/com_parse_ui_twitter_login_logo"
         app:civ_border_width="2dp"
         app:civ_border_color="#FF000000"
         tools:background="@color/wallet_dim_foreground_inverse_disabled_holo_dark" />
 
-    <ImageButton
-        style="?android:attr/buttonStyleSmall"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/user_profile_username"
+        android:layout_centerHorizontal="true"
         android:layout_below="@+id/user_profile_profile_image_view"
+        android:textSize="16sp"
+        android:textColor="#FFFFFF"
+        tools:text="Greeting message" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_profile_username"
         android:id="@+id/user_profile_change_profile_picture_button"
         android:layout_centerHorizontal="true"
         android:src="@android:drawable/ic_menu_camera" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_profile_change_profile_picture_button"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/user_profile_radio_label"
+            android:text="@string/radio_label_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"/>
+
+        <RadioGroup
+            android:id="@+id/user_profile_radio_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/user_profile_radioNA"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_na"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/user_profile_radio1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_1"/>
+
+            <RadioButton
+                android:id="@+id/user_profile_radio2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_2"/>
+
+            <RadioButton
+                android:id="@+id/user_profile_radio3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_3"/>
+        </RadioGroup>
+
+    </LinearLayout>
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"

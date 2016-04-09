@@ -115,7 +115,10 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
 
     private void setRadiusRadioButton(){
         String selectedSearchRange = QueryPreferences.getSearchRange(getContext());
-        if(!selectedSearchRange.isEmpty()) {
+        if(selectedSearchRange.isEmpty()) {
+            RadioButton btn = (RadioButton) mSearchRangeRadioGroup.getChildAt(3);
+            btn.setChecked(true);
+        } else {
             for (int i = 0; i < mSearchRangeRadioGroup.getChildCount(); i++) {
                 RadioButton btn = (RadioButton) mSearchRangeRadioGroup.getChildAt(i);
                 if (btn.getText().toString().equals(selectedSearchRange)) {
@@ -124,9 +127,6 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
                     btn.setChecked(false);
                 }
             }
-        } else {
-            RadioButton btn = (RadioButton) mSearchRangeRadioGroup.getChildAt(3);
-            btn.setChecked(true);
         }
     }
 

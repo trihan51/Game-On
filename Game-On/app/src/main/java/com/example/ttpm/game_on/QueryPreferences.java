@@ -59,6 +59,6 @@ public class QueryPreferences {
     public static String getSearchRange(Context context) {
         return PreferenceManager
                 .getDefaultSharedPreferences(context)
-                .getString(PREF_SEARCH_RANGE, null);
+                .getString(PREF_SEARCH_RANGE, "");
     }
 }

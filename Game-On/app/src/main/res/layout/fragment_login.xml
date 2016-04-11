@@ -17,7 +17,7 @@
         <com.rengwuxian.materialedittext.MaterialEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
+            android:inputType="textEmailAddress"
             android:ems="10"
             android:id="@+id/login_username_edittext"
             android:hint="@string/fragment_login_username"

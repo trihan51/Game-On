@@ -218,7 +218,6 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
             });
         }
 
-
         public void bindSession(GameOnSession session) {
             mSession = session;
 

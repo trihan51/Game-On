@@ -30,7 +30,7 @@ public class ExampleTest extends ActivityInstrumentationTestCase2<SplashActivity
 solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
         solo.clickOnView(solo.getView(R.id.list_item_user_games_list_button));
   //      solo.clickOnView(solo.getView(R.id.list_item_join_button));
-        solo.waitForView(solo.getView(com.example.ttpm.game_on.R.id.menu_action_log_out));
+      //  solo.waitForView(solo.getView(com.example.ttpm.game_on.R.id.menu_action_log_out));
         //solo.clickOnButton("JOIN");
         //   solo.clickOnButton("Log Out");
     //    solo.clickOnView(solo.getView(com.example.ttpm.game_on.R.id.menu_action_log_out));

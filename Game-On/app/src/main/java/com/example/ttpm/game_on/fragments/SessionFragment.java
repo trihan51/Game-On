@@ -35,6 +35,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -54,10 +55,10 @@ public class SessionFragment extends VisibleFragment {
 
     private static final String TAG = "ERROR";
 
-    private GameOnSession mCurrentGameOnSession;
     ParseUser sessionHostName = new ParseUser();
     private boolean mCurrentUserIsHost;
 
+    private GameOnSession mCurrentGameOnSession;
     private LinearLayout mSessionInfoOutput;
     private TextView mTimerTextView;
     private Button mConfirmButton;
@@ -134,10 +135,8 @@ public class SessionFragment extends VisibleFragment {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(37.3353, -121.8813), 15);
         mMap.animateCamera(cameraUpdate);
 
-        ParseQuery<GameOnSession> query = GameOnSession.getQuery();
+        ParseQuery<GameOnSession> query = ParseQuery.getQuery(GameOnSession.class);
         query.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(getActivity()));
-        query.include("host");
-
         query.findInBackground(new FindCallback<GameOnSession>() {
             @Override
             public void done(List<GameOnSession> list, ParseException e) {
@@ -147,6 +146,7 @@ public class SessionFragment extends VisibleFragment {
                     sessionHostName = list.get(0).getParseUser("host");
 
                     mCurrentGameOnSession = list.get(0);
+                    Log.d("GAMEONSESSION", "onCreateView: mCurrent " + mCurrentGameOnSession.getNumberOfParticipants());
                     mCurrentUserIsHost = (mCurrentGameOnSession.getHost().getObjectId() == ParseUser.getCurrentUser().getObjectId());
 
                     mSessionInfoOutput = (LinearLayout) view.findViewById(R.id.session_participant_container);
@@ -156,7 +156,7 @@ public class SessionFragment extends VisibleFragment {
                     TextView hostNameTextView = (TextView) view.findViewById(R.id.session_game_host_name);
                     hostNameTextView.setText("Host: " + sessionHostName.getUsername());
 
-                    displaySessionParticipants(mSessionInfoOutput);
+                    displaySessionParticipants(mSessionInfoOutput, mCurrentGameOnSession);
 
                     mTimerTextView = (TextView) view.findViewById(R.id.timerTextView);
                     if (!mCurrentUserIsHost) {
@@ -210,12 +210,44 @@ public class SessionFragment extends VisibleFragment {
             }
         });
 
+        Button btn = (Button) view.findViewById(R.id.session_button);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseQuery<GameOnSession> query = ParseQuery.getQuery(GameOnSession.class);
+                query.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(getActivity()));
+                query.findInBackground(new FindCallback<GameOnSession>() {
+                    @Override
+                    public void done(List<GameOnSession> objects, ParseException e) {
+                        GameOnSession g = objects.get(0);
+                        Toast.makeText(getContext(), g.getNumberOfParticipants(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
         return view;
     }
+
+    /**
+     * Todo: possible problems is that we have to notify adapter that dataset has changed
+     * Should add a button to session page and then click it to see if it queries right
+     */
 
     @Override
     public void onResume() {
         mapView.onResume();
+        Log.d("GAMEONSESSION", "onResume");
+        ParseQuery<GameOnSession> query = ParseQuery.getQuery(GameOnSession.class);
+        query.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(getActivity()));
+        query.findInBackground(new FindCallback<GameOnSession>() {
+            @Override
+            public void done(List<GameOnSession> objects, ParseException e) {
+                mCurrentGameOnSession = objects.get(0);
+                Log.d("GAMEONSESSION", "onResume: mCurrent " + mCurrentGameOnSession.getNumberOfParticipants());
+                displaySessionParticipants(mSessionInfoOutput, mCurrentGameOnSession);
+            }
+        });
         super.onResume();
     }
 
@@ -231,8 +263,15 @@ public class SessionFragment extends VisibleFragment {
         mapView.onLowMemory();
     }
 
-    private void displaySessionParticipants(LinearLayout displayArea) {
-        JSONArray joinPlayerObjIds = mCurrentGameOnSession.getParticipants();
+    private void displaySessionParticipants(LinearLayout displayArea, GameOnSession session) {
+        JSONArray joinPlayerObjIds = new JSONArray();
+        GameOnSession currSession = session;
+        try {
+            joinPlayerObjIds = currSession.getParticipants();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Log.d("GAMEONSESSION", "displaySession #: " + joinPlayerObjIds.toString());
         int length = joinPlayerObjIds.length();
 
         for (int i = 0; i < length; i++) {
@@ -251,7 +290,9 @@ public class SessionFragment extends VisibleFragment {
             }
         }
 
-        updateUserMarker();
+        if(currSession != null) {
+            updateUserMarker();
+        }
     }
 
     private void startTimer() {
@@ -327,14 +368,10 @@ public class SessionFragment extends VisibleFragment {
                             .position(new LatLng(point.getLatitude(), point.getLongitude()))
                             .title("Host")
             ); */
-
-
-
     }
 
     private void updateUserMarker()
     {
-
         Marker marker1 = mMap.addMarker(
                 new MarkerOptions()
                         .position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()))
@@ -343,7 +380,6 @@ public class SessionFragment extends VisibleFragment {
         );
 
         ParseGeoPoint point = mCurrentGameOnSession.getLocation();
-
 
         Marker marker = mMap.addMarker(
                 new MarkerOptions()

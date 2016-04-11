@@ -57,7 +57,6 @@ public class SessionFragment extends VisibleFragment {
     private GameOnSession mCurrentGameOnSession;
     ParseUser sessionHostName = new ParseUser();
     private boolean mCurrentUserIsHost;
-    private List<ParseUser> particks = new ArrayList<ParseUser>();
 
     private LinearLayout mSessionInfoOutput;
     private TextView mTimerTextView;
@@ -233,40 +232,23 @@ public class SessionFragment extends VisibleFragment {
     }
 
     private void displaySessionParticipants(LinearLayout displayArea) {
-        JSONArray participants = mCurrentGameOnSession.getParticipants();
-        int length = participants.length();
-        System.out.println("Length of Participants Array is:" + length);
-        // particks = new ArrayList<ParseUser>();
+        JSONArray joinPlayerObjIds = mCurrentGameOnSession.getParticipants();
+        int length = joinPlayerObjIds.length();
 
-        for ( int i = 0; i < length ; i++) {
-            ParseQuery<ParseUser> query = ParseQuery.getQuery("User");
+        for (int i = 0; i < length; i++) {
             try {
-                query.whereEqualTo("objectId", participants.getString(i));
+                ParseQuery<ParseUser> query = ParseUser.getQuery();
+                query.whereEqualTo("objectId", joinPlayerObjIds.getString(i));
                 query.findInBackground(new FindCallback<ParseUser>() {
                     @Override
                     public void done(List<ParseUser> objects, ParseException e) {
-                        //ParticipantInGame = objects.get
-                        for (ParseUser users : objects) {
-                            particks.add(users);
-                        }
-                        displaySessionParticipantsEmail(mSessionInfoOutput);
+                        displaySessionParticipantsEmail(mSessionInfoOutput, objects.get(0));
                     }
 
                 });
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
-
-        try {
-            for (int i = 0; i < length; i++) {
-                int participantNum = i + 1;
-                TextView participantNameTextView = new TextView(getActivity());
-                participantNameTextView.setText("Participant " + participantNum + ": " + participants.getString(i));
-                displayArea.addView(participantNameTextView);
-            }
-        } catch (org.json.JSONException e) {
-            e.getStackTrace();
         }
 
         updateUserMarker();
@@ -304,17 +286,11 @@ public class SessionFragment extends VisibleFragment {
         mCountDownTimer.start();
     }
 
-    private void displaySessionParticipantsEmail( LinearLayout displayArea)
+    private void displaySessionParticipantsEmail(LinearLayout displayArea, ParseUser user)
     {
-        for ( int i= 0; i< particks.size(); i++)
-        {
-            int NumberOf = i+1;
-            System.out.println(particks.size());
-            System.out.println("Participant:" + NumberOf + particks.get(i).getObjectId());
-            TextView participantEmailTextView = new TextView(getActivity());
-            participantEmailTextView.setText("Participant " + NumberOf + ": " + particks.get(i).getUsername());
-            displayArea.addView(participantEmailTextView);
-        }
+        TextView participantEmailTextView = new TextView(getActivity());
+        participantEmailTextView.setText("Participant: " + user.getUsername());
+        displayArea.addView(participantEmailTextView);
     }
 
     private void performLeaveActions() {

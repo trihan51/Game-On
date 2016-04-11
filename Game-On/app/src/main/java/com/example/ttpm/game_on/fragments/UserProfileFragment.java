@@ -118,6 +118,7 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
         if(selectedSearchRange.isEmpty()) {
             RadioButton btn = (RadioButton) mSearchRangeRadioGroup.getChildAt(0);
             btn.setChecked(true);
+            QueryPreferences.setSearchRange(getContext(), btn.getText().toString());
         } else {
             for (int i = 0; i < mSearchRangeRadioGroup.getChildCount(); i++) {
                 RadioButton btn = (RadioButton) mSearchRangeRadioGroup.getChildAt(i);

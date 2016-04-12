@@ -236,6 +236,7 @@ public class SessionFragment extends VisibleFragment {
 
     @Override
     public void onResume() {
+        super.onResume();
         mapView.onResume();
         Log.d("GAMEONSESSION", "onResume");
         ParseQuery<GameOnSession> query = ParseQuery.getQuery(GameOnSession.class);
@@ -248,7 +249,6 @@ public class SessionFragment extends VisibleFragment {
                 displaySessionParticipants(mSessionInfoOutput, mCurrentGameOnSession);
             }
         });
-        super.onResume();
     }
 
     @Override

@@ -214,35 +214,8 @@ public class SessionFragment extends VisibleFragment {
             }
         });
 
-        Button btn = (Button) view.findViewById(R.id.session_button);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            ParseQuery<ParseObject> query = ParseQuery.getQuery("GameOnSession");
-            query.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(getActivity()));
-            Log.d("GAMEONSESSION", "SessionID: " + QueryPreferences.getStoredSessionId(getActivity()));
-//            query.clearCachedResult();
-            Log.d("GAMEONSESSION", "Has cached result? " + query.hasCachedResult());
-            Log.d("GAMEONSESSION", "Cleared cached result");
-            query.findInBackground(new FindCallback<ParseObject>() {
-                @Override
-                public void done(List<ParseObject> objects, ParseException e) {
-                    ParseObject g = objects.get(0);
-                    JSONArray a = g.getJSONArray("participants");
-                    Log.d("GAMEONSESSION", "Session players: " + a.toString());
-                    Toast.makeText(getContext(), a.toString(), Toast.LENGTH_SHORT).show();
-                }
-            });
-            }
-        });
-
         return view;
     }
-
-    /**
-     * Todo: possible problems is that we have to notify adapter that dataset has changed
-     * Should add a button to session page and then click it to see if it queries right
-     */
 
     @Override
     public void onResume() {

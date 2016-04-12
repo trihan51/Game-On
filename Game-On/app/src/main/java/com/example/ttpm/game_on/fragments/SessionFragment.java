@@ -140,73 +140,77 @@ public class SessionFragment extends VisibleFragment {
         query.findInBackground(new FindCallback<GameOnSession>() {
             @Override
             public void done(List<GameOnSession> list, ParseException e) {
-                if (e == null) {
+            if (e == null) {
 
-                    //Set the host of the game session to the pointer of the User of this session
-                    sessionHostName = list.get(0).getParseUser("host");
-
-                    mCurrentGameOnSession = list.get(0);
-                    Log.d("GAMEONSESSION", "onCreateView: mCurrent " + mCurrentGameOnSession.getNumberOfParticipants());
-                    mCurrentUserIsHost = (mCurrentGameOnSession.getHost().getObjectId() == ParseUser.getCurrentUser().getObjectId());
-
-                    mSessionInfoOutput = (LinearLayout) view.findViewById(R.id.session_participant_container);
-
-                    TextView boardGameTextView = (TextView) view.findViewById(R.id.session_game_game_name);
-                    boardGameTextView.setText(mCurrentGameOnSession.getGameTitle());
-                    TextView hostNameTextView = (TextView) view.findViewById(R.id.session_game_host_name);
-                    hostNameTextView.setText("Host: " + sessionHostName.getUsername());
-
-                    displaySessionParticipants(mSessionInfoOutput, mCurrentGameOnSession);
-
-                    mTimerTextView = (TextView) view.findViewById(R.id.timerTextView);
-                    if (!mCurrentUserIsHost) {
-                        mTimerTextView.setText(R.string.time_left);
-                    } else {
-                        startTimer();
-                    }
-
-                    mConfirmButton = (Button) view.findViewById(R.id.confirmButton);
-                    mConfirmButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mCountDownTimer.cancel();
-                            // user has confirmed to start session. do appropriate actions here.
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            builder.setMessage(R.string.session_confirmed_message)
-                                    .setTitle(R.string.session_confirmed_title)
-                                    .setPositiveButton(R.string.dialog_confirmed_button_text, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            mCurrentGameOnSession.setOpenStatus(false);
-                                            mCurrentGameOnSession.saveInBackground();
-                                            QueryPreferences.setStoredSessionId(getActivity(), null);
-                                            sendUserBackToHomePagerActivity();
-                                        }
-                                    });
-                            AlertDialog dialog = builder.create();
-                            dialog.show();
-                        }
-                    });
-
-                    if (!mCurrentUserIsHost) {
-                        mConfirmButton.setVisibility(View.GONE);
-                    }
-
-                    mLeaveButton = (Button) view.findViewById(R.id.leaveButton);
-                    mLeaveButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            performLeaveActions();
-                        }
-                    });
-                } else {
-                    // It could be either because the session no longer exists or
-                    // there really was an error when trying to query Parse.
-                    // for now, we can just assume that the session no longer exists.
-                    // however, in the future, we will have to do some checking.
-
-                    // another solution for now is to use call performActionBasedOnSessionCancelled here.
-                    Toast.makeText(getActivity(), "Error!", Toast.LENGTH_SHORT).show();
+                //Set the host of the game session to the pointer of the User of this session
+                try {
+                    sessionHostName = list.get(0).getParseUser("host").fetchIfNeeded();
+                } catch (ParseException ex) {
+                    Log.d("GAMEONSESSION", "session fetchifneeded: " + ex.toString());
                 }
+
+                mCurrentGameOnSession = list.get(0);
+                Log.d("GAMEONSESSION", "onCreateView: mCurrent " + mCurrentGameOnSession.getNumberOfParticipants());
+                mCurrentUserIsHost = (mCurrentGameOnSession.getHost().getObjectId() == ParseUser.getCurrentUser().getObjectId());
+
+                mSessionInfoOutput = (LinearLayout) view.findViewById(R.id.session_participant_container);
+
+                TextView boardGameTextView = (TextView) view.findViewById(R.id.session_game_game_name);
+                boardGameTextView.setText(mCurrentGameOnSession.getGameTitle());
+                TextView hostNameTextView = (TextView) view.findViewById(R.id.session_game_host_name);
+                hostNameTextView.setText("Host: " + sessionHostName.getUsername());
+
+                displaySessionParticipants(mSessionInfoOutput, mCurrentGameOnSession);
+
+                mTimerTextView = (TextView) view.findViewById(R.id.timerTextView);
+                if (!mCurrentUserIsHost) {
+                    mTimerTextView.setText(R.string.time_left);
+                } else {
+                    startTimer();
+                }
+
+                mConfirmButton = (Button) view.findViewById(R.id.confirmButton);
+                mConfirmButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCountDownTimer.cancel();
+                        // user has confirmed to start session. do appropriate actions here.
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setMessage(R.string.session_confirmed_message)
+                                .setTitle(R.string.session_confirmed_title)
+                                .setPositiveButton(R.string.dialog_confirmed_button_text, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        mCurrentGameOnSession.setOpenStatus(false);
+                                        mCurrentGameOnSession.saveInBackground();
+                                        QueryPreferences.setStoredSessionId(getActivity(), null);
+                                        sendUserBackToHomePagerActivity();
+                                    }
+                                });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    }
+                });
+
+                if (!mCurrentUserIsHost) {
+                    mConfirmButton.setVisibility(View.GONE);
+                }
+
+                mLeaveButton = (Button) view.findViewById(R.id.leaveButton);
+                mLeaveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        performLeaveActions();
+                    }
+                });
+            } else {
+                // It could be either because the session no longer exists or
+                // there really was an error when trying to query Parse.
+                // for now, we can just assume that the session no longer exists.
+                // however, in the future, we will have to do some checking.
+
+                // another solution for now is to use call performActionBasedOnSessionCancelled here.
+                Toast.makeText(getActivity(), "Error!", Toast.LENGTH_SHORT).show();
+            }
             }
         });
 
@@ -214,15 +218,21 @@ public class SessionFragment extends VisibleFragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ParseQuery<GameOnSession> query = ParseQuery.getQuery(GameOnSession.class);
-                query.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(getActivity()));
-                query.findInBackground(new FindCallback<GameOnSession>() {
-                    @Override
-                    public void done(List<GameOnSession> objects, ParseException e) {
-                        GameOnSession g = objects.get(0);
-                        Toast.makeText(getContext(), g.getNumberOfParticipants(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("GameOnSession");
+            query.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(getActivity()));
+            Log.d("GAMEONSESSION", "SessionID: " + QueryPreferences.getStoredSessionId(getActivity()));
+//            query.clearCachedResult();
+            Log.d("GAMEONSESSION", "Has cached result? " + query.hasCachedResult());
+            Log.d("GAMEONSESSION", "Cleared cached result");
+            query.findInBackground(new FindCallback<ParseObject>() {
+                @Override
+                public void done(List<ParseObject> objects, ParseException e) {
+                    ParseObject g = objects.get(0);
+                    JSONArray a = g.getJSONArray("participants");
+                    Log.d("GAMEONSESSION", "Session players: " + a.toString());
+                    Toast.makeText(getContext(), a.toString(), Toast.LENGTH_SHORT).show();
+                }
+            });
             }
         });
 

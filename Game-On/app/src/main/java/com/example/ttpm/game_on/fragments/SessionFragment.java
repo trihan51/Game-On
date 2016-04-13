@@ -122,7 +122,7 @@ public class SessionFragment extends VisibleFragment {
 
         newMapView(view, savedInstanceState);
 
-        ParseQuery<GameOnSession> query = ParseQuery.getQuery(GameOnSession.class);
+        ParseQuery<GameOnSession> query = GameOnSession.getQuery();
         query.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(getActivity()));
         query.findInBackground(new FindCallback<GameOnSession>() {
             @Override

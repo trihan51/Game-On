@@ -2,6 +2,7 @@ package com.example.ttpm.game_on.fragments;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -12,8 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +23,7 @@ import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.HomePagerActivity;
 import com.example.ttpm.game_on.activities.SessionActivity;
+import com.example.ttpm.game_on.adapters.PlayerAdapter;
 import com.example.ttpm.game_on.models.GameOnSession;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,11 +38,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
@@ -56,12 +57,12 @@ public class SessionFragment extends VisibleFragment {
     private static final String TAG = "ERROR";
 
     ParseUser sessionHostName = new ParseUser();
-    private boolean mCurrentUserIsHost;
+    private boolean mUserIsHost;
 
     private GameOnSession mCurrentGameOnSession;
-    private LinearLayout mSessionInfoOutput;
+    private GridView mPlayerGrid;
     private TextView mTimerTextView;
-    private Button mConfirmButton;
+    private Button mHostStartButton;
     private Button mLeaveButton;
 
     private GoogleMap mMap;
@@ -119,54 +120,58 @@ public class SessionFragment extends VisibleFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_session, container, false);
 
-        // Gets the MapView from the XML layout and creates it
-        mapView = (MapView) view.findViewById(R.id.mapview);
-        mapView.onCreate(savedInstanceState);
+        newMapView(view, savedInstanceState);
 
-        // Gets to GoogleMap from the MapView and does initialization stuff
-        mMap = mapView.getMap();
-        mMap.getUiSettings().setMyLocationButtonEnabled(false);
-        mMap.setMyLocationEnabled(true);
-
-        // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
-        MapsInitializer.initialize(getActivity());
-
-        // Updates the location and zoom of the MapView
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(37.3353, -121.8813), 15);
-        mMap.animateCamera(cameraUpdate);
-
-        ParseQuery<GameOnSession> query = ParseQuery.getQuery(GameOnSession.class);
+        ParseQuery<GameOnSession> query = GameOnSession.getQuery();
         query.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(getActivity()));
         query.findInBackground(new FindCallback<GameOnSession>() {
             @Override
             public void done(List<GameOnSession> list, ParseException e) {
                 if (e == null) {
-
-                    //Set the host of the game session to the pointer of the User of this session
-                    sessionHostName = list.get(0).getParseUser("host");
-
                     mCurrentGameOnSession = list.get(0);
-                    Log.d("GAMEONSESSION", "onCreateView: mCurrent " + mCurrentGameOnSession.getNumberOfParticipants());
-                    mCurrentUserIsHost = (mCurrentGameOnSession.getHost().getObjectId() == ParseUser.getCurrentUser().getObjectId());
+                    try {
+                        sessionHostName = mCurrentGameOnSession.getParseUser("host").fetchIfNeeded();
+                    } catch (ParseException ex) {
+                        Log.e("GAMEONSESSION", "session fetchifneeded: " + ex.toString());
+                    }
 
-                    mSessionInfoOutput = (LinearLayout) view.findViewById(R.id.session_participant_container);
+                    mUserIsHost = mCurrentGameOnSession.getHost().getObjectId()
+                            .equals(ParseUser.getCurrentUser().getObjectId());
 
+                    // Display grid of players in session
+                    mPlayerGrid = (GridView) view.findViewById(R.id.session_participant_container);
+                    mPlayerGrid.setAdapter(new PlayerAdapter(getContext(), mCurrentGameOnSession));
+                    mPlayerGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Toast.makeText(getContext(), mCurrentGameOnSession.getPlayer(position), Toast.LENGTH_SHORT).show();
+                            // Todo: grab parseuser with objectid and display user info onclick
+                        }
+                    });
+
+                    // Display board game name
                     TextView boardGameTextView = (TextView) view.findViewById(R.id.session_game_game_name);
                     boardGameTextView.setText(mCurrentGameOnSession.getGameTitle());
+
+                    // Display host name
                     TextView hostNameTextView = (TextView) view.findViewById(R.id.session_game_host_name);
-                    hostNameTextView.setText("Host: " + sessionHostName.getUsername());
+                    Resources res = getResources();
+                    String hostSessionTag = res.getString(R.string.session_host_tag)
+                            + " "
+                            + sessionHostName.getUsername();
+                    hostNameTextView.setText(hostSessionTag);
 
-                    displaySessionParticipants(mSessionInfoOutput, mCurrentGameOnSession);
-
+                    // Display timer countdown
                     mTimerTextView = (TextView) view.findViewById(R.id.timerTextView);
-                    if (!mCurrentUserIsHost) {
+                    if (!mUserIsHost) {
                         mTimerTextView.setText(R.string.time_left);
                     } else {
                         startTimer();
                     }
 
-                    mConfirmButton = (Button) view.findViewById(R.id.confirmButton);
-                    mConfirmButton.setOnClickListener(new View.OnClickListener() {
+                    // Display host start button
+                    mHostStartButton = (Button) view.findViewById(R.id.session_host_start_button);
+                    mHostStartButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             mCountDownTimer.cancel();
@@ -187,68 +192,54 @@ public class SessionFragment extends VisibleFragment {
                         }
                     });
 
-                    if (!mCurrentUserIsHost) {
-                        mConfirmButton.setVisibility(View.GONE);
+                    // Hide host start button if user isn't host
+                    if (!mUserIsHost) {
+                        mHostStartButton.setVisibility(View.GONE);
                     }
 
+                    // Display leave button
                     mLeaveButton = (Button) view.findViewById(R.id.leaveButton);
                     mLeaveButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            performLeaveActions();
+                            leaveSession();
                         }
                     });
                 } else {
-                    // It could be either because the session no longer exists or
-                    // there really was an error when trying to query Parse.
-                    // for now, we can just assume that the session no longer exists.
-                    // however, in the future, we will have to do some checking.
-
-                    // another solution for now is to use call performActionBasedOnSessionCancelled here.
                     Toast.makeText(getActivity(), "Error!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        Button btn = (Button) view.findViewById(R.id.session_button);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ParseQuery<GameOnSession> query = ParseQuery.getQuery(GameOnSession.class);
-                query.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(getActivity()));
-                query.findInBackground(new FindCallback<GameOnSession>() {
-                    @Override
-                    public void done(List<GameOnSession> objects, ParseException e) {
-                        GameOnSession g = objects.get(0);
-                        Toast.makeText(getContext(), g.getNumberOfParticipants(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
+        if(mCurrentGameOnSession != null) {
+            updateUserMarker();
+        }
 
         return view;
     }
 
-    /**
-     * Todo: possible problems is that we have to notify adapter that dataset has changed
-     * Should add a button to session page and then click it to see if it queries right
-     */
+    private void newMapView(View view, Bundle savedInstanceState) {
+        // Gets the MapView from the XML layout and creates it
+        mapView = (MapView) view.findViewById(R.id.mapview);
+        mapView.onCreate(savedInstanceState);
+
+        // Gets to GoogleMap from the MapView and does initialization stuff
+        mMap = mapView.getMap();
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMap.setMyLocationEnabled(true);
+
+        // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
+        MapsInitializer.initialize(getActivity());
+
+        // Updates the location and zoom of the MapView
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(37.3353, -121.8813), 15);
+        mMap.animateCamera(cameraUpdate);
+    }
 
     @Override
     public void onResume() {
-        mapView.onResume();
-        Log.d("GAMEONSESSION", "onResume");
-        ParseQuery<GameOnSession> query = ParseQuery.getQuery(GameOnSession.class);
-        query.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(getActivity()));
-        query.findInBackground(new FindCallback<GameOnSession>() {
-            @Override
-            public void done(List<GameOnSession> objects, ParseException e) {
-                mCurrentGameOnSession = objects.get(0);
-                Log.d("GAMEONSESSION", "onResume: mCurrent " + mCurrentGameOnSession.getNumberOfParticipants());
-                displaySessionParticipants(mSessionInfoOutput, mCurrentGameOnSession);
-            }
-        });
         super.onResume();
+        mapView.onResume();
     }
 
     @Override
@@ -261,38 +252,6 @@ public class SessionFragment extends VisibleFragment {
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
-    }
-
-    private void displaySessionParticipants(LinearLayout displayArea, GameOnSession session) {
-        JSONArray joinPlayerObjIds = new JSONArray();
-        GameOnSession currSession = session;
-        try {
-            joinPlayerObjIds = currSession.getParticipants();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Log.d("GAMEONSESSION", "displaySession #: " + joinPlayerObjIds.toString());
-        int length = joinPlayerObjIds.length();
-
-        for (int i = 0; i < length; i++) {
-            try {
-                ParseQuery<ParseUser> query = ParseUser.getQuery();
-                query.whereEqualTo("objectId", joinPlayerObjIds.getString(i));
-                query.findInBackground(new FindCallback<ParseUser>() {
-                    @Override
-                    public void done(List<ParseUser> objects, ParseException e) {
-                        displaySessionParticipantsEmail(mSessionInfoOutput, objects.get(0));
-                    }
-
-                });
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if(currSession != null) {
-            updateUserMarker();
-        }
     }
 
     private void startTimer() {
@@ -317,7 +276,7 @@ public class SessionFragment extends VisibleFragment {
                         .setTitle(R.string.session_timed_out_title)
                         .setPositiveButton(R.string.dialog_timed_out_button_text, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                performLeaveActions();
+                                leaveSession();
                             }
                         });
                 AlertDialog dialog = builder.create();
@@ -327,24 +286,17 @@ public class SessionFragment extends VisibleFragment {
         mCountDownTimer.start();
     }
 
-    private void displaySessionParticipantsEmail(LinearLayout displayArea, ParseUser user)
-    {
-        TextView participantEmailTextView = new TextView(getActivity());
-        participantEmailTextView.setText("Participant: " + user.getUsername());
-        displayArea.addView(participantEmailTextView);
-    }
-
-    private void performLeaveActions() {
+    private void leaveSession() {
         removeCurrentUserFromSession();
         sendUserBackToHomePagerActivity();
     }
 
     private void removeCurrentUserFromSession() {
-        if (mCurrentUserIsHost) {
+        if (mUserIsHost) {
             mCurrentGameOnSession.deleteInBackground();
         } else {
             try {
-                mCurrentGameOnSession.removeParticipant(ParseUser.getCurrentUser().getObjectId());
+                mCurrentGameOnSession.removePlayer(ParseUser.getCurrentUser().getObjectId());
                 mCurrentGameOnSession.saveInBackground();
             } catch (JSONException e) {
                 Log.d(TAG, "JSONException occurred: " + e);
@@ -358,7 +310,7 @@ public class SessionFragment extends VisibleFragment {
         startActivity(intent);
     }
 
-    private void updateHostMarkers()
+    private void updateHostMarker()
     {
         /*ParseGeoPoint point = mCurrentGameOnSession.getLocation();
 

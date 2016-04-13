@@ -4,7 +4,9 @@
     <item
         android:id="@+id/menu_action_current_session"
         android:title="@string/action_current_session"
+        android:icon="@drawable/mr_ic_play_dark"
         android:orderInCategory="100"
+        android:visible="false"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_action_settings"

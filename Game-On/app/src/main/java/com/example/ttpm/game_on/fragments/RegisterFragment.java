@@ -2,6 +2,7 @@ package com.example.ttpm.game_on.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import mehdi.sakout.fancybuttons.FancyButton;
@@ -54,23 +57,64 @@ public class RegisterFragment extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
 
-                String firstName = mFirstNameField.getText().toString().trim();
-                String lastName = mLastNameField.getText().toString().trim();
-                String username = mUsernameField.getText().toString().trim();
-                String email = mEmailField.getText().toString().trim();
-                String password = mPasswordField.getText().toString().trim();
-                String repeatPassword = mRepeatPasswordField.getText().toString().trim();
+                boolean fieldsNotEmpty = isAllFieldsFilled();
+                String firstName,
+                        lastName,
+                        username,
+                        email,
+                        password,
+                        repeatPassword;
+
+                firstName = getSanitizedText(mFirstNameField);
+                lastName = getSanitizedText(mLastNameField);
+                username = getSanitizedText(mUsernameField);
+                email = getSanitizedText(mEmailField);
+                password = getSanitizedText(mPasswordField);
+                repeatPassword = getSanitizedText(mRepeatPasswordField);
 
                 Pattern domainPattern = Pattern.compile("\\S+(@sjsu\\.edu)$");
                 boolean domainValid = domainPattern.matcher(email).matches();
 
                 boolean passwordMatches = password.equals(repeatPassword);
 
-                login(firstName, lastName, username, email, password, passwordMatches, domainValid);
+                if(fieldsNotEmpty) {
+                    login(firstName, lastName, username, email, password, passwordMatches, domainValid);
+                }
             }
         });
-
         return view;
+    }
+
+    private boolean isEmpty(EditText e) {
+        return e.getText().toString().trim().length() == 0;
+    }
+
+    private String getSanitizedText(EditText e) {
+        return e.getText().toString().trim();
+    }
+
+    private boolean isAllFieldsFilled() {
+        if(isEmpty(mFirstNameField)) {
+            Toast.makeText(getActivity(), "First name is missing.", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if(isEmpty(mLastNameField)) {
+            Toast.makeText(getActivity(), "Last name is missing.", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if(isEmpty(mUsernameField)) {
+            Toast.makeText(getActivity(), "Username is missing.", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if(isEmpty(mEmailField)) {
+            Toast.makeText(getActivity(), "Email is missing.", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if(isEmpty(mPasswordField)) {
+            Toast.makeText(getActivity(), "Password is missing.", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if(isEmpty(mRepeatPasswordField)) {
+            Toast.makeText(getActivity(), "Repeat your password.", Toast.LENGTH_SHORT).show();
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public void login(String firstName, String lastName, String username,
@@ -90,7 +134,7 @@ public class RegisterFragment extends android.support.v4.app.Fragment {
                         Intent intent = new Intent(getActivity(), HomePagerActivity.class);
                         startActivity(intent);
                     } else {
-                        Toast.makeText(getActivity(), "There was an error!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "There was an unexpected error.", Toast.LENGTH_SHORT).show();
                     }
                 }
             });

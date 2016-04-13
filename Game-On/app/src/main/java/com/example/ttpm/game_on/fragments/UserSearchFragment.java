@@ -17,12 +17,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.ttpm.game_on.models.GameOnSession;
 import com.example.ttpm.game_on.QueryPreferences;
@@ -237,7 +233,7 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
                     if (e == null) {
                         for (GameOnSession session : objects) {
                             mQuickJoinSession = session;
-                            mQuickJoinSession.addParticipant
+                            mQuickJoinSession.addPlayer
                                     (ParseUser.getCurrentUser().getObjectId());
                             mQuickJoinSession.saveInBackground(new SaveCallback() {
                                 @Override

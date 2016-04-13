@@ -7,6 +7,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  * Data model for a session
@@ -42,8 +43,8 @@ public class GameOnSession extends ParseObject {
         put("participants",numberOfParticipants);
     }
 
-    public String getNumberOfParticipants() {
-        int getParticipantsNumber = getParticipants().length() + 1;
+    public String getAllPlayerAndHostCount() {
+        int getParticipantsNumber = getAllPlayers().length() + 1;
         return String.valueOf(getParticipantsNumber);
     }
 
@@ -63,14 +64,23 @@ public class GameOnSession extends ParseObject {
         put("host", value);
     }
 
-    public JSONArray getParticipants() { return getJSONArray("participants"); }
+    public JSONArray getAllPlayers() { return getJSONArray("participants"); }
 
-    public void setParticipants(JSONArray participants) {
+    public String getPlayer(int position) {
+        try {
+            return getAllPlayers().get(position).toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void setPlayers(JSONArray participants) {
         put("participants", participants);
     }
 
-    public void addParticipant(String userId)  {
-        JSONArray participants = this.getParticipants();
+    public void addPlayer(String userId)  {
+        JSONArray participants = this.getAllPlayers();
         try {
             if (!userIdIsAlreadyIn(participants, userId)) {
                 participants.put(userId);
@@ -91,8 +101,8 @@ public class GameOnSession extends ParseObject {
         return false;
     }
 
-    public void removeParticipant(String userId) throws org.json.JSONException {
-        JSONArray oldListOfParticipants = this.getParticipants();
+    public void removePlayer(String userId) throws org.json.JSONException {
+        JSONArray oldListOfParticipants = this.getAllPlayers();
         JSONArray newListOfParticipants = new JSONArray();
 
         int oldListLength = oldListOfParticipants.length();

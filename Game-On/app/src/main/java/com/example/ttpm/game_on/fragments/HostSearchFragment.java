@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ttpm.game_on.models.GameOnSession;
 import com.example.ttpm.game_on.QueryPreferences;
@@ -55,6 +56,7 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
     private List<BoardGame> mBoardGames;
 
     private Location mCurrentLocation;
+    private boolean isHost;
 
     public HostSearchFragment() {
     }
@@ -181,7 +183,7 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
             mHostButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    createSession(mBoardGame.getBoardName());
+                    checkHostAbility();
                 }
             });
         }
@@ -190,35 +192,50 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
             mBoardGame = boardGame;
             mBoardGameTextView.setText(mBoardGame.getBoardName());
         }
-    }
 
-    private void createSession(String gameTitle) {
-        final GameOnSession session = new GameOnSession();
-        session.setGameTitle(gameTitle);
-        session.setHost(ParseUser.getCurrentUser());
-        session.setParticipants(new JSONArray());
-        session.setOpenStatus(true);
-        session.setLocation(new ParseGeoPoint(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
-
-        ParseACL acl  = new ParseACL();
-        acl.setPublicReadAccess(true);
-        acl.setPublicWriteAccess(true);
-        session.setACL(acl);
-
-        session.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    // Saved Successfully
-                    QueryPreferences.setStoredSessionId(getActivity(), session.getObjectId());
-                    Intent intent = SessionActivity.newIntent(getActivity(), mCurrentLocation);
-                    startActivity(intent);
-                } else {
-                    // The save failed
-                    Log.d("ERROR", "Unable to save session in the background: " + e);
+        private void checkHostAbility() {
+            ParseQuery<GameOnSession> query = GameOnSession.getQuery();
+            query.whereEqualTo("host", ParseUser.getCurrentUser());
+            query.findInBackground(new FindCallback<GameOnSession>() {
+                @Override
+                public void done(List<GameOnSession> objects, ParseException e) {
+                    if(!objects.isEmpty()) {
+                        Toast.makeText(getContext(), "You can only host one game", Toast.LENGTH_SHORT).show();
+                    } else {
+                        createSession(mBoardGame.getBoardName());
+                    }
                 }
-            }
-        });
+            });
+        }
+
+        private void createSession(String gameTitle) {
+            final GameOnSession session = new GameOnSession();
+            session.setGameTitle(gameTitle);
+            session.setHost(ParseUser.getCurrentUser());
+            session.setPlayers(new JSONArray());
+            session.setOpenStatus(true);
+            session.setLocation(new ParseGeoPoint(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
+
+            ParseACL acl  = new ParseACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            session.setACL(acl);
+
+            session.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e == null) {
+                        // Saved Successfully
+                        QueryPreferences.setStoredSessionId(getActivity(), session.getObjectId());
+                        Intent intent = SessionActivity.newIntent(getActivity(), mCurrentLocation);
+                        startActivity(intent);
+                    } else {
+                        // The save failed
+                        Log.d("ERROR", "Unable to save session in the background: " + e);
+                    }
+                }
+            });
+        }
     }
 
     /**

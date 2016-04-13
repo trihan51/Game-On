@@ -25,6 +25,13 @@ public class QueryPreferences {
                 .apply();
     }
 
+    public static void removeStoredSessionId(Context context) {
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .remove(PREF_SESSION_ID)
+                .commit();
+    }
+
     public static boolean isAlarmOn(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context)
                 .getBoolean(PREF_IS_ALARM_ON, false);

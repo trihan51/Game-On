@@ -27,15 +27,21 @@ import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.fragments.HostSearchFragment;
 import com.example.ttpm.game_on.fragments.UserSearchFragment;
 import com.example.ttpm.game_on.fragments.UserProfileFragment;
+import com.example.ttpm.game_on.models.GameOnSession;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.karim.MaterialTabs;
 
@@ -209,9 +215,41 @@ public class HomePagerActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        if (QueryPreferences.getStoredSessionId(this) == null) {
-            MenuItem currentSessionMenuItem = menu.findItem(R.id.menu_action_current_session);
-            currentSessionMenuItem.setVisible(false);
+        final Menu m = menu;
+
+        if (QueryPreferences.getStoredSessionId(this) != null) {
+            ParseQuery<GameOnSession> queryIsPlayerInSession = GameOnSession.getQuery();
+            queryIsPlayerInSession.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(this));
+            queryIsPlayerInSession.whereEqualTo("participants", ParseUser.getCurrentUser().toString());
+
+            ParseQuery<GameOnSession> queryIsPlayerHostSession = GameOnSession.getQuery();
+            queryIsPlayerHostSession.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(this));
+            queryIsPlayerHostSession.whereEqualTo("host", ParseUser.getCurrentUser());
+
+            List<ParseQuery<GameOnSession>> query = new ArrayList<>();
+            query.add(queryIsPlayerInSession);
+            query.add(queryIsPlayerHostSession);
+
+            ParseQuery<GameOnSession> superQuery = ParseQuery.or(query);
+            // if user is a participant or host and session exist, show menu
+            superQuery.findInBackground(new FindCallback<GameOnSession>() {
+                @Override
+                public void done(List<GameOnSession> objects, ParseException e) {
+                    if(e == null) {
+                        // If user is in an active session, show the session button
+                        // Else user isn't in a session, delete reference to inactive session
+                        if (!objects.isEmpty()) {
+                            MenuItem currentSessionMenuItem = m.findItem(R.id.menu_action_current_session);
+                            currentSessionMenuItem.setVisible(true);
+                        } else {
+                            QueryPreferences.removeStoredSessionId(getApplicationContext());
+                        }
+                    } else {
+                        Log.e("GAMEON", "homepager:onCreateOptionsMenu" + e.toString());
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
         return true;
     }
@@ -220,21 +258,15 @@ public class HomePagerActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_action_log_out:
-                ParseUser currentUser1 = ParseUser.getCurrentUser();
-                String currentuses = currentUser1.getUsername();
-                Toast.makeText(this, currentuses + " has logged out.", Toast.LENGTH_LONG).show();
                 ParseUser.logOut();
-                ParseUser currentUser = ParseUser.getCurrentUser();// this will now be null
-                if (currentUser != null) {
-                    Toast.makeText(this, "Error logging out!", Toast.LENGTH_LONG).show();
-                } else {
-                    Intent gohome = new Intent(this, LoginActivity.class);
-                    startActivity(gohome);
-                    this.finish();
-                }
+
+                Intent intent = new Intent(this, SplashActivity.class);
+                startActivity(intent);
+                this.finish();
+
                 return true;
             case R.id.menu_action_current_session:
-                Intent intent = SessionActivity.newIntent(this, mCurrentLocation);
+                intent = SessionActivity.newIntent(this, mCurrentLocation);
                 startActivity(intent);
                 return true;
             default:

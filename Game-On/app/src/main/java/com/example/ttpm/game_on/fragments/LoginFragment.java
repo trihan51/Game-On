@@ -2,6 +2,7 @@ package com.example.ttpm.game_on.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.ForgotPasswordActivity;
 import com.example.ttpm.game_on.activities.HomePagerActivity;
 import com.parse.LogInCallback;
+import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -42,18 +44,27 @@ public class LoginFragment extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
 
-                String email = mEmailField.getText().toString().trim();
-                String password = mPasswordField.getText().toString().trim();
+            String email = mEmailField.getText().toString().trim();
+            String password = mPasswordField.getText().toString().trim();
 
                 ParseUser.logInInBackground(email, password, new LogInCallback() {
                     @Override
                     public void done(ParseUser parseUser, com.parse.ParseException e) {
-                        if (parseUser != null) {
-                            Toast.makeText(getActivity(), "Successfully logged in!", Toast.LENGTH_SHORT).show();
+                        if (e == null) {
                             Intent intent = new Intent(getActivity(), HomePagerActivity.class);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(getActivity(), "Error logging in!", Toast.LENGTH_SHORT).show();
+                            switch (e.getCode()) {
+                                case ParseException.OBJECT_NOT_FOUND: {
+                                    Toast.makeText(getActivity(),
+                                            "Username or password is invalid/missing",
+                                            Toast.LENGTH_SHORT).show();
+                                    break;
+                                }
+                                default: {
+                                    Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                                }
+                            }
                         }
                     }
                 });

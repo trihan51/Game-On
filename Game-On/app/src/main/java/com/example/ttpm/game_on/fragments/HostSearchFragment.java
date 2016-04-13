@@ -196,11 +196,10 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
         private void checkHostAbility() {
             ParseQuery<GameOnSession> query = GameOnSession.getQuery();
             query.whereEqualTo("host", ParseUser.getCurrentUser());
-            query.setLimit(1);
             query.findInBackground(new FindCallback<GameOnSession>() {
                 @Override
                 public void done(List<GameOnSession> objects, ParseException e) {
-                    if(objects != null) {
+                    if(!objects.isEmpty()) {
                         Toast.makeText(getContext(), "You can only host one game", Toast.LENGTH_SHORT).show();
                     } else {
                         createSession(mBoardGame.getBoardName());

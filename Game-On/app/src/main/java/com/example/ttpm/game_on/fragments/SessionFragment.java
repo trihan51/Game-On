@@ -206,12 +206,6 @@ public class SessionFragment extends VisibleFragment {
                         }
                     });
                 } else {
-                    // It could be either because the session no longer exists or
-                    // there really was an error when trying to query Parse.
-                    // for now, we can just assume that the session no longer exists.
-                    // however, in the future, we will have to do some checking.
-
-                    // another solution for now is to use call performActionBasedOnSessionCancelled here.
                     Toast.makeText(getActivity(), "Error!", Toast.LENGTH_SHORT).show();
                 }
             }

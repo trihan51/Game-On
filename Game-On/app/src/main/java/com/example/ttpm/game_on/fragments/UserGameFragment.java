@@ -110,17 +110,6 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
         query.whereEqualTo("gameTitle", boardGameName);
         query.whereNotEqualTo("host", ParseUser.getCurrentUser());
         query.whereEqualTo("Open", true);
-        /*
-         //name of the seconday table
-       query.include("User");
-        query.whereEqualTo("host","objectID");
-         */
-
-
-
-      // query.include("email");
-       //query.include("participants");
-
 
         if (!mSearchRadius.equals(getResources().getString(R.string.radio_na))) {
             query.whereWithinMiles(
@@ -146,30 +135,20 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_main, menu);
-        if (QueryPreferences.getStoredSessionId(getActivity()) == null) {
-            MenuItem currentSessionMenuItem = menu.findItem(R.id.menu_action_current_session);
-            currentSessionMenuItem.setVisible(false);
-        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_action_log_out:
-                ParseUser currentUser1 = ParseUser.getCurrentUser();
-                String currentuses = currentUser1.getUsername();
-                Toast.makeText(getActivity(), currentuses + " has logged out.", Toast.LENGTH_LONG).show();
                 ParseUser.logOut();
-                ParseUser currentUser = ParseUser.getCurrentUser();// this will now be null
-                if (currentUser != null) {
-                    Toast.makeText(getActivity(), "Error logging out!", Toast.LENGTH_LONG).show();
-                } else {
-                    Intent intent = new Intent(getActivity(), SplashActivity.class);
-                    startActivity(intent);
-                }
+
+                Intent intent = new Intent(getActivity(), SplashActivity.class);
+                startActivity(intent);
+
                 return true;
             case R.id.menu_action_current_session:
-                Intent intent = SessionActivity.newIntent(getActivity(), mCurrentLocation);
+                intent = SessionActivity.newIntent(getContext(), mCurrentLocation);
                 startActivity(intent);
                 return true;
             default:
@@ -209,7 +188,7 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
                                 startActivity(intent);
                             } else {
                                 // The save failed
-                                Log.d("ERROR", "Unable to add current user to session: " + e);
+                                Log.e("GAMEON", "Unable to add current user to session: " + e);
                             }
                         }
                     });
@@ -262,11 +241,10 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
                         }
                         mNumOfParticipantsTextView.append("/" + maxPlayers + " players");
                     } else {
-                        Log.e("GAMEONSESSION", "No array of maximum participants found");
+                        Log.e("GAMEON", "No array of maximum participants found");
                     }
                 }
             });
-            Log.d("GAMEONSESSION", mSession.getGameTitle());
         }
     }
 

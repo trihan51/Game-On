@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -59,7 +60,7 @@ public class SessionFragment extends VisibleFragment {
     private boolean mUserIsHost;
 
     private GameOnSession mCurrentGameOnSession;
-    private GridView mSessionInfoOutput;
+    private GridView mPlayerGrid;
     private TextView mTimerTextView;
     private Button mHostStartButton;
     private Button mLeaveButton;
@@ -127,30 +128,40 @@ public class SessionFragment extends VisibleFragment {
             @Override
             public void done(List<GameOnSession> list, ParseException e) {
                 if (e == null) {
-                    //Set the host of the game session to the pointer of the User of this session
+                    mCurrentGameOnSession = list.get(0);
                     try {
-                        sessionHostName = list.get(0).getParseUser("host").fetchIfNeeded();
+                        sessionHostName = mCurrentGameOnSession.getParseUser("host").fetchIfNeeded();
                     } catch (ParseException ex) {
-                        Log.d("GAMEONSESSION", "session fetchifneeded: " + ex.toString());
+                        Log.e("GAMEONSESSION", "session fetchifneeded: " + ex.toString());
                     }
 
-                    mCurrentGameOnSession = list.get(0);
-                    Log.d("GAMEONSESSION", "onCreateView: mCurrent " + mCurrentGameOnSession.getAllPlayerAndHostCount());
-                    mUserIsHost = (mCurrentGameOnSession.getHost().getObjectId() == ParseUser.getCurrentUser().getObjectId());
+                    mUserIsHost = mCurrentGameOnSession.getHost().getObjectId()
+                            .equals(ParseUser.getCurrentUser().getObjectId());
 
-                    mSessionInfoOutput = (GridView) view.findViewById(R.id.session_participant_container);
-                    mSessionInfoOutput.setAdapter(new PlayerAdapter(getContext(), mCurrentGameOnSession));
+                    // Display grid of players in session
+                    mPlayerGrid = (GridView) view.findViewById(R.id.session_participant_container);
+                    mPlayerGrid.setAdapter(new PlayerAdapter(getContext(), mCurrentGameOnSession));
+                    mPlayerGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Toast.makeText(getContext(), mCurrentGameOnSession.getPlayer(position), Toast.LENGTH_SHORT).show();
+                            // Todo: grab parseuser with objectid and display user info onclick
+                        }
+                    });
 
+                    // Display board game name
                     TextView boardGameTextView = (TextView) view.findViewById(R.id.session_game_game_name);
                     boardGameTextView.setText(mCurrentGameOnSession.getGameTitle());
-                    TextView hostNameTextView = (TextView) view.findViewById(R.id.session_game_host_name);
 
+                    // Display host name
+                    TextView hostNameTextView = (TextView) view.findViewById(R.id.session_game_host_name);
                     Resources res = getResources();
                     String hostSessionTag = res.getString(R.string.session_host_tag)
                             + " "
                             + sessionHostName.getUsername();
                     hostNameTextView.setText(hostSessionTag);
 
+                    // Display timer countdown
                     mTimerTextView = (TextView) view.findViewById(R.id.timerTextView);
                     if (!mUserIsHost) {
                         mTimerTextView.setText(R.string.time_left);
@@ -158,6 +169,7 @@ public class SessionFragment extends VisibleFragment {
                         startTimer();
                     }
 
+                    // Display host start button
                     mHostStartButton = (Button) view.findViewById(R.id.session_host_start_button);
                     mHostStartButton.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -180,15 +192,17 @@ public class SessionFragment extends VisibleFragment {
                         }
                     });
 
+                    // Hide host start button if user isn't host
                     if (!mUserIsHost) {
                         mHostStartButton.setVisibility(View.GONE);
                     }
 
+                    // Display leave button
                     mLeaveButton = (Button) view.findViewById(R.id.leaveButton);
                     mLeaveButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            performLeaveActions();
+                            leaveSession();
                         }
                     });
                 } else {
@@ -268,7 +282,7 @@ public class SessionFragment extends VisibleFragment {
                         .setTitle(R.string.session_timed_out_title)
                         .setPositiveButton(R.string.dialog_timed_out_button_text, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                performLeaveActions();
+                                leaveSession();
                             }
                         });
                 AlertDialog dialog = builder.create();
@@ -278,7 +292,7 @@ public class SessionFragment extends VisibleFragment {
         mCountDownTimer.start();
     }
 
-    private void performLeaveActions() {
+    private void leaveSession() {
         removeCurrentUserFromSession();
         sendUserBackToHomePagerActivity();
     }

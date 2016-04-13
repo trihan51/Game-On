@@ -1,12 +1,18 @@
 package com.example.ttpm.game_on.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.models.GameOnSession;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -50,6 +56,11 @@ public class PlayerAdapter extends BaseAdapter {
             playerTv.setLayoutParams(new GridView.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT));
+            playerTv.setTextColor(Color.parseColor("#EEEEEE"));
+            playerTv.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                    mContext.getResources().getDimensionPixelSize(R.dimen.session_player_text_size));
+            playerTv.setTypeface(playerTv.getTypeface(), Typeface.BOLD);
+            playerTv.setGravity(Gravity.CENTER);
         } else {
             playerTv = (TextView) convertView;
         }
@@ -60,7 +71,7 @@ public class PlayerAdapter extends BaseAdapter {
             @Override
             public void done(List<ParseUser> objects, ParseException e) {
                 String username = objects.get(0).getUsername();
-                playerTv.setText("Player: " + username);
+                playerTv.setText(username);
             }
         });
 

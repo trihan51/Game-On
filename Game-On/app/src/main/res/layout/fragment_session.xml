@@ -62,21 +62,34 @@
         android:layout_below="@+id/session_frame"
         android:layout_above="@+id/session_button_container">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:id="@+id/participant_text_view"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="#EEEEEE"
+            android:text="Players"
+            />
+
         <GridView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0px"
             android:id="@+id/session_participant_container"
-            android:layout_weight="1"
+            android:layout_weight="4"
             android:numColumns="2"
-            android:verticalSpacing="6dp"
+            android:paddingTop="12dp"
+            android:verticalSpacing="12dp"
             android:background="@color/colorPrimaryLight">
         </GridView>
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_height="0px"
+            android:layout_weight="4"
             tools:background="#000000"
             />
     </LinearLayout>

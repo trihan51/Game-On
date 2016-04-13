@@ -220,21 +220,18 @@ public class HomePagerActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_action_log_out:
-                ParseUser currentUser1 = ParseUser.getCurrentUser();
-                String currentuses = currentUser1.getUsername();
-                Toast.makeText(this, currentuses + " has logged out.", Toast.LENGTH_LONG).show();
+                ParseUser currentUser = ParseUser.getCurrentUser();
+                String username = currentUser.getUsername();
+                Toast.makeText(this, username + " has logged out.", Toast.LENGTH_LONG).show();
                 ParseUser.logOut();
-                ParseUser currentUser = ParseUser.getCurrentUser();// this will now be null
-                if (currentUser != null) {
-                    Toast.makeText(this, "Error logging out!", Toast.LENGTH_LONG).show();
-                } else {
-                    Intent gohome = new Intent(this, LoginActivity.class);
-                    startActivity(gohome);
-                    this.finish();
-                }
+
+                Intent intent = new Intent(this, SplashActivity.class);
+                startActivity(intent);
+                this.finish();
+
                 return true;
             case R.id.menu_action_current_session:
-                Intent intent = SessionActivity.newIntent(this, mCurrentLocation);
+                intent = SessionActivity.newIntent(this, mCurrentLocation);
                 startActivity(intent);
                 return true;
             default:

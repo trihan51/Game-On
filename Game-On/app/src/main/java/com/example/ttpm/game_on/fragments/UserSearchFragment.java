@@ -20,7 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.ttpm.game_on.interfaces.YourFragmentInterface;
+import com.example.ttpm.game_on.interfaces.SwipeFragmentUpdateInterface;
 import com.example.ttpm.game_on.models.GameOnSession;
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
@@ -44,7 +44,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class UserSearchFragment extends android.support.v4.app.Fragment
-        implements SearchView.OnQueryTextListener, YourFragmentInterface {
+        implements SearchView.OnQueryTextListener, SwipeFragmentUpdateInterface {
 
     private static final String ARG_CURRENT_LOCATION = "com.example.ttpm.game_on.current_location";
 
@@ -136,7 +136,6 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
     }
 
     private void queryForAllOpenUniqueBoardGames() {
-        Log.d("GAMEON", "Called from becamevisible");
         ParseQuery<ParseObject> query = ParseQuery.getQuery("GameOnSession");
         query.orderByAscending("gameTitle");
         query.whereNotEqualTo("host", ParseUser.getCurrentUser());
@@ -181,7 +180,6 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
 
     @Override
     public void fragmentBecameVisible() {
-        Log.d("GAMEON", "search visible");
         queryForAllOpenUniqueBoardGames();
     }
 

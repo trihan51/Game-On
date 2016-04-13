@@ -24,7 +24,7 @@ import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.fragments.HostSearchFragment;
 import com.example.ttpm.game_on.fragments.UserSearchFragment;
 import com.example.ttpm.game_on.fragments.UserProfileFragment;
-import com.example.ttpm.game_on.interfaces.YourFragmentInterface;
+import com.example.ttpm.game_on.interfaces.SwipeFragmentUpdateInterface;
 import com.example.ttpm.game_on.models.GameOnSession;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -74,19 +74,13 @@ public class HomePagerActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                YourFragmentInterface f = (YourFragmentInterface) viewPagerAdapter.instantiateItem(viewPager, position);
+                SwipeFragmentUpdateInterface f = (SwipeFragmentUpdateInterface)
+                        viewPagerAdapter.instantiateItem(viewPager, position);
                 if(f != null) {
                     f.fragmentBecameVisible();
+                } else {
+                    Log.e("GAMEON", "HomePagerActivity onPageSelected: fragment is null");
                 }
-//                Log.d("GAMEON", viewPagerAdapter.getItem(position).toString());
-//                switch (position) {
-//                    case 0:
-//                        ((UserProfileFragment)viewPagerAdapter.getItem(position)).onUpdateView();
-//                    case 1:
-//                        ((UserSearchFragment)viewPagerAdapter.getItem(position)).onUpdateView();
-//                    default:
-//                        ((HostSearchFragment)viewPagerAdapter.getItem(position)).onUpdateView();
-//                }
             }
 
             @Override

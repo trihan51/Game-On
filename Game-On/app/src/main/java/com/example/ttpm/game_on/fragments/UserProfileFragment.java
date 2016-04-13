@@ -27,7 +27,7 @@ import com.bumptech.glide.Glide;
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.CameraActivity;
-import com.example.ttpm.game_on.interfaces.YourFragmentInterface;
+import com.example.ttpm.game_on.interfaces.SwipeFragmentUpdateInterface;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
@@ -51,7 +51,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * A simple {@link Fragment} subclass.
  */
 public class UserProfileFragment extends android.support.v4.app.Fragment
-        implements YourFragmentInterface {
+        implements SwipeFragmentUpdateInterface {
 
     private static int SELECT_FILE = 1;
 
@@ -323,7 +323,6 @@ public class UserProfileFragment extends android.support.v4.app.Fragment
 
     @Override
     public void fragmentBecameVisible() {
-        Log.d("GAMEON", "profile visible");
     }
 }
 

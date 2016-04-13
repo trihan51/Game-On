@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ttpm.game_on.interfaces.YourFragmentInterface;
 import com.example.ttpm.game_on.models.GameOnSession;
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
@@ -47,7 +48,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class HostSearchFragment extends android.support.v4.app.Fragment
-        implements SearchView.OnQueryTextListener {
+        implements SearchView.OnQueryTextListener, YourFragmentInterface {
     private static final String TAG = "HostSearchFragment";
     private static final String ARG_CURRENT_LOCATION = "com.example.ttpm.game_on.current_location";
 
@@ -98,6 +99,10 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
 
         mSearchAdapter = new HostSearchAdapter(getActivity(), mBoardGames);
         mSearchRecyclerView.setAdapter(mSearchAdapter);
+    }
+
+    public void onUpdateView() {
+        Log.d("GAMEON", "hostSearch onUpdateView");
     }
 
     @Override
@@ -153,6 +158,11 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
         }
 
         return filteredBoardGame;
+    }
+
+    @Override
+    public void fragmentBecameVisible() {
+        Log.d("GAMEON", "host visible");
     }
 
     /**********************************************************************************************/

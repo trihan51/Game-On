@@ -12,21 +12,19 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.fragments.HostSearchFragment;
 import com.example.ttpm.game_on.fragments.UserSearchFragment;
 import com.example.ttpm.game_on.fragments.UserProfileFragment;
+import com.example.ttpm.game_on.interfaces.YourFragmentInterface;
 import com.example.ttpm.game_on.models.GameOnSession;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -36,7 +34,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -64,10 +61,39 @@ public class HomePagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_pager);
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.activity_home_pager_view_pager);
-        viewPager.setAdapter(new SamplePageAdapter(getSupportFragmentManager(), 3));
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.activity_home_pager_view_pager);
+        final HomePageAdapter viewPagerAdapter = new HomePageAdapter(getSupportFragmentManager(), 3);
+        viewPager.setAdapter(viewPagerAdapter);
         MaterialTabs tabs = (MaterialTabs) findViewById(R.id.material_tabs);
         tabs.setViewPager(viewPager);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                YourFragmentInterface f = (YourFragmentInterface) viewPagerAdapter.instantiateItem(viewPager, position);
+                if(f != null) {
+                    f.fragmentBecameVisible();
+                }
+//                Log.d("GAMEON", viewPagerAdapter.getItem(position).toString());
+//                switch (position) {
+//                    case 0:
+//                        ((UserProfileFragment)viewPagerAdapter.getItem(position)).onUpdateView();
+//                    case 1:
+//                        ((UserSearchFragment)viewPagerAdapter.getItem(position)).onUpdateView();
+//                    default:
+//                        ((HostSearchFragment)viewPagerAdapter.getItem(position)).onUpdateView();
+//                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         setCurrentLocationToDefault();
 
@@ -160,26 +186,6 @@ public class HomePagerActivity extends AppCompatActivity {
 
         HomePagerActivity.this.invalidateOptionsMenu();
         mClient.connect();
-
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
-//            @Override
-//            public Fragment getItem(int position) {
-//                switch (position) {
-//                    case 0:
-//                        return UserProfileFragment.newInstance();
-//                    case 1:
-//                        return UserSearchFragment.newInstance(mCurrentLocation);
-//                    default:
-//                        return HostSearchFragment.newInstance(mCurrentLocation);
-//                }
-//            }
-//
-//            @Override
-//            public int getCount() {
-//                return 3;
-//            }
-//        });
     }
 
     @Override
@@ -274,13 +280,12 @@ public class HomePagerActivity extends AppCompatActivity {
         }
     }
 
-    public class SamplePageAdapter extends FragmentPagerAdapter {
+    public class HomePageAdapter extends FragmentStatePagerAdapter {
 
         private final String[] TITLES = {"Profile", "Join", "Host"};
-
         private final ArrayList<String> mTitles;
 
-        public SamplePageAdapter(FragmentManager fm, int numberOfTabs){
+        public HomePageAdapter(FragmentManager fm, int numberOfTabs){
             super(fm);
             mTitles = new ArrayList<>();
             for (int i = 0; i < numberOfTabs; i++) {
@@ -308,6 +313,11 @@ public class HomePagerActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             return mTitles.size();
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
         }
     }
 }

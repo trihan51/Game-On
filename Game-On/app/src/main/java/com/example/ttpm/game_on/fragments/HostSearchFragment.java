@@ -196,7 +196,7 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
         final GameOnSession session = new GameOnSession();
         session.setGameTitle(gameTitle);
         session.setHost(ParseUser.getCurrentUser());
-        session.setParticipants(new JSONArray());
+        session.setPlayers(new JSONArray());
         session.setOpenStatus(true);
         session.setLocation(new ParseGeoPoint(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
 

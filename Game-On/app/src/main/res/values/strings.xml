@@ -88,5 +88,6 @@
     <string name="fragment_register_firstname">First Name</string>
     <string name="fragment_register_lastname">Last Name</string>
     <string name="fragment_register_username">Username</string>
+    <string name="session_host_tag">Host:</string>
 
 </resources>

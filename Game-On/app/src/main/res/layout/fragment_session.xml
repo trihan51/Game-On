@@ -62,14 +62,15 @@
         android:layout_below="@+id/session_frame"
         android:layout_above="@+id/session_button_container">
 
-        <LinearLayout
+        <GridView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/session_participant_container"
             android:layout_weight="1"
-            android:orientation="vertical"
-            tools:background="#d50000">
-        </LinearLayout>
+            android:numColumns="2"
+            android:verticalSpacing="6dp"
+            android:background="@color/colorPrimaryLight">
+        </GridView>
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapview"
@@ -88,7 +89,7 @@
         android:layout_alignParentBottom="true"
         android:gravity="center" >
         <Button
-            android:id="@+id/confirmButton"
+            android:id="@+id/session_host_start_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

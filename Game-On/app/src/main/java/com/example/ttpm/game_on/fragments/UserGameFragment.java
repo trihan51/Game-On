@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -199,7 +198,7 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
                 @Override
                 public void onClick(View v) {
                     // Add user to current session
-                    mSession.addParticipant(ParseUser.getCurrentUser().getObjectId());
+                    mSession.addPlayer(ParseUser.getCurrentUser().getObjectId());
                     mSession.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
@@ -224,7 +223,7 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
             bindHostName(mSession);
             bindNumOfPlayers(mSession);
 
-            mNumOfParticipantsTextView.setText(session.getNumberOfParticipants());
+            mNumOfParticipantsTextView.setText(session.getAllPlayerAndHostCount());
         }
 
         public void bindHostName(GameOnSession session) {

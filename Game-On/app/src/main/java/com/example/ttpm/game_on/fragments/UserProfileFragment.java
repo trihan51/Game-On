@@ -296,7 +296,6 @@ public class UserProfileFragment extends android.support.v4.app.Fragment
     }
 
     private String getPictureName(String input) {
-        Log.d("GAMEONSESSION", input);
         String regexPattern = "(IMAGE)[\\s\\S]*";
         Pattern pattern = Pattern.compile(regexPattern);
         Matcher matcher = pattern.matcher(input);

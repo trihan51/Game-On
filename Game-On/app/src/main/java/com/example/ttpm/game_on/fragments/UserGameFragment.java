@@ -2,8 +2,11 @@ package com.example.ttpm.game_on.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.ttpm.game_on.models.GameOnSession;
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
@@ -25,7 +29,9 @@ import com.example.ttpm.game_on.activities.SessionActivity;
 import com.example.ttpm.game_on.activities.SplashActivity;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.parse.FindCallback;
+import com.parse.GetDataCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -35,6 +41,9 @@ import com.parse.SaveCallback;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -203,6 +212,60 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
             bindNumOfPlayers(mSession);
 
             mNumOfParticipantsTextView.setText(session.getAllPlayerAndHostCount());
+
+            loadBoardImage();
+        }
+
+        // Todo: Need to perform loading board images asynchronously
+        private void loadBoardImage() {
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("BoardGames");
+            query.whereEqualTo("boardName", mBoardGameTextView.getText().toString());
+            query.findInBackground(new FindCallback<ParseObject>() {
+                @Override
+                public void done(List<ParseObject> objects, ParseException e) {
+                    if(e == null) {
+                        ParseFile picture = objects.get(0).getParseFile("gameLogo");
+                        if(picture != null) {
+                            // If board game has image, load image
+                            final String pictureName = picture.getName();
+
+                            picture.getDataInBackground(new GetDataCallback() {
+                                @Override
+                                public void done(byte[] data, ParseException e) {
+                                    if (e == null) {
+                                        if (data.length == 0) {
+                                            Log.d("GAMEON", "Data found, but nothing to extract");
+                                            return;
+                                        }
+                                        Log.d("GAMEON", "User board image found!");
+
+                                        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                                        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), pictureName);
+                                        try {
+                                            OutputStream os = new FileOutputStream(file);
+                                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+                                            os.flush();
+                                            os.close();
+                                        } catch (Exception ex) {
+                                            ex.printStackTrace();
+                                        }
+
+                                        Glide.with(getContext()).load(file).into(mBoardGameImageView);
+                                    } else {
+                                        Log.d("GAMEON", "Parsefile contains no data");
+                                    }
+                                }
+                            });
+                        } else {
+                            // If board game has no image, load a placeholder image
+                            Log.d("GAMEON", "no pic");
+                            Glide.clear(mBoardGameImageView);
+                        }
+                    } else {
+                        Log.d("GAMEON", "loadBoardImage ParseException");
+                    }
+                }
+            });
         }
 
         public void bindHostName(GameOnSession session) {

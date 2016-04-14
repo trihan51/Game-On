@@ -3,9 +3,12 @@ package com.example.ttpm.game_on.fragments;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -16,9 +19,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.HomePagerActivity;
@@ -36,13 +41,19 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
+import com.parse.GetDataCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import org.json.JSONException;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -64,6 +75,8 @@ public class SessionFragment extends VisibleFragment {
     private TextView mTimerTextView;
     private Button mHostStartButton;
     private Button mLeaveButton;
+    private TextView mBoardGameTextView;
+    private ImageView mBoardGameImageView;
 
     private GoogleMap mMap;
     private MapView mapView;
@@ -150,8 +163,8 @@ public class SessionFragment extends VisibleFragment {
                     });
 
                     // Display board game name
-                    TextView boardGameTextView = (TextView) view.findViewById(R.id.session_game_game_name);
-                    boardGameTextView.setText(mCurrentGameOnSession.getGameTitle());
+                    mBoardGameTextView = (TextView) view.findViewById(R.id.session_game_game_name);
+                    mBoardGameTextView.setText(mCurrentGameOnSession.getGameTitle());
 
                     // Display host name
                     TextView hostNameTextView = (TextView) view.findViewById(R.id.session_game_host_name);
@@ -205,6 +218,9 @@ public class SessionFragment extends VisibleFragment {
                             leaveSession();
                         }
                     });
+
+                    mBoardGameImageView = (ImageView) view.findViewById(R.id.session_game_image_view);
+                    loadBoardImage();
                 } else {
                     Toast.makeText(getActivity(), "Error!", Toast.LENGTH_SHORT).show();
                 }
@@ -216,6 +232,58 @@ public class SessionFragment extends VisibleFragment {
         }
 
         return view;
+    }
+
+    // Todo: Need to perform loading board images asynchronously
+    private void loadBoardImage() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("BoardGames");
+        query.whereEqualTo("boardName", mBoardGameTextView.getText().toString());
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if(e == null) {
+                    ParseFile picture = objects.get(0).getParseFile("gameLogo");
+                    if(picture != null) {
+                        // If board game has image, load image
+                        final String pictureName = picture.getName();
+
+                        picture.getDataInBackground(new GetDataCallback() {
+                            @Override
+                            public void done(byte[] data, ParseException e) {
+                                if (e == null) {
+                                    if (data.length == 0) {
+                                        Log.d("GAMEON", "Data found, but nothing to extract");
+                                        return;
+                                    }
+                                    Log.d("GAMEON", "Host board image found!");
+
+                                    Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                                    File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), pictureName);
+                                    try {
+                                        OutputStream os = new FileOutputStream(file);
+                                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+                                        os.flush();
+                                        os.close();
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                    }
+
+                                    Glide.with(getContext()).load(file).into(mBoardGameImageView);
+                                } else {
+                                    Log.d("GAMEON", "Parsefile contains no data");
+                                }
+                            }
+                        });
+                    } else {
+                        // If board game has no image, load a placeholder image
+                        Log.d("GAMEON", "no pic");
+                        Glide.clear(mBoardGameImageView);
+                    }
+                } else {
+                    Log.d("GAMEON", "loadBoardImage ParseException");
+                }
+            }
+        });
     }
 
     private void newMapView(View view, Bundle savedInstanceState) {

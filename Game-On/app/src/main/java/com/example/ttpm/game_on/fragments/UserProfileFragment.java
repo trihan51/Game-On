@@ -27,6 +27,7 @@ import com.bumptech.glide.Glide;
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.CameraActivity;
+import com.example.ttpm.game_on.interfaces.SwipeFragmentUpdateInterface;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
@@ -49,7 +50,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UserProfileFragment extends android.support.v4.app.Fragment {
+public class UserProfileFragment extends android.support.v4.app.Fragment
+        implements SwipeFragmentUpdateInterface {
 
     private static int SELECT_FILE = 1;
 
@@ -111,6 +113,10 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
         updateProfilePicture();
 
         return view;
+    }
+
+    public static void onUpdateView() {
+        Log.d("GAMEON", "userProfile onUpdateView");
     }
 
     private void setRadiusRadioButton(){
@@ -290,7 +296,6 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
     }
 
     private String getPictureName(String input) {
-        Log.d("GAMEONSESSION", input);
         String regexPattern = "(IMAGE)[\\s\\S]*";
         Pattern pattern = Pattern.compile(regexPattern);
         Matcher matcher = pattern.matcher(input);
@@ -313,6 +318,10 @@ public class UserProfileFragment extends android.support.v4.app.Fragment {
 
         updateProfilePicture();
         Snackbar.make(mUploadSnackbar, "Image Removed", Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void fragmentBecameVisible() {
     }
 }
 

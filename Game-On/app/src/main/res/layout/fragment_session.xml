@@ -74,6 +74,18 @@
             android:text="Players"
             />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/session_no_players_found"
+            android:text="@string/session_no_players_found"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#EEEEEE"
+            android:background="@color/colorPrimaryLight"
+            android:visibility="gone" />
+
         <GridView
             android:layout_width="match_parent"
             android:layout_height="0px"

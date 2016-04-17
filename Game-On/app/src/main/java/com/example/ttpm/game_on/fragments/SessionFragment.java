@@ -73,6 +73,7 @@ public class SessionFragment extends VisibleFragment {
     private GameOnSession mCurrentGameOnSession;
     private GridView mPlayerGrid;
     private TextView mTimerTextView;
+    private TextView mNoPlayersFoundTextView;
     private Button mHostStartButton;
     private Button mLeaveButton;
     private TextView mBoardGameTextView;
@@ -151,16 +152,25 @@ public class SessionFragment extends VisibleFragment {
                     mUserIsHost = mCurrentGameOnSession.getHost().getObjectId()
                             .equals(ParseUser.getCurrentUser().getObjectId());
 
-                    // Display grid of players in session
-                    mPlayerGrid = (GridView) view.findViewById(R.id.session_participant_container);
-                    mPlayerGrid.setAdapter(new PlayerAdapter(getContext(), mCurrentGameOnSession));
-                    mPlayerGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Toast.makeText(getContext(), mCurrentGameOnSession.getPlayer(position), Toast.LENGTH_SHORT).show();
-                            // Todo: grab parseuser with objectid and display user info onclick
-                        }
-                    });
+                    // Display grid of players in session, if players, display
+                    // else, show no players message
+                    // Todo: does noPlayerFoundTextView display after refreshing and finding no players?
+                    mNoPlayersFoundTextView = (TextView)
+                            view.findViewById(R.id.session_no_players_found);
+                    if(mCurrentGameOnSession.getAllPlayers().length() != 0) {
+                        mNoPlayersFoundTextView.setVisibility(View.GONE);
+                        mPlayerGrid = (GridView) view.findViewById(R.id.session_participant_container);
+                        mPlayerGrid.setAdapter(new PlayerAdapter(getContext(), mCurrentGameOnSession));
+                        mPlayerGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                Toast.makeText(getContext(), mCurrentGameOnSession.getPlayer(position), Toast.LENGTH_SHORT).show();
+                                // Todo: grab parseuser with objectid and display user info onclick
+                            }
+                        });
+                    } else {
+                        mNoPlayersFoundTextView.setVisibility(View.VISIBLE);
+                    }
 
                     // Display board game name
                     mBoardGameTextView = (TextView) view.findViewById(R.id.session_game_game_name);

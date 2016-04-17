@@ -65,6 +65,35 @@ public class RegressionTestSuite extends ActivityInstrumentationTestCase2<Splash
         assertTrue(solo.searchText("Checkers"));
     }
 
+    //Join Session: See List to view the details of sessions currently open
+    public void testSeeListDetail() {
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
+        solo.clickOnView(solo.getView(R.id.list_item_user_games_list_button));
+        assertTrue(solo.searchText("Caverna: The Cave Farmers"));
+       // list_item_user_games_quick_button
+        //      solo.clickOnView(solo.getView(R.id.list_item_join_button));
+        //  solo.waitForView(solo.getView(com.example.ttpm.game_on.R.id.menu_action_log_out));
+        //solo.clickOnButton("JOIN");
+        //   solo.clickOnButton("Log Out");
+        //    solo.clickOnView(solo.getView(com.example.ttpm.game_on.R.id.menu_action_log_out));
+
+    }
+
+    //Join Session: Quick Join a game
+    //Fails, when I click on quick Join Game On suddenly stops working
+    public void testQuickJoin() {
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
+        solo.clickOnView(solo.getView(R.id.list_item_user_games_quick_button));
+
+    }
+
+    public void test_viewCurrentSession(){
+        solo.clickOnView(solo.getView(R.id.menu_action_current_session));
+        // solo.clickOnView(solo.getView(R.id.menu_action_log_out));
+        assertTrue(solo.searchText("GAME ON"));
+        assertTrue(solo.searchText("LEAVE"));
+    }
+
 
 
 

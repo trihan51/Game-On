@@ -2,6 +2,7 @@ package com.example.ttpm.game_on;
 
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.example.ttpm.game_on.activities.SplashActivity;
 import com.robotium.solo.Solo;
@@ -64,7 +65,25 @@ public class AutomatedUnitTestSuite extends ActivityInstrumentationTestCase2<Spl
 
             }
         }
-       // solo.clickOnImageButton(1);
-       // solo.clickInList(1);
+
     }
+   //LogOut: Verify Action Bar
+    public void test_Logout() {
+      //  solo.clickOnActionBarItem(assertTrue(solo.searchText("Settings")));
+        solo.clickOnActionBarItem(R.id.menu_action_log_out);
+        assertTrue(solo.searchText("Settings"));
+        assertTrue(solo.searchText("Log Out"));
+
+    }
+
+    //LogIn: User Successfully logsIn
+    public void test_LogInSuccess(){
+        solo.clickOnActionBarItem(R.id.menu_action_log_out);
+        solo.clickOnView(solo.getView(R.id.splash_login_button));
+        solo.enterText((EditText) solo.getView(R.id.login_username_edittext), "sam@sjsu.edu");
+        solo.enterText((EditText) solo.getView(R.id.login_password_edittext), "a");
+        solo.clickOnView(solo.getView(R.id.login_login_button));
+
+    }
+
 }

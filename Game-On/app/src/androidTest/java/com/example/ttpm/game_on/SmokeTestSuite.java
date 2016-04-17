@@ -26,7 +26,7 @@ public class SmokeTestSuite extends ActivityInstrumentationTestCase2<SplashActiv
         super.tearDown();
     }
 
-    public void testRun() {
+    public void testViewList() {
         solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
         solo.clickOnView(solo.getView(R.id.list_item_user_games_list_button));
         //      solo.clickOnView(solo.getView(R.id.list_item_join_button));
@@ -44,5 +44,22 @@ public class SmokeTestSuite extends ActivityInstrumentationTestCase2<SplashActiv
         */
 
 
+
     }
+
+    public void test_LogOut(){
+        solo.clickOnActionBarItem(R.id.menu_action_log_out);
+        assertTrue(solo.searchText("Login"));
+       // solo.clickOnView(solo.getView(R.id.menu_action_current_session));
+       // assertTrue(solo.searchText("Settings"));
+      //  assertTrue(solo.searchText("Log Out"));
+    }
+
+
+    public void test_viewCurrentSession(){
+        solo.clickOnView(solo.getView(R.id.menu_action_current_session));
+        assertTrue(solo.searchText("GAME ON"));
+        assertTrue(solo.searchText("LEAVE"));
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.example.ttpm.game_on;
 
 import android.test.ActivityInstrumentationTestCase2;
+import android.widget.EditText;
 
 import com.example.ttpm.game_on.activities.SplashActivity;
 import com.robotium.solo.Solo;
@@ -50,4 +51,35 @@ public class IntegrationTestSuite extends ActivityInstrumentationTestCase2<Splas
         assertTrue(solo.searchText("Twilight Struggle"));
 
     }
+
+    //Join Session: Overview of Join Screen
+    public void testPageOverviewJoinSession() {
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
+        assertTrue(solo.searchText("See List"));
+        assertTrue(solo.searchText("Quick Join"));
+        assertTrue(solo.searchText("open"));
+    }
+
+    //LogIn: Page Overview
+    public void test_LogInPageOverview(){
+        solo.clickOnActionBarItem(R.id.menu_action_log_out);
+        assertTrue(solo.searchText("Game On"));
+        assertTrue(solo.searchText("Login"));
+        assertTrue(solo.searchText("Register"));
+        // solo.clickOnView(solo.getView(R.id.menu_action_current_session));
+        // assertTrue(solo.searchText("Settings"));
+        //  assertTrue(solo.searchText("Log Out"));
+    }
+
+    //LogIn: User Successfully logsIn
+    public void test_LogInSuccess(){
+        solo.clickOnActionBarItem(R.id.menu_action_log_out);
+        solo.clickOnView(solo.getView(R.id.splash_login_button));
+        solo.enterText((EditText) solo.getView(R.id.login_username_edittext), "sam@sjsu.edu");
+        solo.enterText((EditText) solo.getView(R.id.login_password_edittext), "a");
+        solo.clickOnView(solo.getView(R.id.login_login_button));
+
+    }
+
+
 }

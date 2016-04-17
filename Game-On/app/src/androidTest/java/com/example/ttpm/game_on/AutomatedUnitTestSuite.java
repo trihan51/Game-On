@@ -1,9 +1,11 @@
 package com.example.ttpm.game_on;
 
 import android.test.ActivityInstrumentationTestCase2;
+import android.widget.Button;
 
 import com.example.ttpm.game_on.activities.SplashActivity;
 import com.robotium.solo.Solo;
+import java.util.*;
 
 @SuppressWarnings("rawtypes")
 public class AutomatedUnitTestSuite extends ActivityInstrumentationTestCase2<SplashActivity> {
@@ -42,7 +44,27 @@ public class AutomatedUnitTestSuite extends ActivityInstrumentationTestCase2<Spl
             e.printStackTrace();
         }
         */
+    }
 
+    //Host Session: Host a game
+    public void testHostSession() {
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
+        assertTrue(solo.searchText("Caverna: The Cave Farmers"));
+       // solo.clickOnImageButton(0);
+        int count = 1;
+        ArrayList<Button> buttoni = solo.getCurrentViews(Button.class);
+        for(Button button: buttoni){
+            if(button.getId()== (R.id.list_item_host_games_list_button)){
+                if(count==1){
+                    solo.clickOnView(button);
+                    break;
+                }
+                count++;
 
+            }
+        }
+       // solo.clickOnImageButton(1);
+       // solo.clickInList(1);
     }
 }

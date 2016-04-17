@@ -35,14 +35,37 @@ public class RegressionTestSuite extends ActivityInstrumentationTestCase2<Splash
         //   solo.clickOnButton("Log Out");
         //    solo.clickOnView(solo.getView(com.example.ttpm.game_on.R.id.menu_action_log_out));
 
-        /*
-        try {
-            solo.wait(1000000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        */
+    }
 
+    public void test_UserProfile_VerifyEmail() {
+        //verify login user email address present
+        assertTrue(solo.searchText("sam@sjsu.edu"));
+    }
+
+    public void test_UserProfile_VerifyRadius() {
+        assertTrue(solo.searchText("Search"));
+        assertTrue(solo.searchText("Radius"));
+        assertTrue(solo.searchText("(miles)"));
+        assertTrue(solo.searchText("NA"));
+        assertTrue(solo.searchText("1"));
+        assertTrue(solo.searchText("2"));
+        assertTrue(solo.searchText("5"));
 
     }
+
+    public void test_UserProfile_Camera() {
+        solo.clickOnView(solo.getView(R.id.user_profile_change_profile_picture_button));
+        assertTrue(solo.searchText("Upload"));
+    }
+
+
+    public void test_Join_Game() {
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
+        solo.clickOnView(solo.getView(R.id.list_item_user_games_list_button));
+        assertTrue(solo.searchText("Checkers"));
+    }
+
+
+
+
 }

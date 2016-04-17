@@ -26,23 +26,38 @@ public class FunctionalityTestSuite extends ActivityInstrumentationTestCase2<Spl
         super.tearDown();
     }
 
-    public void testRun() {
+    //Open Session: Test to see if list games button work
+    public void testOpenSession() {
         solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
         solo.clickOnView(solo.getView(R.id.list_item_user_games_list_button));
-        //      solo.clickOnView(solo.getView(R.id.list_item_join_button));
-        //  solo.waitForView(solo.getView(com.example.ttpm.game_on.R.id.menu_action_log_out));
-        //solo.clickOnButton("JOIN");
-        //   solo.clickOnButton("Log Out");
-        //    solo.clickOnView(solo.getView(com.example.ttpm.game_on.R.id.menu_action_log_out));
-
-        /*
-        try {
-            solo.wait(1000000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        */
-
-
     }
+
+    //Host Session: Check to see if it opens
+    public void testHostSession() {
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
+        assertTrue(solo.searchText("Caverna: The Cave Farmers"));
+        solo.clickOnImageButton(0);
+    }
+
+    //UserProfile: Verification of filter games by radius
+    public void testFilterGamesByRadius() {
+        solo.clickOnView(solo.getView(R.id.user_profile_radioNA));
+        solo.clickOnView(solo.getView(R.id.user_profile_radio1));
+        solo.clickOnView(solo.getView(R.id.user_profile_radio2));
+        solo.clickOnView(solo.getView(R.id.user_profile_radio3));
+        //solo.clickOnView(solo.getView(R.id));
+
+       // solo.clickOnImageButton(0);
+        // solo.clickOnView(solo.getView(R.id.list_item_host_games_button));
+
+        // solo.clickOnButton("Host Game");
+    }
+
+    public void test_Logout() {
+        solo.clickOnView(solo.getView(R.id.menu_action_current_session));
+        assertTrue(solo.searchText("Settings"));
+        assertTrue(solo.searchText("Log Out"));
+    }
+
 }

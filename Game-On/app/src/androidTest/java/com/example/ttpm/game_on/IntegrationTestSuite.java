@@ -42,7 +42,25 @@ public class IntegrationTestSuite extends ActivityInstrumentationTestCase2<Splas
             e.printStackTrace();
         }
         */
+    }
 
+    //Host Session: Check to see if it opens up list of games
+    public void testListGamesHosted() {
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
+        assertTrue(solo.searchText("Caverna: The Cave Farmers"));
+        assertTrue(solo.searchText("Checkers"));
+        assertTrue(solo.searchText("Chess"));
+        assertTrue(solo.searchText("Eclipse"));
+        assertTrue(solo.searchText("Monopoly"));
+        assertTrue(solo.searchText("One Night Ultimate Werewolf"));
+        assertTrue(solo.searchText("Pandemic Legacy: Season 1"));
+        assertTrue(solo.searchText("Puerto Rico"));
+        assertTrue(solo.searchText("Scrabble"));
+        assertTrue(solo.searchText("Settlers of Catan"));
+        assertTrue(solo.searchText("Splendor"));
+        assertTrue(solo.searchText("Terra Mystica"));
+        assertTrue(solo.searchText("Twilight Struggle"));
 
     }
 }

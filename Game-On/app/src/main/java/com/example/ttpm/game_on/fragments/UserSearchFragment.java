@@ -58,6 +58,7 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
     private static final String ARG_CURRENT_LOCATION = "com.example.ttpm.game_on.current_location";
 
     private RecyclerView mSearchRecyclerView;
+    private TextView mNoGamesFoundTextView;
     private UserSearchAdapter mSearchAdapter;
     private List<BoardGame> mBoardGames;
     private GameOnSession mQuickJoinSession;
@@ -92,6 +93,8 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_search, container, false);
+
+        mNoGamesFoundTextView = (TextView) view.findViewById(R.id.user_search_no_games_found);
 
         mSearchRecyclerView = (RecyclerView) view
                 .findViewById(R.id.user_search_recycler_view);
@@ -152,20 +155,25 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
                 if (e == null) {
-                    for (ParseObject boardGameName : objects) {
-                        boolean boardGameExist = false;
-                        BoardGame b = new BoardGame();
-                        b.setBoardName(boardGameName.getString("gameTitle"));
-                        for (BoardGame boardGame : mBoardGames) {
-                            if (boardGame.getBoardName().toLowerCase()
-                                    .equals(b.getBoardName().toLowerCase())) {
-                                boardGameExist = true;
+                    if(!objects.isEmpty()) {
+                        mNoGamesFoundTextView.setVisibility(View.GONE);
+                        for (ParseObject boardGameName : objects) {
+                            boolean boardGameExist = false;
+                            BoardGame b = new BoardGame();
+                            b.setBoardName(boardGameName.getString("gameTitle"));
+                            for (BoardGame boardGame : mBoardGames) {
+                                if (boardGame.getBoardName().toLowerCase()
+                                        .equals(b.getBoardName().toLowerCase())) {
+                                    boardGameExist = true;
+                                }
+                            }
+                            if (!boardGameExist) {
+                                mBoardGames.add(b);
+                                mSearchAdapter.addNewGame(b);
                             }
                         }
-                        if (!boardGameExist) {
-                            mBoardGames.add(b);
-                            mSearchAdapter.addNewGame(b);
-                        }
+                    } else {
+                        mNoGamesFoundTextView.setVisibility(View.VISIBLE);
                     }
                 }
             }

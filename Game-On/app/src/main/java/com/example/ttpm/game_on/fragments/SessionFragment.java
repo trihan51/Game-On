@@ -268,7 +268,9 @@ public class SessionFragment extends VisibleFragment {
                                         ex.printStackTrace();
                                     }
 
-                                    Glide.with(getContext()).load(file).into(mBoardGameImageView);
+                                    Glide.with(getContext())
+                                            .load(file)
+                                            .into(mBoardGameImageView);
                                 } else {
                                     Log.d("GAMEON", "Parsefile contains no data");
                                 }

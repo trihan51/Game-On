@@ -89,5 +89,6 @@
     <string name="fragment_register_lastname">Last Name</string>
     <string name="fragment_register_username">Username</string>
     <string name="session_host_tag">Host:</string>
+    <string name="no_games_found">No games found nearby!</string>
 
 </resources>

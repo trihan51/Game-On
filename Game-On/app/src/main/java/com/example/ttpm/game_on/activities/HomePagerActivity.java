@@ -221,10 +221,12 @@ public class HomePagerActivity extends AppCompatActivity {
             ParseQuery<GameOnSession> queryIsPlayerInSession = GameOnSession.getQuery();
             queryIsPlayerInSession.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(this));
             queryIsPlayerInSession.whereEqualTo("participants", ParseUser.getCurrentUser().toString());
+            queryIsPlayerInSession.whereEqualTo("open", true);
 
             ParseQuery<GameOnSession> queryIsPlayerHostSession = GameOnSession.getQuery();
             queryIsPlayerHostSession.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(this));
             queryIsPlayerHostSession.whereEqualTo("host", ParseUser.getCurrentUser());
+            queryIsPlayerHostSession.whereEqualTo("open", true);
 
             List<ParseQuery<GameOnSession>> query = new ArrayList<>();
             query.add(queryIsPlayerInSession);

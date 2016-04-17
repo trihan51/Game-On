@@ -118,7 +118,7 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
         ParseQuery<GameOnSession> query = GameOnSession.getQuery();
         query.whereEqualTo("gameTitle", boardGameName);
         query.whereNotEqualTo("host", ParseUser.getCurrentUser());
-        query.whereEqualTo("Open", true);
+        query.whereEqualTo("open", true);
 
         if (!mSearchRadius.equals(getResources().getString(R.string.radio_na))) {
             query.whereWithinMiles(

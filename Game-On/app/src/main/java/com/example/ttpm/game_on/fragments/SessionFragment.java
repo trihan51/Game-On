@@ -192,32 +192,30 @@ public class SessionFragment extends VisibleFragment {
                         startTimer();
                     }
 
-                    // Display host start button
-                    mHostStartButton = (Button) view.findViewById(R.id.session_host_start_button);
-                    mHostStartButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mCountDownTimer.cancel();
-                            // user has confirmed to start session. do appropriate actions here.
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            builder.setMessage(R.string.session_confirmed_message)
-                                    .setTitle(R.string.session_confirmed_title)
-                                    .setPositiveButton(R.string.dialog_confirmed_button_text, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            mCurrentGameOnSession.setOpenStatus(false);
-                                            mCurrentGameOnSession.saveInBackground();
-                                            QueryPreferences.setStoredSessionId(getActivity(), null);
-                                            sendUserBackToHomePagerActivity();
-                                        }
-                                    });
-                            AlertDialog dialog = builder.create();
-                            dialog.show();
-                        }
-                    });
-
-                    // Hide host start button if user isn't host
-                    if (!mUserIsHost) {
-                        mHostStartButton.setVisibility(View.GONE);
+                    // Display host start button, if user is host
+                    if (mUserIsHost) {
+                        mHostStartButton = (Button) view.findViewById(R.id.session_host_start_button);
+                        mHostStartButton.setVisibility(View.VISIBLE);
+                        mHostStartButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mCountDownTimer.cancel();
+                                // user has confirmed to start session. do appropriate actions here.
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                builder.setMessage(R.string.session_confirmed_message)
+                                        .setTitle(R.string.session_confirmed_title)
+                                        .setPositiveButton(R.string.dialog_confirmed_button_text, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                mCurrentGameOnSession.setOpenStatus(false);
+                                                mCurrentGameOnSession.saveInBackground();
+                                                QueryPreferences.removeStoredSessionId(getActivity());
+                                                sendUserBackToHomePagerActivity();
+                                            }
+                                        });
+                                AlertDialog dialog = builder.create();
+                                dialog.show();
+                            }
+                        });
                     }
 
                     // Display leave button

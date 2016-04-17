@@ -269,6 +269,7 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
         private void checkHostAbility() {
             ParseQuery<GameOnSession> query = GameOnSession.getQuery();
             query.whereEqualTo("host", ParseUser.getCurrentUser());
+            query.whereEqualTo("open", true);
             query.findInBackground(new FindCallback<GameOnSession>() {
                 @Override
                 public void done(List<GameOnSession> objects, ParseException e) {

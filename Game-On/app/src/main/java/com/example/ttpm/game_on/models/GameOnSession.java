@@ -117,11 +117,11 @@ public class GameOnSession extends ParseObject {
     }
 
     public boolean isOpen() {
-        return (this.getBoolean("Open") == true);
+        return (this.getBoolean("open") == true);
     }
 
     public void setOpenStatus(boolean status) {
-        this.put("Open", status);
+        this.put("open", status);
     }
 
     public ParseGeoPoint getLocation() {

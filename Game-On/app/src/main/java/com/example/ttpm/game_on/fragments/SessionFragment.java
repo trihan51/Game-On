@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.ttpm.game_on.PollService;
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.HomePagerActivity;
@@ -101,7 +102,7 @@ public class SessionFragment extends VisibleFragment {
     @Override
     protected void performActionBasedOnSessionUpdated() {
         // Refreshing the session page. NOTE (2/13/2016): NOT SURE IF THIS WORKS YET!
-        Fragment newFragment = new SessionFragment();
+        Fragment newFragment = SessionFragment.newInstance(mCurrentLocation);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
         transaction.replace(R.id.fragment_container, newFragment);
@@ -117,11 +118,6 @@ public class SessionFragment extends VisibleFragment {
         // NOTE (2/13/2016): NOT SURE IF THIS WORKS YET!
 
         ((SessionActivity)getActivity()).showDialog();
-        // The line above is the replacement for the Toast line below. However, not sure if it works yet.
-//        Toast.makeText(getActivity(), "Session has been cancelled", Toast.LENGTH_LONG).show();
-        QueryPreferences.setStoredSessionId(getActivity(), null);
-        Intent intent = HomePagerActivity.newIntent(getActivity());
-        startActivity(intent);
     }
 
     @Override
@@ -141,7 +137,9 @@ public class SessionFragment extends VisibleFragment {
         query.findInBackground(new FindCallback<GameOnSession>() {
             @Override
             public void done(List<GameOnSession> list, ParseException e) {
-                if (e == null) {
+                if (e == null && list.size() ==0) {
+                    performActionBasedOnSessionCancelled();
+                } else if (e == null) {
                     mCurrentGameOnSession = list.get(0);
                     try {
                         sessionHostName = mCurrentGameOnSession.getParseUser("host").fetchIfNeeded();
@@ -200,14 +198,21 @@ public class SessionFragment extends VisibleFragment {
                             @Override
                             public void onClick(View v) {
                                 mCountDownTimer.cancel();
+                                // Stop checking for updates if it's on
+                                if (PollService.isServiceAlarmOn(SessionFragment.this.getActivity())) {
+                                    PollService.setServiceAlarm(SessionFragment.this.getActivity(), false);
+                                }
                                 // user has confirmed to start session. do appropriate actions here.
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                 builder.setMessage(R.string.session_confirmed_message)
                                         .setTitle(R.string.session_confirmed_title)
                                         .setPositiveButton(R.string.dialog_confirmed_button_text, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
+                                                // Close the session on Parse
                                                 mCurrentGameOnSession.setOpenStatus(false);
                                                 mCurrentGameOnSession.saveInBackground();
+
+                                                // Remove session id from shared preferences
                                                 QueryPreferences.removeStoredSessionId(getActivity());
                                                 sendUserBackToHomePagerActivity();
                                             }
@@ -223,6 +228,10 @@ public class SessionFragment extends VisibleFragment {
                     mLeaveButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            // Stop checking for updates if it's on
+                            if (PollService.isServiceAlarmOn(getActivity())) {
+                                PollService.setServiceAlarm(getActivity(), false);
+                            }
                             leaveSession();
                         }
                     });

@@ -56,7 +56,6 @@ public class PollService extends IntentService {
         } else {
             alarmManager.cancel(pi);
             pi.cancel();
-
         }
 
         QueryPreferences.setAlarmOn(context, isOn);
@@ -64,8 +63,7 @@ public class PollService extends IntentService {
 
     public static boolean isServiceAlarmOn(Context context) {
         Intent i = PollService.newIntent(context);
-        PendingIntent pi = PendingIntent
-                .getService(context, 0, i, PendingIntent.FLAG_NO_CREATE);
+        PendingIntent pi = PendingIntent.getService(context, 0, i, PendingIntent.FLAG_NO_CREATE);
         return pi != null;
     }
 
@@ -89,10 +87,26 @@ public class PollService extends IntentService {
         query.findInBackground(new FindCallback<GameOnSession>() {
             @Override
             public void done(List<GameOnSession> list, ParseException e) {
-                if (e == null) {
-                    // We are returned an object. broadcast that the session page should be refreshed.
-                    Toast.makeText(PollService.this, "We successfully queried parse.", Toast.LENGTH_SHORT).show();
+                if (e == null && list.size() == 0) { // if the session has been cancelled by the host
+                    // Here, send out a Broadcast telling the user that the session has been cancelled.
+                    Resources resources = getResources();
+                    Intent i = SessionActivity.newIntent(PollService.this);
+                    PendingIntent pi = PendingIntent.getActivity(PollService.this,
+                            REQUEST_CODE_ALERT_USER_OF_SESSION_CANCELLED, i, 0);
 
+                    Notification notification = new NotificationCompat.Builder(PollService.this)
+                            .setTicker(resources.getString(R.string.session_cancelled_title))
+                            .setSmallIcon(android.R.drawable.ic_menu_report_image)
+                            .setContentTitle(resources.getString(R.string.session_cancelled_title))
+                            .setContentText(resources.getString(R.string.session_cancelled_text))
+                            .setContentIntent(pi)
+                            .setAutoCancel(true)
+                            .build();
+
+                    showBackgroundNotification(REQUEST_CODE_ALERT_USER_OF_SESSION_CANCELLED, notification);
+                } else if (e == null){
+                    // We are returned an object. broadcast that the session page should be refreshed.
+                    Log.i(TAG, "We successfully queried Parse from PollService");
                     Resources resources = getResources();
                     Intent i = SessionActivity.newIntent(PollService.this);
                     PendingIntent pi = PendingIntent.getActivity(PollService.this,
@@ -110,30 +124,7 @@ public class PollService extends IntentService {
                     showBackgroundNotification(REQUEST_CODE_ALERT_USER_OF_SESSION_UPDATES, notification);
 
                 } else {
-                    // either
-                    // 1. there was some error retrieving the session or
-                    // 2. the session has been cancelled from Parse.
-                    // Here, send out a Broadcast telling the user that the session has been cancelled.
-                    // this is not good because the session could still be open, but we just encountered
-                    // an error while querying Parse. This is ok for now (2/13/2016), but it will need
-                    // to be fixed in a future sprint!
                     Log.e(TAG, "In PollService.java: Error querying Parse");
-
-                    Resources resources = getResources();
-                    Intent i = SessionActivity.newIntent(PollService.this);
-                    PendingIntent pi = PendingIntent.getActivity(PollService.this,
-                            REQUEST_CODE_ALERT_USER_OF_SESSION_CANCELLED, i, 0);
-
-                    Notification notification = new NotificationCompat.Builder(PollService.this)
-                            .setTicker(resources.getString(R.string.session_cancelled_title))
-                            .setSmallIcon(android.R.drawable.ic_menu_report_image)
-                            .setContentTitle(resources.getString(R.string.session_cancelled_title))
-                            .setContentText(resources.getString(R.string.session_cancelled_text))
-                            .setContentIntent(pi)
-                            .setAutoCancel(true)
-                            .build();
-
-                    showBackgroundNotification(REQUEST_CODE_ALERT_USER_OF_SESSION_CANCELLED, notification);
                 }
             }
         });

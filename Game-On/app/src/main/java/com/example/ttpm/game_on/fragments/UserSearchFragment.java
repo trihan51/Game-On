@@ -218,31 +218,35 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
                     (TextView) itemView.findViewById(R.id.list_item_host_games_game_name);
             mSessionsTextView =
                     (TextView) itemView.findViewById(R.id.list_item_user_games_game_open);
-            mListGamesButton =
-                    (ButtonRectangle) itemView.findViewById(R.id.list_item_user_games_list_button);
-            mListGamesButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String gameTitle = mBoardGameTextView.getText().toString();
+            if(QueryPreferences.getStoredSessionId(getContext()) == null) {
+                mListGamesButton =
+                        (ButtonRectangle) itemView.findViewById(R.id.list_item_user_games_list_button);
+                mListGamesButton.setVisibility(View.VISIBLE);
+                mListGamesButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String gameTitle = mBoardGameTextView.getText().toString();
 
-                    String searchRadius = QueryPreferences.getSearchRange(getContext());
+                        String searchRadius = QueryPreferences.getSearchRange(getContext());
 
-                    Intent intent = UserGameActivity.newIntent(
-                            getActivity(),
-                            gameTitle,
-                            searchRadius,
-                            mCurrentLocation);
-                    startActivity(intent);
-                }
-            });
-            mQuickJoinButton =
-                    (ButtonRectangle) itemView.findViewById(R.id.list_item_user_games_quick_button);
-            mQuickJoinButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    quickJoinSession();
-                }
-            });
+                        Intent intent = UserGameActivity.newIntent(
+                                getActivity(),
+                                gameTitle,
+                                searchRadius,
+                                mCurrentLocation);
+                        startActivity(intent);
+                    }
+                });
+                mQuickJoinButton =
+                        (ButtonRectangle) itemView.findViewById(R.id.list_item_user_games_quick_button);
+                mQuickJoinButton.setVisibility(View.VISIBLE);
+                mQuickJoinButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        quickJoinSession();
+                    }
+                });
+            }
         }
 
         private void quickJoinSession() {

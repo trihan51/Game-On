@@ -70,13 +70,15 @@
                     android:id="@+id/list_item_user_games_list_button"
                     android:layout_width="wrap_content"
                     android:layout_height="54dp"
-                    android:text="@string/list_item_user_games_list_button" />
+                    android:text="@string/list_item_user_games_list_button"
+                    android:visibility="gone"/>
 
                 <com.gc.materialdesign.views.ButtonRectangle
                     android:id="@+id/list_item_user_games_quick_button"
                     android:layout_width="wrap_content"
                     android:layout_height="54dp"
-                    android:text="@string/list_item_user_games_quick_button"/>
+                    android:text="@string/list_item_user_games_quick_button"
+                    android:visibility="gone"/>
 
             </LinearLayout>
         </RelativeLayout>

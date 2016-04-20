@@ -92,5 +92,7 @@
     <string name="session_host_tag">Host:</string>
     <string name="no_games_found">No games found nearby!</string>
     <string name="session_no_players_found">No players have joined.</string>
+    <string name="user_in_session">Session is in progress</string>
+    <string name="session_player_section">Players</string>
 
 </resources>

@@ -102,6 +102,11 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        if(QueryPreferences.getStoredSessionId(getContext()) != null) {
+            TextView sessionWarningTextView = (TextView) view.findViewById(R.id.host_search_session_warning);
+            sessionWarningTextView.setVisibility(View.VISIBLE);
+        }
+        
         mSearchRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         BoardGameCollection boardGameCollection = new BoardGameCollection();
@@ -198,14 +203,17 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
                     (ImageView) itemView.findViewById(R.id.list_item_host_games_game_pic);
             mBoardGameTextView =
                     (TextView) itemView.findViewById(R.id.list_item_host_games_game_name);
-            mHostButton =
-                    (ButtonRectangle) itemView.findViewById(R.id.list_item_host_games_list_button);
-            mHostButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    checkHostAbility();
-                }
-            });
+            if(QueryPreferences.getStoredSessionId(getContext()) == null) {
+                mHostButton =
+                        (ButtonRectangle) itemView.findViewById(R.id.list_item_host_games_list_button);
+                mHostButton.setVisibility(View.VISIBLE);
+                mHostButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        checkHostAbility();
+                    }
+                });
+            }
         }
 
         // Todo: Need to perform loading board images asynchronously

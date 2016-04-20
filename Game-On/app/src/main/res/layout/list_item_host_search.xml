@@ -20,6 +20,7 @@
             android:paddingRight="12dp"
             android:paddingLeft="12dp"
             android:paddingBottom="4dp"
+            android:elevation="8dp"
             android:background="#FAFAFA">
 
             <FrameLayout
@@ -62,7 +63,9 @@
                     android:id="@+id/list_item_host_games_list_button"
                     android:layout_width="wrap_content"
                     android:layout_height="54dp"
-                    android:text="@string/list_item_host_games_button" />
+                    android:text="@string/list_item_host_games_button"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
 
             </LinearLayout>
         </RelativeLayout>

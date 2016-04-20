@@ -71,8 +71,8 @@
             android:textSize="28sp"
             android:textStyle="bold"
             android:textColor="#EEEEEE"
-            android:text="Players"
-            />
+            android:text="@string/session_player_section"
+            android:elevation="4dp"/>
 
         <TextView
             android:layout_width="match_parent"

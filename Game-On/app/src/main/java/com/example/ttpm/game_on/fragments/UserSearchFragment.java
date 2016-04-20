@@ -94,6 +94,10 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_search, container, false);
 
+        if(QueryPreferences.getStoredSessionId(getContext()) != null) {
+            TextView sessionWarningTextView = (TextView) view.findViewById(R.id.user_search_session_warning);
+            sessionWarningTextView.setVisibility(View.VISIBLE);
+        }
         mNoGamesFoundTextView = (TextView) view.findViewById(R.id.user_search_no_games_found);
 
         mSearchRecyclerView = (RecyclerView) view
@@ -172,8 +176,6 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
                                 mSearchAdapter.addNewGame(b);
                             }
                         }
-                    } else {
-                        mNoGamesFoundTextView.setVisibility(View.VISIBLE);
                     }
                 }
             }

@@ -47,9 +47,9 @@ public class SessionActivity extends SingleFragmentActivity {
 
         MenuItem toggleItem = menu.findItem(R.id.menu_item_toggle_polling);
         if (PollService.isServiceAlarmOn(this)) {
-            toggleItem.setTitle(R.string.stop_polling);
+            toggleItem.setTitle(R.string.stop);
         } else {
-            toggleItem.setTitle(R.string.start_polling);
+            toggleItem.setTitle(R.string.check_for_updates);
         }
         return true;
     }
@@ -69,10 +69,11 @@ public class SessionActivity extends SingleFragmentActivity {
 
     public static class MyAlertDialogFragment extends DialogFragment {
 
-        public static MyAlertDialogFragment newInstance(int title) {
+        public static MyAlertDialogFragment newInstance(int title, int message) {
             MyAlertDialogFragment frag = new MyAlertDialogFragment();
             Bundle args = new Bundle();
             args.putInt("title", title);
+            args.putInt("message", message);
             frag.setArguments(args);
             return frag;
         }
@@ -80,9 +81,11 @@ public class SessionActivity extends SingleFragmentActivity {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             int title = getArguments().getInt("title");
+            int message = getArguments().getInt("message");
 
             return new AlertDialog.Builder(getActivity())
                     .setTitle(title)
+                    .setMessage(message)
                     .setPositiveButton(R.string.alert_dialog_ok,
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
@@ -96,13 +99,25 @@ public class SessionActivity extends SingleFragmentActivity {
 
     public void showDialog() {
         DialogFragment newFragment = MyAlertDialogFragment.newInstance(
-                R.string.alert_dialog_two_buttons_title);
+                R.string.alert_dialog_two_buttons_title,
+                R.string.alert_dialog_session_cancelled_message);
         newFragment.show(getSupportFragmentManager(), "dialog");
     }
 
     public void doPositiveClick() {
-        // Do stuff here.
         Log.i("FragmentAlertDialog", "Positive click!");
+
+        // Delete the session ID from shared preferences
+        QueryPreferences.setStoredSessionId(this, null);
+
+        // Turn off polling if it's on
+        if (PollService.isServiceAlarmOn(this)) {
+            PollService.setServiceAlarm(this, false);
+        }
+
+        // Send user back to home page
+        Intent intent = HomePagerActivity.newIntent(this);
+        startActivity(intent);
     }
 
 }

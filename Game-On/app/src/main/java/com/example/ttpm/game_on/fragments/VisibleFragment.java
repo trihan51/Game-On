@@ -15,7 +15,7 @@ import com.example.ttpm.game_on.activities.SessionActivity;
 /**
  * Created by Tri Han on 2/13/2016.
  */
-public abstract class VisibleFragment extends Fragment {
+public abstract class VisibleFragment extends android.support.v4.app.Fragment {
     private static final String TAG = "VisibleFragment";
 
     @Override

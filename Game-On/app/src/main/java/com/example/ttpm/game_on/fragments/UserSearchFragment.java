@@ -250,7 +250,6 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
             query.whereEqualTo("gameTitle", mBoardGameTextView.getText());
             query.whereNotEqualTo("host", ParseUser.getCurrentUser());
             query.whereEqualTo("open", true);
-
             query.addDescendingOrder("createdAt");
             query.setLimit(1);
             query.findInBackground(new FindCallback<GameOnSession>() {
@@ -304,8 +303,6 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
                                             Log.d("GAMEON", "Data found, but nothing to extract");
                                             return;
                                         }
-                                        Log.d("GAMEON", "User board image found!");
-
                                         Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                                         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), pictureName);
                                         try {

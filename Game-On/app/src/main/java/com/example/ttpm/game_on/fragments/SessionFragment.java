@@ -131,6 +131,11 @@ public class SessionFragment extends VisibleFragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_session, container, false);
 
@@ -263,8 +268,6 @@ public class SessionFragment extends VisibleFragment {
                                         Log.d("GAMEON", "Data found, but nothing to extract");
                                         return;
                                     }
-                                    Log.d("GAMEON", "Host board image found!");
-
                                     Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                                     File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), pictureName);
                                     try {

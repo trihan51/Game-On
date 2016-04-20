@@ -34,6 +34,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -220,7 +221,7 @@ public class HomePagerActivity extends AppCompatActivity {
         if (QueryPreferences.getStoredSessionId(this) != null) {
             ParseQuery<GameOnSession> queryIsPlayerInSession = GameOnSession.getQuery();
             queryIsPlayerInSession.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(this));
-            queryIsPlayerInSession.whereEqualTo("participants", ParseUser.getCurrentUser().toString());
+            queryIsPlayerInSession.whereEqualTo("participants", ParseUser.getCurrentUser().getObjectId());
             queryIsPlayerInSession.whereEqualTo("open", true);
 
             ParseQuery<GameOnSession> queryIsPlayerHostSession = GameOnSession.getQuery();
@@ -244,7 +245,7 @@ public class HomePagerActivity extends AppCompatActivity {
                             MenuItem currentSessionMenuItem = m.findItem(R.id.menu_action_current_session);
                             currentSessionMenuItem.setVisible(true);
                         } else {
-                            QueryPreferences.removeStoredSessionId(getApplicationContext());
+//                            QueryPreferences.removeStoredSessionId(getApplicationContext());
                         }
                     } else {
                         Log.e("GAMEON", "homepager:onCreateOptionsMenu" + e.toString());

@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -201,18 +202,27 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
 
             mBoardGameImageView =
                     (ImageView) itemView.findViewById(R.id.list_item_host_games_game_pic);
+
             mBoardGameTextView =
                     (TextView) itemView.findViewById(R.id.list_item_host_games_game_name);
             if(QueryPreferences.getStoredSessionId(getContext()) == null) {
-                mHostButton =
-                        (ButtonRectangle) itemView.findViewById(R.id.list_item_host_games_list_button);
-                mHostButton.setVisibility(View.VISIBLE);
-                mHostButton.setOnClickListener(new View.OnClickListener() {
+                mBoardGameImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         checkHostAbility();
                     }
                 });
+
+                //Todo: make buttons visibility GONE, replaced by long/short holds on imageview
+//                mHostButton =
+//                        (ButtonRectangle) itemView.findViewById(R.id.list_item_host_games_list_button);
+//                mHostButton.setVisibility(View.VISIBLE);
+//                mHostButton.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        checkHostAbility();
+//                    }
+//                });
             }
         }
 

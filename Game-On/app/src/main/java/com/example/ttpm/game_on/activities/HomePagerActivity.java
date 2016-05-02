@@ -260,16 +260,8 @@ public class HomePagerActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_action_log_out:
-                ParseUser.logOut();
-
-                Intent intent = new Intent(this, SplashActivity.class);
-                startActivity(intent);
-                this.finish();
-
-                return true;
             case R.id.menu_action_current_session:
-                intent = SessionActivity.newIntent(this, mCurrentLocation);
+                Intent intent = SessionActivity.newIntent(this, mCurrentLocation);
                 startActivity(intent);
                 return true;
             default:

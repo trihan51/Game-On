@@ -149,15 +149,8 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_action_log_out:
-                ParseUser.logOut();
-
-                Intent intent = new Intent(getActivity(), SplashActivity.class);
-                startActivity(intent);
-
-                return true;
             case R.id.menu_action_current_session:
-                intent = SessionActivity.newIntent(getContext(), mCurrentLocation);
+                Intent intent = SessionActivity.newIntent(getContext(), mCurrentLocation);
                 startActivity(intent);
                 return true;
             default:

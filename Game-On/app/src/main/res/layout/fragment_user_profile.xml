@@ -86,6 +86,16 @@
                 android:text="@string/radio_3"/>
         </RadioGroup>
 
+        <com.gc.materialdesign.views.ButtonRectangle
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/user_profile_logout_button"
+            android:gravity="center"
+            android:text="@string/menu_action_logout"
+            android:textSize="12sp"
+            android:background="@color/colorAccent"
+            />
+
     </LinearLayout>
 
     <android.support.design.widget.CoordinatorLayout

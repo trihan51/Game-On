@@ -8,14 +8,4 @@
         android:orderInCategory="100"
         android:visible="false"
         app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/menu_action_settings"
-        android:title="@string/menu_action_settings"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/menu_action_log_out"
-        android:title="@string/menu_action_logout"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
 </menu>

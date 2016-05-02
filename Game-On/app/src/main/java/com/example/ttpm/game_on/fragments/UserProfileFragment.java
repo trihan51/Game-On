@@ -27,7 +27,9 @@ import com.bumptech.glide.Glide;
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.CameraActivity;
+import com.example.ttpm.game_on.activities.SplashActivity;
 import com.example.ttpm.game_on.interfaces.SwipeFragmentUpdateInterface;
+import com.gc.materialdesign.views.ButtonRectangle;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
@@ -110,7 +112,25 @@ public class UserProfileFragment extends android.support.v4.app.Fragment
             QueryPreferences.setNewProfilePic(this.getContext(), false);
         }
 
-        updateProfilePicture();
+        ButtonRectangle logoutButton =
+                (ButtonRectangle) view.findViewById(R.id.user_profile_logout_button);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseUser.logOut();
+                Intent intent = new Intent(getContext(), SplashActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                updateProfilePicture();
+
+            }
+        };
+        r.run();
 
         return view;
     }

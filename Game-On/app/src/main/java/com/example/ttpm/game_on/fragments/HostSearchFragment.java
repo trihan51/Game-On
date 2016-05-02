@@ -226,7 +226,6 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
             }
         }
 
-        // Todo: Need to perform loading board images asynchronously
         private void loadBoardImage() {
             ParseQuery<ParseObject> query = ParseQuery.getQuery("BoardGames");
             query.whereEqualTo("boardName", mBoardGameTextView.getText().toString());
@@ -279,7 +278,8 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
         public void bindGame(BoardGame boardGame) {
             mBoardGame = boardGame;
             mBoardGameTextView.setText(mBoardGame.getBoardName());
-            loadBoardImage();
+            // Todo: Need to perform loading board images asynchronously
+//            loadBoardImage();
         }
 
         private void checkHostAbility() {

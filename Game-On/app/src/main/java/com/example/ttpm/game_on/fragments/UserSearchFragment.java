@@ -313,7 +313,6 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
             });
         }
 
-        // Todo: Need to perform loading board images asynchronously
         private void loadBoardImage() {
             ParseQuery<ParseObject> query = ParseQuery.getQuery("BoardGames");
             query.whereEqualTo("boardName", mBoardGameTextView.getText().toString());
@@ -367,7 +366,8 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
             mBoardGame = boardGame;
             mBoardGameTextView.setText(mBoardGame.getBoardName());
             setAmountOfOpenSessions(mBoardGame.getBoardName());
-            loadBoardImage();
+            // Todo: Need to perform loading board images asynchronously
+//            loadBoardImage();
         }
 
         public void setAmountOfOpenSessions(String boardGame) {

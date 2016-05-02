@@ -28,7 +28,7 @@ import java.util.List;
 public class PollService extends IntentService {
     private static final String TAG = "PollService";
 
-    private static final int POLL_INTERVAL = 1000 * 60; // 60 seconds
+    private static final int POLL_INTERVAL = 1000 * 10; // 10 seconds
     public static final String ACTION_SHOW_NOTIFICATION = "com.example.ttpm.game_on.SHOW_NOTIFICATION";
     /* Recommended way of doing it in the book
     private static final long POLL_INTERVAL = AlarmManager.INTERVAL_FIFTEEN_MINUTES;

@@ -219,6 +219,7 @@ public class SessionFragment extends VisibleFragment {
 
                                                 // Remove session id from shared preferences
                                                 QueryPreferences.removeStoredSessionId(getActivity());
+
                                                 sendUserBackToHomePagerActivity();
                                             }
                                         });

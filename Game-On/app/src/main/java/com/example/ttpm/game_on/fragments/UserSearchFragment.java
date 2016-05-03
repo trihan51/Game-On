@@ -60,6 +60,7 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
 
     private RecyclerView mSearchRecyclerView;
     private TextView mNoGamesFoundTextView;
+    private TextView sessionWarningTextView;
     private UserSearchAdapter mSearchAdapter;
     private List<BoardGame> mBoardGames;
     private GameOnSession mQuickJoinSession;
@@ -96,7 +97,7 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
         View view = inflater.inflate(R.layout.fragment_user_search, container, false);
 
         if(QueryPreferences.getStoredSessionId(getContext()) != null) {
-            TextView sessionWarningTextView = (TextView) view.findViewById(R.id.user_search_session_warning);
+            sessionWarningTextView = (TextView) view.findViewById(R.id.user_search_session_warning);
             sessionWarningTextView.setVisibility(View.VISIBLE);
         }
         mNoGamesFoundTextView = (TextView) view.findViewById(R.id.user_search_no_games_found);
@@ -200,6 +201,11 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
     @Override
     public void fragmentBecameVisible() {
         queryForAllOpenUniqueBoardGames();
+        if(QueryPreferences.getStoredSessionId(getContext()) == null
+                && sessionWarningTextView != null
+                && sessionWarningTextView.getVisibility() != View.GONE) {
+            sessionWarningTextView.setVisibility(View.GONE);
+        }
     }
 
     private class UserSearchViewHolder extends RecyclerView.ViewHolder {
@@ -367,7 +373,7 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
             mBoardGameTextView.setText(mBoardGame.getBoardName());
             setAmountOfOpenSessions(mBoardGame.getBoardName());
             // Todo: Need to perform loading board images asynchronously
-//            loadBoardImage();
+            loadBoardImage();
         }
 
         public void setAmountOfOpenSessions(String boardGame) {

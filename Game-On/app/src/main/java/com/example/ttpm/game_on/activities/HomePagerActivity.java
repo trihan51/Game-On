@@ -222,7 +222,6 @@ public class HomePagerActivity extends AppCompatActivity {
             ParseQuery<GameOnSession> queryIsPlayerInSession = GameOnSession.getQuery();
             queryIsPlayerInSession.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(this));
             queryIsPlayerInSession.whereEqualTo("participants", ParseUser.getCurrentUser().getObjectId());
-            queryIsPlayerInSession.whereEqualTo("open", true);
 
             ParseQuery<GameOnSession> queryIsPlayerHostSession = GameOnSession.getQuery();
             queryIsPlayerHostSession.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(this));
@@ -245,7 +244,8 @@ public class HomePagerActivity extends AppCompatActivity {
                             MenuItem currentSessionMenuItem = m.findItem(R.id.menu_action_current_session);
                             currentSessionMenuItem.setVisible(true);
                         } else {
-//                            QueryPreferences.removeStoredSessionId(getApplicationContext());
+                            Log.d("GAMEON", "removedStoredSessionId");
+                            QueryPreferences.removeStoredSessionId(getApplicationContext());
                         }
                     } else {
                         Log.e("GAMEON", "homepager:onCreateOptionsMenu" + e.toString());

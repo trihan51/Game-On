@@ -213,14 +213,22 @@ public class SessionFragment extends VisibleFragment {
                                         .setTitle(R.string.session_confirmed_title)
                                         .setPositiveButton(R.string.dialog_confirmed_button_text, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
-                                                // Close the session on Parse
-                                                mCurrentGameOnSession.setOpenStatus(false);
-                                                mCurrentGameOnSession.saveInBackground();
+                                                ParseQuery<GameOnSession> tmpQuery = GameOnSession.getQuery();
+                                                tmpQuery.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(getActivity()));
+                                                tmpQuery.findInBackground(new FindCallback<GameOnSession>() {
+                                                    @Override
+                                                    public void done(List<GameOnSession> objects, ParseException e) {
+                                                        // Close the session on Parse
+                                                        // Requery to get the new updated session with participants
+                                                        GameOnSession updatedSession = objects.get(0);
+                                                        updatedSession.setOpenStatus(false);
+                                                        updatedSession.saveInBackground();
+                                                        // Remove session id from shared preferences
+                                                        QueryPreferences.removeStoredSessionId(getActivity());
 
-                                                // Remove session id from shared preferences
-                                                QueryPreferences.removeStoredSessionId(getActivity());
-
-                                                sendUserBackToHomePagerActivity();
+                                                        sendUserBackToHomePagerActivity();
+                                                    }
+                                                });
                                             }
                                         });
                                 AlertDialog dialog = builder.create();
@@ -247,12 +255,12 @@ public class SessionFragment extends VisibleFragment {
                 } else {
                     Toast.makeText(getActivity(), "Error!", Toast.LENGTH_SHORT).show();
                 }
+
+                if(mCurrentGameOnSession != null) {
+                    updateUserMarker();
+                }
             }
         });
-
-        if(mCurrentGameOnSession != null) {
-            updateUserMarker();
-        }
 
         return view;
     }
@@ -398,6 +406,7 @@ public class SessionFragment extends VisibleFragment {
 
     private void sendUserBackToHomePagerActivity() {
         Intent intent = new Intent(getActivity(), HomePagerActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Will clear out your activity history stack till now
         startActivity(intent);
     }
 

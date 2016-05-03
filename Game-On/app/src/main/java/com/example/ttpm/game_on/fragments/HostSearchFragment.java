@@ -70,6 +70,7 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
 
     private Location mCurrentLocation;
     private boolean isHost;
+    private TextView sessionWarningTextView;
 
     public HostSearchFragment() {
     }
@@ -104,7 +105,7 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
         super.onViewCreated(view, savedInstanceState);
 
         if(QueryPreferences.getStoredSessionId(getContext()) != null) {
-            TextView sessionWarningTextView = (TextView) view.findViewById(R.id.host_search_session_warning);
+            sessionWarningTextView = (TextView) view.findViewById(R.id.host_search_session_warning);
             sessionWarningTextView.setVisibility(View.VISIBLE);
         }
         
@@ -179,6 +180,11 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
 
     @Override
     public void fragmentBecameVisible() {
+        if(QueryPreferences.getStoredSessionId(getContext()) == null
+                && sessionWarningTextView != null
+                && sessionWarningTextView.getVisibility() != View.GONE) {
+            sessionWarningTextView.setVisibility(View.GONE);
+        }
     }
 
     /**********************************************************************************************/
@@ -279,7 +285,7 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
             mBoardGame = boardGame;
             mBoardGameTextView.setText(mBoardGame.getBoardName());
             // Todo: Need to perform loading board images asynchronously
-//            loadBoardImage();
+            loadBoardImage();
         }
 
         private void checkHostAbility() {

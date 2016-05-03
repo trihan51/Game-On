@@ -34,7 +34,7 @@ public class ForgotPasswordFragment extends android.support.v4.app.Fragment {
         View view = inflater.inflate(R.layout.fragment_forgot_password, container, false);
 
         Button resetButton = (Button) view.findViewById(R.id.forgot_password_reset_password_button);
-        mEmailField = (EditText) view.findViewById(R.id.forgot_password_email_edittext);
+        mEmailField = (EditText) view.findViewById(R.id.forgot_pw_email_edittext);
 
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override

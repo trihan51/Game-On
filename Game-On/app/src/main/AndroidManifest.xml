@@ -47,6 +47,7 @@
         </activity>
         <activity
             android:name=".activities.ForgotPasswordActivity"
+            android:parentActivityName=".activities.LoginActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity

@@ -24,7 +24,7 @@
 
     <!--Strings for ForgotPassword.java-->
     <string name="fragment_forgot_password_text">Please enter the email address
-        associated with your Game-On account.</string>
+        associated with your Game On account. You will receive an email to reset your password.</string>
     <string name="fragment_forgot_password_email_hint_text">Enter e-mail here</string>
     <string name="fragment_forgot_password_button">Reset</string>
 

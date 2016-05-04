@@ -21,12 +21,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.example.ttpm.game_on.models.GameOnSession;
 import com.example.ttpm.game_on.QueryPreferences;
 import com.example.ttpm.game_on.R;
 import com.example.ttpm.game_on.activities.SessionActivity;
-import com.example.ttpm.game_on.activities.SplashActivity;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.parse.FindCallback;
 import com.parse.GetDataCallback;
@@ -173,27 +173,66 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
             mHostNameTextView = (TextView) itemView.findViewById(R.id.list_item_host_name);
             mNumOfParticipantsTextView =
                     (TextView) itemView.findViewById(R.id.list_item_participant_count);
-            mJoinButton = (ButtonRectangle) itemView.findViewById(R.id.list_item_join_button);
 
+            mJoinButton = (ButtonRectangle) itemView.findViewById(R.id.list_item_join_button);
             mJoinButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // Add user to current session
-                    mSession.addPlayer(ParseUser.getCurrentUser().getObjectId());
-                    mSession.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if (e == null) {
-                                // Saved Successfully
-                                QueryPreferences.setStoredSessionId(getActivity(), mSession.getObjectId());
-                                Intent intent = SessionActivity.newIntent(getActivity(), mCurrentLocation);
-                                startActivity(intent);
-                            } else {
-                                // The save failed
-                                Log.e("GAMEON", "Unable to add current user to session: " + e);
-                            }
+                    checkIfFullRoom();
+                }
+            });
+        }
+
+        public void checkIfFullRoom() {
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("BoardGames");
+            query.whereEqualTo("boardName", mSession.getGameTitle());
+            query.findInBackground(new FindCallback<ParseObject>() {
+                @Override
+                public void done(List<ParseObject> objects, ParseException e) {
+                    if(e == null) {
+                        JSONArray arr = objects.get(0).getJSONArray("maxPlayers");
+                        int playerCountWithNewUser = Integer.parseInt(mSession.getAllPlayerAndHostCount()) + 1;
+                        int maxPlayerCount = -1;
+                        try {
+                            maxPlayerCount = (int) arr.get(arr.length() - 1);
+                        } catch (JSONException ex) {
+                            Log.d("GAMEON", "checkIfFullRoom JSON: " + ex);
                         }
-                    });
+
+                        // Check if room is full, true - user can't join, false - user can join
+                        if (playerCountWithNewUser > maxPlayerCount) {
+                            blockPlayerToSession();
+                        } else {
+                            addPlayerToSession();
+                        }
+                    } else {
+                        Log.e("GAMEON", "checkIfFullRoom Parse:" + e);
+                    }
+                }
+            });
+        }
+
+        public void blockPlayerToSession() {
+            MaterialDialog.Builder b = new MaterialDialog.Builder(getActivity())
+                    .title("Full Room")
+                    .content("Sorry but this room is full, try another!")
+                    .positiveText("Ok");
+            MaterialDialog d = b.build();
+            d.show();
+        }
+
+        public void addPlayerToSession() {
+            mSession.addPlayer(ParseUser.getCurrentUser().getObjectId());
+            mSession.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e == null) {
+                        QueryPreferences.setStoredSessionId(getActivity(), mSession.getObjectId());
+                        Intent intent = SessionActivity.newIntent(getActivity(), mCurrentLocation);
+                        startActivity(intent);
+                    } else {
+                        Log.e("GAMEON", "Unable to add current user to session: " + e);
+                    }
                 }
             });
         }

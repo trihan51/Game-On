@@ -9,6 +9,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -23,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.example.ttpm.game_on.PollService;
 import com.example.ttpm.game_on.QueryPreferences;
@@ -50,6 +53,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.File;
@@ -202,37 +206,33 @@ public class SessionFragment extends VisibleFragment {
                         mHostStartButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                mCountDownTimer.cancel();
-                                // Stop checking for updates if it's on
-                                if (PollService.isServiceAlarmOn(SessionFragment.this.getActivity())) {
-                                    PollService.setServiceAlarm(SessionFragment.this.getActivity(), false);
-                                }
-                                // user has confirmed to start session. do appropriate actions here.
-                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                builder.setMessage(R.string.session_confirmed_message)
-                                        .setTitle(R.string.session_confirmed_title)
-                                        .setPositiveButton(R.string.dialog_confirmed_button_text, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                ParseQuery<GameOnSession> tmpQuery = GameOnSession.getQuery();
-                                                tmpQuery.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(getActivity()));
-                                                tmpQuery.findInBackground(new FindCallback<GameOnSession>() {
-                                                    @Override
-                                                    public void done(List<GameOnSession> objects, ParseException e) {
-                                                        // Close the session on Parse
-                                                        // Requery to get the new updated session with participants
-                                                        GameOnSession updatedSession = objects.get(0);
-                                                        updatedSession.setOpenStatus(false);
-                                                        updatedSession.saveInBackground();
-                                                        // Remove session id from shared preferences
-                                                        QueryPreferences.removeStoredSessionId(getActivity());
-
-                                                        sendUserBackToHomePagerActivity();
-                                                    }
-                                                });
+                                ParseQuery<ParseObject> query = ParseQuery.getQuery("BoardGames");
+                                query.whereEqualTo("boardName", mCurrentGameOnSession.getGameTitle());
+                                query.findInBackground(new FindCallback<ParseObject>() {
+                                    @Override
+                                    public void done(List<ParseObject> objects, ParseException e) {
+                                        if(e == null) {
+                                            JSONArray arr = objects.get(0).getJSONArray("maxPlayers");
+                                            int playerCount = Integer.parseInt(mCurrentGameOnSession.getAllPlayerAndHostCount());
+                                            int minPlayerCount = -1;
+                                            try {
+                                                minPlayerCount = (int) arr.get(0);
+                                            } catch (JSONException ex) {
+                                                Log.d("GAMEON", "checkIfFullRoom JSON: " + ex);
                                             }
-                                        });
-                                AlertDialog dialog = builder.create();
-                                dialog.show();
+
+                                            // Check if min players reached
+                                            // true - host can start, false - host can't start
+                                            if (playerCount >= minPlayerCount) {
+                                                hostStartSession();
+                                            } else {
+                                                hostNoStartSession();
+                                            }
+                                        } else {
+                                            Log.e("GAMEON", "checkIfFullRoom Parse:" + e);
+                                        }
+                                    }
+                                });;
                             }
                         });
                     }
@@ -263,6 +263,51 @@ public class SessionFragment extends VisibleFragment {
         });
 
         return view;
+    }
+
+    private void hostStartSession() {
+        mCountDownTimer.cancel();
+        // Stop checking for updates if it's on
+        if (PollService.isServiceAlarmOn(SessionFragment.this.getActivity())) {
+            PollService.setServiceAlarm(SessionFragment.this.getActivity(), false);
+        }
+
+        MaterialDialog.Builder b = new MaterialDialog.Builder(getActivity())
+                .title(R.string.session_confirmed_title)
+                .content(R.string.session_confirmed_message)
+                .positiveText(R.string.dialog_confirmed_button_text)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        ParseQuery<GameOnSession> tmpQuery = GameOnSession.getQuery();
+                        tmpQuery.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(getActivity()));
+                        tmpQuery.findInBackground(new FindCallback<GameOnSession>() {
+                            @Override
+                            public void done(List<GameOnSession> objects, ParseException e) {
+                                // Close the session on Parse
+                                // Requery to get the new updated session with participants
+                                GameOnSession updatedSession = objects.get(0);
+                                updatedSession.setOpenStatus(false);
+                                updatedSession.saveInBackground();
+                                // Remove session id from shared preferences
+                                QueryPreferences.removeStoredSessionId(getActivity());
+
+                                sendUserBackToHomePagerActivity();
+                            }
+                        });
+                    }
+                });
+        MaterialDialog d = b.build();
+        d.show();
+    }
+
+    private void hostNoStartSession() {
+        MaterialDialog.Builder b = new MaterialDialog.Builder(getActivity())
+                .title("Not Enough Players")
+                .content("There are not enough players to start!")
+                .positiveText("Ok");
+        MaterialDialog d = b.build();
+        d.show();
     }
 
     // Todo: Need to perform loading board images asynchronously

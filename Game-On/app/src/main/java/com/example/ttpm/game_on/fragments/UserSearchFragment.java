@@ -282,13 +282,13 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
             }
         }
 
+        //Todo: check if max player, if max player join next game
         private void quickJoinSession() {
             ParseQuery<GameOnSession> query = GameOnSession.getQuery();
             query.whereEqualTo("gameTitle", mBoardGameTextView.getText());
             query.whereNotEqualTo("host", ParseUser.getCurrentUser());
             query.whereEqualTo("open", true);
             query.addDescendingOrder("createdAt");
-            query.setLimit(1);
             query.findInBackground(new FindCallback<GameOnSession>() {
                 @Override
                 public void done(List<GameOnSession> objects, ParseException e) {

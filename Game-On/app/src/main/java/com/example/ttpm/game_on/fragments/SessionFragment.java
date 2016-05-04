@@ -161,7 +161,6 @@ public class SessionFragment extends VisibleFragment {
 
                     // Display grid of players in session, if players, display
                     // else, show no players message
-                    // Todo: does noPlayerFoundTextView display after refreshing and finding no players?
                     mNoPlayersFoundTextView = (TextView)
                             view.findViewById(R.id.session_no_players_found);
                     if(mCurrentGameOnSession.getAllPlayers().length() != 0) {

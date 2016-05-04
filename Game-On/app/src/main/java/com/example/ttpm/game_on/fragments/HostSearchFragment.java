@@ -219,7 +219,6 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
                     }
                 });
 
-                //Todo: make buttons visibility GONE, replaced by long/short holds on imageview
 //                mHostButton =
 //                        (ButtonRectangle) itemView.findViewById(R.id.list_item_host_games_list_button);
 //                mHostButton.setVisibility(View.VISIBLE);

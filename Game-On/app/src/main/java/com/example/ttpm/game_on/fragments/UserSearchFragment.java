@@ -251,7 +251,6 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
                     }
                 });
 
-                //Todo: make buttons visibility GONE, replaced by long/short holds on imageview
 //                mListGamesButton =
 //                        (ButtonRectangle) itemView.findViewById(R.id.list_item_user_games_list_button);
 //                mListGamesButton.setVisibility(View.VISIBLE);

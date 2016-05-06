@@ -56,7 +56,9 @@
 
     <!-- Strings for SessionActivity.java -->
     <string name="alert_dialog_ok">Ok</string>
-    <string name="alert_dialog_two_buttons_title">Alert: Session Cancelled</string>
+    <string name="alert_dialog_session_started_title">Session Started</string>
+    <string name="alert_dialog_session_started_message">The host has confirmed the current session. Please head to the event location and have fun!</string>
+    <string name="alert_dialog_session_cancelled_title">Alert: Session Cancelled</string>
     <string name="alert_dialog_session_cancelled_message">Your current session has been cancelled by the host.</string>
 
     <!-- Strings for SessionFragment.java -->
@@ -84,6 +86,8 @@
     <!-- Strings for PollService.java -->
     <string name="session_update_title">New Session Update</string>
     <string name="session_update_text">Session has changed. Click here to check it out!</string>
+    <string name="session_start_title">Session Started!</string>
+    <string name="session_start_text">Your current session has started!</string>
     <string name="session_cancelled_title">Session Cancelled</string>
     <string name="session_cancelled_text">We\'re sorry, but your current session has been cancelled.</string>
     <string name="fragment_register_firstname">First Name</string>

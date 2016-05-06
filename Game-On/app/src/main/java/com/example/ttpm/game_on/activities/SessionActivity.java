@@ -67,10 +67,13 @@ public class SessionActivity extends SingleFragmentActivity {
         }
     }
 
-    public static class MyAlertDialogFragment extends DialogFragment {
+    /**********************************************************************************************/
+    /*                 DialogFragment to display when the session has started                     */
+    /**********************************************************************************************/
+    public static class MySessionStartedAlertDialogFragment extends DialogFragment {
 
-        public static MyAlertDialogFragment newInstance(int title, int message) {
-            MyAlertDialogFragment frag = new MyAlertDialogFragment();
+        public static MySessionStartedAlertDialogFragment newInstance(int title, int message) {
+            MySessionStartedAlertDialogFragment frag = new MySessionStartedAlertDialogFragment();
             Bundle args = new Bundle();
             args.putInt("title", title);
             args.putInt("message", message);
@@ -89,7 +92,7 @@ public class SessionActivity extends SingleFragmentActivity {
                     .setPositiveButton(R.string.alert_dialog_ok,
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
-                                    ((SessionActivity)getActivity()).doPositiveClick();
+                                    ((SessionActivity)getActivity()).doPositiveClickOnSessionStarted();
                                 }
                             }
                     )
@@ -97,15 +100,15 @@ public class SessionActivity extends SingleFragmentActivity {
         }
     }
 
-    public void showDialog() {
-        DialogFragment newFragment = MyAlertDialogFragment.newInstance(
-                R.string.alert_dialog_two_buttons_title,
-                R.string.alert_dialog_session_cancelled_message);
+    public void showSessionStartedDialog() {
+        DialogFragment newFragment = MySessionStartedAlertDialogFragment.newInstance(
+                R.string.alert_dialog_session_started_title,
+                R.string.alert_dialog_session_started_message);
         newFragment.show(getSupportFragmentManager(), "dialog");
     }
 
-    public void doPositiveClick() {
-        Log.i("FragmentAlertDialog", "Positive click!");
+    public void doPositiveClickOnSessionStarted() {
+        Log.i("AlertDialogFragment", "Positive click!");
 
         // Delete the session ID from shared preferences
         QueryPreferences.setStoredSessionId(this, null);
@@ -120,4 +123,59 @@ public class SessionActivity extends SingleFragmentActivity {
         startActivity(intent);
     }
 
+    /**********************************************************************************************/
+    /*            DialogFragment to display when the session has been cancelled                   */
+    /**********************************************************************************************/
+    public static class MySessionCancelledAlertDialogFragment extends DialogFragment {
+
+        public static MySessionCancelledAlertDialogFragment newInstance(int title, int message) {
+            MySessionCancelledAlertDialogFragment frag = new MySessionCancelledAlertDialogFragment();
+            Bundle args = new Bundle();
+            args.putInt("title", title);
+            args.putInt("message", message);
+            frag.setArguments(args);
+            return frag;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            int title = getArguments().getInt("title");
+            int message = getArguments().getInt("message");
+
+            return new AlertDialog.Builder(getActivity())
+                    .setTitle(title)
+                    .setMessage(message)
+                    .setPositiveButton(R.string.alert_dialog_ok,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    ((SessionActivity)getActivity()).doPositiveClickOnSessionCancelled();
+                                }
+                            }
+                    )
+                    .create();
+        }
+    }
+
+    public void showSessionCancelledDialog() {
+        DialogFragment newFragment = MySessionCancelledAlertDialogFragment.newInstance(
+                R.string.alert_dialog_session_cancelled_title,
+                R.string.alert_dialog_session_cancelled_message);
+        newFragment.show(getSupportFragmentManager(), "dialog");
+    }
+
+    public void doPositiveClickOnSessionCancelled() {
+        Log.i("AlertDialogFragment", "Positive click!");
+
+        // Delete the session ID from shared preferences
+        QueryPreferences.setStoredSessionId(this, null);
+
+        // Turn off polling if it's on
+        if (PollService.isServiceAlarmOn(this)) {
+            PollService.setServiceAlarm(this, false);
+        }
+
+        // Send user back to home page
+        Intent intent = HomePagerActivity.newIntent(this);
+        startActivity(intent);
+    }
 }

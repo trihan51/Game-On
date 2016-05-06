@@ -105,7 +105,7 @@ public class SessionFragment extends VisibleFragment {
 
     @Override
     protected void performActionBasedOnSessionUpdated() {
-        // Refreshing the session page. NOTE (2/13/2016): NOT SURE IF THIS WORKS YET!
+        // Refreshing the session page
         Fragment newFragment = SessionFragment.newInstance(mCurrentLocation);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
@@ -115,13 +115,13 @@ public class SessionFragment extends VisibleFragment {
     }
 
     @Override
-    protected void performActionBasedOnSessionCancelled() {
-        // 1. display cancellation message
-        // 2. Clear session id in shared preferences
-        // 3. Redirect user back to HomeActivity.
-        // NOTE (2/13/2016): NOT SURE IF THIS WORKS YET!
+    protected void performActionBasedOnSessionStarted() {
+        ((SessionActivity) getActivity()).showSessionStartedDialog();
+    }
 
-        ((SessionActivity)getActivity()).showDialog();
+    @Override
+    protected void performActionBasedOnSessionCancelled() {
+        ((SessionActivity)getActivity()).showSessionCancelledDialog();
     }
 
     @Override
@@ -150,107 +150,112 @@ public class SessionFragment extends VisibleFragment {
                     performActionBasedOnSessionCancelled();
                 } else if (e == null) {
                     mCurrentGameOnSession = list.get(0);
-                    try {
-                        sessionHostName = mCurrentGameOnSession.getParseUser("host").fetchIfNeeded();
-                    } catch (ParseException ex) {
-                        Log.e("GAMEONSESSION", "session fetchifneeded: " + ex.toString());
-                    }
 
-                    mUserIsHost = mCurrentGameOnSession.getHost().getObjectId()
-                            .equals(ParseUser.getCurrentUser().getObjectId());
+                    if (mCurrentGameOnSession.isOpen()) {
+                        try {
+                            sessionHostName = mCurrentGameOnSession.getParseUser("host").fetchIfNeeded();
+                        } catch (ParseException ex) {
+                            Log.e("GAMEONSESSION", "session fetchifneeded: " + ex.toString());
+                        }
 
-                    // Display grid of players in session, if players, display
-                    // else, show no players message
-                    mNoPlayersFoundTextView = (TextView)
-                            view.findViewById(R.id.session_no_players_found);
-                    if(mCurrentGameOnSession.getAllPlayers().length() != 0) {
-                        mNoPlayersFoundTextView.setVisibility(View.GONE);
-                        mPlayerGrid = (GridView) view.findViewById(R.id.session_participant_container);
-                        mPlayerGrid.setAdapter(new PlayerAdapter(getContext(), mCurrentGameOnSession));
-                        mPlayerGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                Toast.makeText(getContext(), mCurrentGameOnSession.getPlayer(position), Toast.LENGTH_SHORT).show();
-                                // Todo: grab parseuser with objectid and display user info onclick
-                            }
-                        });
-                    } else {
-                        mNoPlayersFoundTextView.setVisibility(View.VISIBLE);
-                    }
+                        mUserIsHost = mCurrentGameOnSession.getHost().getObjectId()
+                                .equals(ParseUser.getCurrentUser().getObjectId());
 
-                    // Display board game name
-                    mBoardGameTextView = (TextView) view.findViewById(R.id.session_game_game_name);
-                    mBoardGameTextView.setText(mCurrentGameOnSession.getGameTitle());
+                        // Display grid of players in session, if players, display
+                        // else, show no players message
+                        mNoPlayersFoundTextView = (TextView)
+                                view.findViewById(R.id.session_no_players_found);
+                        if(mCurrentGameOnSession.getAllPlayers().length() != 0) {
+                            mNoPlayersFoundTextView.setVisibility(View.GONE);
+                            mPlayerGrid = (GridView) view.findViewById(R.id.session_participant_container);
+                            mPlayerGrid.setAdapter(new PlayerAdapter(getContext(), mCurrentGameOnSession));
+                            mPlayerGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    Toast.makeText(getContext(), mCurrentGameOnSession.getPlayer(position), Toast.LENGTH_SHORT).show();
+                                    // Todo: grab parseuser with objectid and display user info onclick
+                                }
+                            });
+                        } else {
+                            mNoPlayersFoundTextView.setVisibility(View.VISIBLE);
+                        }
 
-                    // Display host name
-                    TextView hostNameTextView = (TextView) view.findViewById(R.id.session_game_host_name);
-                    Resources res = getResources();
-                    String hostSessionTag = res.getString(R.string.session_host_tag)
-                            + " "
-                            + sessionHostName.getUsername();
-                    hostNameTextView.setText(hostSessionTag);
+                        // Display board game name
+                        mBoardGameTextView = (TextView) view.findViewById(R.id.session_game_game_name);
+                        mBoardGameTextView.setText(mCurrentGameOnSession.getGameTitle());
 
-                    // Display timer countdown
-                    mTimerTextView = (TextView) view.findViewById(R.id.timerTextView);
-                    if (!mUserIsHost) {
-                        mTimerTextView.setText(R.string.time_left);
-                    } else {
-                        startTimer();
-                    }
+                        // Display host name
+                        TextView hostNameTextView = (TextView) view.findViewById(R.id.session_game_host_name);
+                        Resources res = getResources();
+                        String hostSessionTag = res.getString(R.string.session_host_tag)
+                                + " "
+                                + sessionHostName.getUsername();
+                        hostNameTextView.setText(hostSessionTag);
 
-                    // Display host start button, if user is host
-                    if (mUserIsHost) {
-                        mHostStartButton = (Button) view.findViewById(R.id.session_host_start_button);
-                        mHostStartButton.setVisibility(View.VISIBLE);
-                        mHostStartButton.setOnClickListener(new View.OnClickListener() {
+                        // Display timer countdown
+                        mTimerTextView = (TextView) view.findViewById(R.id.timerTextView);
+                        if (!mUserIsHost) {
+                            mTimerTextView.setText(R.string.time_left);
+                        } else {
+                            startTimer();
+                        }
+
+                        // Display host start button, if user is host
+                        if (mUserIsHost) {
+                            mHostStartButton = (Button) view.findViewById(R.id.session_host_start_button);
+                            mHostStartButton.setVisibility(View.VISIBLE);
+                            mHostStartButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ParseQuery<ParseObject> query = ParseQuery.getQuery("BoardGames");
+                                    query.whereEqualTo("boardName", mCurrentGameOnSession.getGameTitle());
+                                    query.findInBackground(new FindCallback<ParseObject>() {
+                                        @Override
+                                        public void done(List<ParseObject> objects, ParseException e) {
+                                            if(e == null) {
+                                                JSONArray arr = objects.get(0).getJSONArray("maxPlayers");
+                                                int playerCount = Integer.parseInt(mCurrentGameOnSession.getAllPlayerAndHostCount());
+                                                int minPlayerCount = -1;
+                                                try {
+                                                    minPlayerCount = (int) arr.get(0);
+                                                } catch (JSONException ex) {
+                                                    Log.d("GAMEON", "checkIfFullRoom JSON: " + ex);
+                                                }
+
+                                                // Check if min players reached
+                                                // true - host can start, false - host can't start
+                                                if (playerCount >= minPlayerCount) {
+                                                    hostStartSession();
+                                                } else {
+                                                    hostNoStartSession();
+                                                }
+                                            } else {
+                                                Log.e("GAMEON", "checkIfFullRoom Parse:" + e);
+                                            }
+                                        }
+                                    });;
+                                }
+                            });
+                        }
+
+                        // Display leave button
+                        mLeaveButton = (Button) view.findViewById(R.id.leaveButton);
+                        mLeaveButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                ParseQuery<ParseObject> query = ParseQuery.getQuery("BoardGames");
-                                query.whereEqualTo("boardName", mCurrentGameOnSession.getGameTitle());
-                                query.findInBackground(new FindCallback<ParseObject>() {
-                                    @Override
-                                    public void done(List<ParseObject> objects, ParseException e) {
-                                        if(e == null) {
-                                            JSONArray arr = objects.get(0).getJSONArray("maxPlayers");
-                                            int playerCount = Integer.parseInt(mCurrentGameOnSession.getAllPlayerAndHostCount());
-                                            int minPlayerCount = -1;
-                                            try {
-                                                minPlayerCount = (int) arr.get(0);
-                                            } catch (JSONException ex) {
-                                                Log.d("GAMEON", "checkIfFullRoom JSON: " + ex);
-                                            }
-
-                                            // Check if min players reached
-                                            // true - host can start, false - host can't start
-                                            if (playerCount >= minPlayerCount) {
-                                                hostStartSession();
-                                            } else {
-                                                hostNoStartSession();
-                                            }
-                                        } else {
-                                            Log.e("GAMEON", "checkIfFullRoom Parse:" + e);
-                                        }
-                                    }
-                                });;
+                                // Stop checking for updates if it's on
+                                if (PollService.isServiceAlarmOn(getActivity())) {
+                                    PollService.setServiceAlarm(getActivity(), false);
+                                }
+                                leaveSession();
                             }
                         });
+
+                        mBoardGameImageView = (ImageView) view.findViewById(R.id.session_game_image_view);
+                        loadBoardImage();
+                    } else {
+                        performActionBasedOnSessionStarted();
                     }
-
-                    // Display leave button
-                    mLeaveButton = (Button) view.findViewById(R.id.leaveButton);
-                    mLeaveButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // Stop checking for updates if it's on
-                            if (PollService.isServiceAlarmOn(getActivity())) {
-                                PollService.setServiceAlarm(getActivity(), false);
-                            }
-                            leaveSession();
-                        }
-                    });
-
-                    mBoardGameImageView = (ImageView) view.findViewById(R.id.session_game_image_view);
-                    loadBoardImage();
                 } else {
                     Toast.makeText(getActivity(), "Error!", Toast.LENGTH_SHORT).show();
                 }

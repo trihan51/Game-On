@@ -38,17 +38,26 @@ public abstract class VisibleFragment extends android.support.v4.app.Fragment {
             setResultCode(Activity.RESULT_CANCELED);
 
             int requestCode = intent.getIntExtra(PollService.REQUEST_CODE, 0);
-            if (requestCode == PollService.REQUEST_CODE_ALERT_USER_OF_SESSION_UPDATES) {
-                performActionBasedOnSessionUpdated();
-            } else if (requestCode == PollService.REQUEST_CODE_ALERT_USER_OF_SESSION_CANCELLED) {
-                performActionBasedOnSessionCancelled();
-            } else {
-
+            switch(requestCode) {
+                case PollService.REQUEST_CODE_ALERT_USER_OF_SESSION_UPDATES:
+                    performActionBasedOnSessionUpdated();
+                    break;
+                case PollService.REQUEST_CODE_ALERT_USER_OF_SESSION_START:
+                    performActionBasedOnSessionStarted();
+                    break;
+                case PollService.REQUEST_CODE_ALERT_USER_OF_SESSION_CANCELLED:
+                    performActionBasedOnSessionCancelled();
+                    break;
+                default:
+                    Log.d(TAG, "Request code not valid. THIS IS A BUG! FIX IT!");
+                    break;
             }
         }
     };
 
     protected abstract void performActionBasedOnSessionUpdated();
+
+    protected abstract void performActionBasedOnSessionStarted();
 
     protected abstract void performActionBasedOnSessionCancelled();
 }

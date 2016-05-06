@@ -39,6 +39,7 @@ public class PollService extends IntentService {
 
     public static final int REQUEST_CODE_ALERT_USER_OF_SESSION_UPDATES = 0;
     public static final int REQUEST_CODE_ALERT_USER_OF_SESSION_CANCELLED = 1;
+    public static final int REQUEST_CODE_ALERT_USER_OF_SESSION_START = 2;
 
     public static Intent newIntent(Context context) {
         return new Intent(context, PollService.class);
@@ -79,8 +80,9 @@ public class PollService extends IntentService {
 
         // the AlarmManager has requested the service of PollService.
         // Here, we query Parse for the current session.
-        // if we are returned an object, that means the session is still open. go ahead and broadcast that the session page should be updated.
-        // else if there is an error or no object is returned, then broadcast that the session has been cancelled.
+        // if we are returned an object, that means the session is still open. go ahead and broadcast
+        // that the session page should be updated else if there is an error or no object is
+        // returned, then broadcast that the session has been cancelled.
 
         ParseQuery<GameOnSession> query = GameOnSession.getQuery();
         query.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(this));
@@ -105,24 +107,42 @@ public class PollService extends IntentService {
 
                     showBackgroundNotification(REQUEST_CODE_ALERT_USER_OF_SESSION_CANCELLED, notification);
                 } else if (e == null){
-                    // We are returned an object. broadcast that the session page should be refreshed.
-                    Log.i(TAG, "We successfully queried Parse from PollService");
-                    Resources resources = getResources();
-                    Intent i = SessionActivity.newIntent(PollService.this);
-                    PendingIntent pi = PendingIntent.getActivity(PollService.this,
-                            REQUEST_CODE_ALERT_USER_OF_SESSION_UPDATES, i, 0);
+                    GameOnSession session = list.get(0);
+                    if (session.isOpen()) {
+                        // broadcast that the session may have new updates
+                        Intent i = SessionActivity.newIntent(PollService.this);
+                        PendingIntent pi = PendingIntent.getActivity(PollService.this,
+                                REQUEST_CODE_ALERT_USER_OF_SESSION_UPDATES, i, 0);
 
-                    Notification notification = new NotificationCompat.Builder(PollService.this)
-                            .setTicker(resources.getString(R.string.session_update_title))
-                            .setSmallIcon(android.R.drawable.ic_menu_report_image)
-                            .setContentTitle(resources.getString(R.string.session_update_title))
-                            .setContentText(resources.getString(R.string.session_update_text))
-                            .setContentIntent(pi)
-                            .setAutoCancel(true)
-                            .build();
+                        Resources resources = getResources();
+                        Notification notification = new NotificationCompat.Builder(PollService.this)
+                                .setTicker(resources.getString(R.string.session_update_title))
+                                .setSmallIcon(android.R.drawable.ic_menu_report_image)
+                                .setContentTitle(resources.getString(R.string.session_update_title))
+                                .setContentText(resources.getString(R.string.session_update_text))
+                                .setContentIntent(pi)
+                                .setAutoCancel(true)
+                                .build();
 
-                    showBackgroundNotification(REQUEST_CODE_ALERT_USER_OF_SESSION_UPDATES, notification);
+                        showBackgroundNotification(REQUEST_CODE_ALERT_USER_OF_SESSION_UPDATES, notification);
+                    } else {
+                        // broadcast that the session has started
+                        Intent i = SessionActivity.newIntent(PollService.this);
+                        PendingIntent pi = PendingIntent.getActivity(PollService.this,
+                                REQUEST_CODE_ALERT_USER_OF_SESSION_START, i, 0);
 
+                        Resources resources = getResources();
+                        Notification notification = new NotificationCompat.Builder(PollService.this)
+                                .setTicker(resources.getString(R.string.session_start_title))
+                                .setSmallIcon(android.R.drawable.ic_menu_report_image)
+                                .setContentTitle(resources.getString(R.string.session_start_title))
+                                .setContentText(resources.getString(R.string.session_start_text))
+                                .setContentIntent(pi)
+                                .setAutoCancel(true)
+                                .build();
+
+                        showBackgroundNotification(REQUEST_CODE_ALERT_USER_OF_SESSION_START, notification);
+                    }
                 } else {
                     Log.e(TAG, "In PollService.java: Error querying Parse");
                 }

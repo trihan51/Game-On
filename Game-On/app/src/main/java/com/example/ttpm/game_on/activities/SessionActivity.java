@@ -40,23 +40,12 @@ public class SessionActivity extends SingleFragmentActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_session, menu);
 
-        MenuItem toggleItem = menu.findItem(R.id.menu_item_toggle_polling);
-        if (PollService.isServiceAlarmOn(this)) {
-            toggleItem.setTitle(R.string.stop);
-        } else {
-            toggleItem.setTitle(R.string.check_for_updates);
-        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_item_toggle_polling:
-                boolean shouldStartAlarm = !PollService.isServiceAlarmOn(this);
-                PollService.setServiceAlarm(this, shouldStartAlarm);
-                this.invalidateOptionsMenu();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

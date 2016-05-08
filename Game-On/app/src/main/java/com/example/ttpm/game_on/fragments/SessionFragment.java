@@ -128,6 +128,11 @@ public class SessionFragment extends VisibleFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mCurrentLocation = (Location) getArguments().getParcelable(ARG_CURRENT_LOCATION);
+
+        boolean automaticUpdateIsOn = PollService.isServiceAlarmOn(getActivity());
+        if (!automaticUpdateIsOn) {
+            PollService.setServiceAlarm(getActivity(), true);
+        }
     }
 
     @Override

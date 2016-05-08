@@ -66,9 +66,13 @@
     <string name="time_left">30 minutes left</string>
     <string name="confirm_button_text">Game On</string>
     <string name="leave_button_text">Leave</string>
-    <string name="session_confirmed_message">Please enjoy your game session!</string>
-    <string name="session_confirmed_title">Session Confirmed</string>
-    <string name="dialog_confirmed_button_text">Game On!</string>
+    <string name="session_confirmation_message">Would you like to start the session?</string>
+    <string name="session_confirmation_title">Session Confirmation</string>
+    <string name="dialog_confirm_button_text">Game On!</string>
+    <string name="dialog_cancel_button_text">No, thanks</string>
+    <string name="session_leave_title">Leaving Session</string>
+    <string name="session_leave_message">Would you like to leave this session?</string>
+    <string name="session_leave_positive_button_text">Yes</string>
     <string name="timed_out_text">Timed Out</string>
     <string name="session_timed_out_message">Your current session has timed out. Please host a new one.</string>
     <string name="session_timed_out_title">Session Time Out</string>

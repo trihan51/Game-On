@@ -212,33 +212,51 @@ public class SessionFragment extends VisibleFragment {
                             mHostStartButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    ParseQuery<ParseObject> query = ParseQuery.getQuery("BoardGames");
-                                    query.whereEqualTo("boardName", mCurrentGameOnSession.getGameTitle());
-                                    query.findInBackground(new FindCallback<ParseObject>() {
-                                        @Override
-                                        public void done(List<ParseObject> objects, ParseException e) {
-                                            if(e == null) {
-                                                JSONArray arr = objects.get(0).getJSONArray("maxPlayers");
-                                                int playerCount = Integer.parseInt(mCurrentGameOnSession.getAllPlayerAndHostCount());
-                                                int minPlayerCount = -1;
-                                                try {
-                                                    minPlayerCount = (int) arr.get(0);
-                                                } catch (JSONException ex) {
-                                                    Log.d("GAMEON", "checkIfFullRoom JSON: " + ex);
-                                                }
+                                    MaterialDialog.Builder b = new MaterialDialog.Builder(getActivity())
+                                            .title(R.string.session_confirmation_title)
+                                            .content(R.string.session_confirmation_message)
+                                            .positiveText(R.string.dialog_confirm_button_text)
+                                            .negativeText(R.string.dialog_cancel_button_text)
+                                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                                @Override
+                                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                    ParseQuery<ParseObject> query = ParseQuery.getQuery("BoardGames");
+                                                    query.whereEqualTo("boardName", mCurrentGameOnSession.getGameTitle());
+                                                    query.findInBackground(new FindCallback<ParseObject>() {
+                                                        @Override
+                                                        public void done(List<ParseObject> objects, ParseException e) {
+                                                            if(e == null) {
+                                                                JSONArray arr = objects.get(0).getJSONArray("maxPlayers");
+                                                                int playerCount = Integer.parseInt(mCurrentGameOnSession.getAllPlayerAndHostCount());
+                                                                int minPlayerCount = -1;
+                                                                try {
+                                                                    minPlayerCount = (int) arr.get(0);
+                                                                } catch (JSONException ex) {
+                                                                    Log.d("GAMEON", "checkIfFullRoom JSON: " + ex);
+                                                                }
 
-                                                // Check if min players reached
-                                                // true - host can start, false - host can't start
-                                                if (playerCount >= minPlayerCount) {
-                                                    hostStartSession();
-                                                } else {
-                                                    hostNoStartSession();
+                                                                // Check if min players reached
+                                                                // true - host can start, false - host can't start
+                                                                if (playerCount >= minPlayerCount) {
+                                                                    hostStartSession();
+                                                                } else {
+                                                                    hostNoStartSession();
+                                                                }
+                                                            } else {
+                                                                Log.e("GAMEON", "checkIfFullRoom Parse:" + e);
+                                                            }
+                                                        }
+                                                    });;
                                                 }
-                                            } else {
-                                                Log.e("GAMEON", "checkIfFullRoom Parse:" + e);
-                                            }
-                                        }
-                                    });;
+                                            })
+                                            .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                                @Override
+                                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                    // TODO
+                                                }
+                                            });
+                                    MaterialDialog d = b.build();
+                                    d.show();
                                 }
                             });
                         }
@@ -248,11 +266,19 @@ public class SessionFragment extends VisibleFragment {
                         mLeaveButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                // Stop checking for updates if it's on
-                                if (PollService.isServiceAlarmOn(getActivity())) {
-                                    PollService.setServiceAlarm(getActivity(), false);
-                                }
-                                leaveSession();
+                                MaterialDialog.Builder b = new MaterialDialog.Builder(getActivity())
+                                        .title(R.string.session_leave_title)
+                                        .content(R.string.session_leave_message)
+                                        .positiveText(R.string.session_leave_positive_button_text)
+                                        .negativeText(R.string.dialog_cancel_button_text)
+                                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                            @Override
+                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                leaveSession();
+                                            }
+                                        });
+                                MaterialDialog d = b.build();
+                                d.show();
                             }
                         });
 
@@ -281,33 +307,22 @@ public class SessionFragment extends VisibleFragment {
             PollService.setServiceAlarm(SessionFragment.this.getActivity(), false);
         }
 
-        MaterialDialog.Builder b = new MaterialDialog.Builder(getActivity())
-                .title(R.string.session_confirmed_title)
-                .content(R.string.session_confirmed_message)
-                .positiveText(R.string.dialog_confirmed_button_text)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        ParseQuery<GameOnSession> tmpQuery = GameOnSession.getQuery();
-                        tmpQuery.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(getActivity()));
-                        tmpQuery.findInBackground(new FindCallback<GameOnSession>() {
-                            @Override
-                            public void done(List<GameOnSession> objects, ParseException e) {
-                                // Close the session on Parse
-                                // Requery to get the new updated session with participants
-                                GameOnSession updatedSession = objects.get(0);
-                                updatedSession.setOpenStatus(false);
-                                updatedSession.saveInBackground();
-                                // Remove session id from shared preferences
-                                QueryPreferences.removeStoredSessionId(getActivity());
+        ParseQuery<GameOnSession> tmpQuery = GameOnSession.getQuery();
+        tmpQuery.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(getActivity()));
+        tmpQuery.findInBackground(new FindCallback<GameOnSession>() {
+            @Override
+            public void done(List<GameOnSession> objects, ParseException e) {
+                // Close the session on Parse
+                // Requery to get the new updated session with participants
+                GameOnSession updatedSession = objects.get(0);
+                updatedSession.setOpenStatus(false);
+                updatedSession.saveInBackground();
+                // Remove session id from shared preferences
+                QueryPreferences.removeStoredSessionId(getActivity());
 
-                                sendUserBackToHomePagerActivity();
-                            }
-                        });
-                    }
-                });
-        MaterialDialog d = b.build();
-        d.show();
+                sendUserBackToHomePagerActivity();
+            }
+        });
     }
 
     private void hostNoStartSession() {
@@ -440,6 +455,10 @@ public class SessionFragment extends VisibleFragment {
     }
 
     private void leaveSession() {
+        // Stop checking for updates if it's on
+        if (PollService.isServiceAlarmOn(getActivity())) {
+            PollService.setServiceAlarm(getActivity(), false);
+        }
         removeCurrentUserFromSession();
         sendUserBackToHomePagerActivity();
     }

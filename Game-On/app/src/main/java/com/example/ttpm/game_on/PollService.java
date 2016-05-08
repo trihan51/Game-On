@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.os.SystemClock;
 import android.support.v7.app.NotificationCompat;
@@ -83,6 +84,9 @@ public class PollService extends IntentService {
         // if we are returned an object, that means the session is still open. go ahead and broadcast
         // that the session page should be updated else if there is an error or no object is
         // returned, then broadcast that the session has been cancelled.
+        final Location currentLocation = new Location("");
+        currentLocation.setLatitude(QueryPreferences.getStoredLat(this));
+        currentLocation.setLongitude(QueryPreferences.getStoredLng(this));
 
         ParseQuery<GameOnSession> query = GameOnSession.getQuery();
         query.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(this));
@@ -92,7 +96,7 @@ public class PollService extends IntentService {
                 if (e == null && list.size() == 0) { // if the session has been cancelled by the host
                     // Here, send out a Broadcast telling the user that the session has been cancelled.
                     Resources resources = getResources();
-                    Intent i = SessionActivity.newIntent(PollService.this);
+                    Intent i = SessionActivity.newIntent(PollService.this, currentLocation);
                     PendingIntent pi = PendingIntent.getActivity(PollService.this,
                             REQUEST_CODE_ALERT_USER_OF_SESSION_CANCELLED, i, 0);
 
@@ -110,7 +114,7 @@ public class PollService extends IntentService {
                     GameOnSession session = list.get(0);
                     if (session.isOpen()) {
                         // broadcast that the session may have new updates
-                        Intent i = SessionActivity.newIntent(PollService.this);
+                        Intent i = SessionActivity.newIntent(PollService.this, currentLocation);
                         PendingIntent pi = PendingIntent.getActivity(PollService.this,
                                 REQUEST_CODE_ALERT_USER_OF_SESSION_UPDATES, i, 0);
 
@@ -127,7 +131,7 @@ public class PollService extends IntentService {
                         showBackgroundNotification(REQUEST_CODE_ALERT_USER_OF_SESSION_UPDATES, notification);
                     } else {
                         // broadcast that the session has started
-                        Intent i = SessionActivity.newIntent(PollService.this);
+                        Intent i = SessionActivity.newIntent(PollService.this, currentLocation);
                         PendingIntent pi = PendingIntent.getActivity(PollService.this,
                                 REQUEST_CODE_ALERT_USER_OF_SESSION_START, i, 0);
 

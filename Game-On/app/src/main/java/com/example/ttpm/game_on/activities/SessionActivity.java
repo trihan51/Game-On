@@ -22,11 +22,6 @@ public class SessionActivity extends SingleFragmentActivity {
 
     private static final String EXTRA_CURRENT_LOCATION = "com.example.ttpm.game_on.current_location";
 
-    public static Intent newIntent(Context packageContext) {
-        Intent intent = new Intent(packageContext, SessionActivity.class);
-        return intent;
-    }
-
     public static Intent newIntent(Context packageContext,
                                    Location currentLocation) {
         Intent intent = new Intent(packageContext, SessionActivity.class);

@@ -13,6 +13,8 @@ public class QueryPreferences {
     private static final String PREF_IS_ALARM_ON = "isAlarmOn";
     private static final String PREF_IS_NEW_PROFILE_PIC = "isNewProfilePic";
     private static final String PREF_SEARCH_RANGE = "searchRange";
+    private static final String PREF_CUR_LAT = "currentLatitude";
+    private static final String PREF_CUR_LNG = "currentLongitude";
 
     public static String getStoredSessionId(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context).getString(PREF_SESSION_ID, null);
@@ -67,5 +69,29 @@ public class QueryPreferences {
         return PreferenceManager
                 .getDefaultSharedPreferences(context)
                 .getString(PREF_SEARCH_RANGE, "");
+    }
+
+    public static Double getStoredLat(Context context) {
+        Float lat = PreferenceManager.getDefaultSharedPreferences(context).getFloat(PREF_CUR_LAT, 0);
+        return new Double(lat);
+    }
+
+    public static void setStoredLat(Context context, Double lat) {
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putFloat(PREF_CUR_LAT, new Float(lat))
+                .apply();
+    }
+
+    public static Double getStoredLng(Context context) {
+        Float lng = PreferenceManager.getDefaultSharedPreferences(context).getFloat(PREF_CUR_LNG, 0);
+        return new Double(lng);
+    }
+
+    public static void setStoredLng(Context context, Double lng) {
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putFloat(PREF_CUR_LNG, new Float(lng))
+                .apply();
     }
 }

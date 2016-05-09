@@ -63,6 +63,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import mehdi.sakout.fancybuttons.FancyButton;
+
 /**
  * Created by Tri Han on 2/10/2016.
  */
@@ -79,8 +81,8 @@ public class SessionFragment extends VisibleFragment {
     private GridView mPlayerGrid;
     private TextView mTimerTextView;
     private TextView mNoPlayersFoundTextView;
-    private Button mHostStartButton;
-    private Button mLeaveButton;
+    private FancyButton mHostStartButton;
+    private FancyButton mLeaveButton;
     private TextView mBoardGameTextView;
     private ImageView mBoardGameImageView;
 
@@ -205,9 +207,31 @@ public class SessionFragment extends VisibleFragment {
                             startTimer();
                         }
 
+                        // Display leave button
+                        mLeaveButton = (FancyButton) view.findViewById(R.id.leaveButton);
+                        mLeaveButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                MaterialDialog.Builder b = new MaterialDialog.Builder(getActivity())
+                                        .title(R.string.session_leave_title)
+                                        .content(R.string.session_leave_message)
+                                        .positiveText(R.string.session_leave_positive_button_text)
+                                        .negativeText(R.string.dialog_cancel_button_text)
+                                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                            @Override
+                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                leaveSession();
+                                            }
+                                        });
+                                MaterialDialog d = b.build();
+                                d.show();
+                            }
+                        });
+
                         // Display host start button, if user is host
                         if (mUserIsHost) {
-                            mHostStartButton = (Button) view.findViewById(R.id.session_host_start_button);
+                            mLeaveButton.setText(getResources().getString(R.string.dialog_cancel_button_text));
+                            mHostStartButton = (FancyButton) view.findViewById(R.id.session_host_start_button);
                             mHostStartButton.setVisibility(View.VISIBLE);
                             mHostStartButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -252,7 +276,7 @@ public class SessionFragment extends VisibleFragment {
                                             .onNegative(new MaterialDialog.SingleButtonCallback() {
                                                 @Override
                                                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                                    // TODO
+                                                    dialog.dismiss();
                                                 }
                                             });
                                     MaterialDialog d = b.build();
@@ -260,27 +284,6 @@ public class SessionFragment extends VisibleFragment {
                                 }
                             });
                         }
-
-                        // Display leave button
-                        mLeaveButton = (Button) view.findViewById(R.id.leaveButton);
-                        mLeaveButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                MaterialDialog.Builder b = new MaterialDialog.Builder(getActivity())
-                                        .title(R.string.session_leave_title)
-                                        .content(R.string.session_leave_message)
-                                        .positiveText(R.string.session_leave_positive_button_text)
-                                        .negativeText(R.string.dialog_cancel_button_text)
-                                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                            @Override
-                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                                leaveSession();
-                                            }
-                                        });
-                                MaterialDialog d = b.build();
-                                d.show();
-                            }
-                        });
 
                         mBoardGameImageView = (ImageView) view.findViewById(R.id.session_game_image_view);
                         loadBoardImage();

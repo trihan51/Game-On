@@ -69,7 +69,7 @@
     <string name="session_confirmation_message">Would you like to start the session?</string>
     <string name="session_confirmation_title">Session Confirmation</string>
     <string name="dialog_confirm_button_text">Game On!</string>
-    <string name="dialog_cancel_button_text">No, thanks</string>
+    <string name="dialog_cancel_button_text">Cancel</string>
     <string name="session_leave_title">Leaving Session</string>
     <string name="session_leave_message">Would you like to leave this session?</string>
     <string name="session_leave_positive_button_text">Yes</string>

@@ -58,8 +58,8 @@
     <string name="alert_dialog_ok">Ok</string>
     <string name="alert_dialog_session_started_title">Session Started</string>
     <string name="alert_dialog_session_started_message">The host has confirmed the current session. Please head to the event location and have fun!</string>
-    <string name="alert_dialog_session_cancelled_title">Alert: Session Cancelled</string>
-    <string name="alert_dialog_session_cancelled_message">Your current session has been cancelled by the host.</string>
+    <string name="alert_dialog_session_cancelled_title">Session Cancelled</string>
+    <string name="alert_dialog_session_cancelled_message">The host has cancelled the session.</string>
 
     <!-- Strings for SessionFragment.java -->
     <string name="session_header_text">Current Session Info</string>
@@ -67,10 +67,10 @@
     <string name="confirm_button_text">Game On</string>
     <string name="leave_button_text">Leave</string>
     <string name="session_confirmation_message">Would you like to start the session?</string>
-    <string name="session_confirmation_title">Session Confirmation</string>
+    <string name="session_confirmation_title">Confirm Session</string>
     <string name="dialog_confirm_button_text">Game On!</string>
     <string name="dialog_cancel_button_text">Cancel</string>
-    <string name="session_leave_title">Leaving Session</string>
+    <string name="session_leave_title">Leave Session</string>
     <string name="session_leave_message">Would you like to leave this session?</string>
     <string name="session_leave_positive_button_text">Yes</string>
     <string name="timed_out_text">Timed Out</string>
@@ -102,5 +102,6 @@
     <string name="session_no_players_found">No players have joined.</string>
     <string name="user_in_session">Session is in progress</string>
     <string name="session_player_section">Players</string>
+    <string name="alert_dialog_get_directions">Get directions</string>
 
 </resources>

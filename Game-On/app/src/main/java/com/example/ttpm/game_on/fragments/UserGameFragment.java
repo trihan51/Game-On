@@ -280,7 +280,10 @@ public class UserGameFragment extends android.support.v4.app.Fragment{
                                             ex.printStackTrace();
                                         }
 
-                                        Glide.with(getContext()).load(file).into(mBoardGameImageView);
+                                        Glide.with(getContext())
+                                                .load(file)
+                                                .centerCrop()
+                                                .into(mBoardGameImageView);
                                     } else {
                                         Log.d("GAMEON", "Parsefile contains no data");
                                     }

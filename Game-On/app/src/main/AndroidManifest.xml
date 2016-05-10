@@ -87,7 +87,8 @@
 
         <activity
             android:name=".activities.UserGameActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:parentActivityName=".activities.HomePagerActivity">
         </activity>
 
     </application>

@@ -62,7 +62,7 @@ public class IntegrationTestSuite extends ActivityInstrumentationTestCase2<Splas
 
     //LogIn: Page Overview
     public void test_LogInPageOverview(){
-        solo.clickOnActionBarItem(R.id.menu_action_log_out);
+      //  solo.clickOnActionBarItem(R.id.menu_action_log_out);
         assertTrue(solo.searchText("Game On"));
         assertTrue(solo.searchText("Login"));
         assertTrue(solo.searchText("Register"));
@@ -73,7 +73,7 @@ public class IntegrationTestSuite extends ActivityInstrumentationTestCase2<Splas
 
     //LogIn: User Successfully logsIn
     public void test_LogInSuccess(){
-        solo.clickOnActionBarItem(R.id.menu_action_log_out);
+    //    solo.clickOnActionBarItem(R.id.menu_action_log_out);
         solo.clickOnView(solo.getView(R.id.splash_login_button));
         solo.enterText((EditText) solo.getView(R.id.login_username_edittext), "sam@sjsu.edu");
         solo.enterText((EditText) solo.getView(R.id.login_password_edittext), "a");

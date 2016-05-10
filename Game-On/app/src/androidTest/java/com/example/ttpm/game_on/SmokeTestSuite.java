@@ -48,7 +48,7 @@ public class SmokeTestSuite extends ActivityInstrumentationTestCase2<SplashActiv
     }
 
     public void test_LogOut(){
-        solo.clickOnActionBarItem(R.id.menu_action_log_out);
+      //  solo.clickOnActionBarItem(R.id.menu_action_log_out);
         assertTrue(solo.searchText("Login"));
        // solo.clickOnView(solo.getView(R.id.menu_action_current_session));
        // assertTrue(solo.searchText("Settings"));

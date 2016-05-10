@@ -1,15 +1,18 @@
 package com.example.ttpm.game_on.fragments;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -79,6 +82,7 @@ public class SessionFragment extends VisibleFragment {
 
     private GameOnSession mCurrentGameOnSession;
     private GridView mPlayerGrid;
+    private PlayerAdapter mPlayerGridAdapter;
     private TextView mTimerTextView;
     private TextView mNoPlayersFoundTextView;
     private FancyButton mHostStartButton;
@@ -108,22 +112,79 @@ public class SessionFragment extends VisibleFragment {
     @Override
     protected void performActionBasedOnSessionUpdated() {
         // Refreshing the session page
-        Fragment newFragment = SessionFragment.newInstance(mCurrentLocation);
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-        transaction.replace(R.id.fragment_container, newFragment);
-
-        transaction.commit();
+        ParseQuery<GameOnSession> query = GameOnSession.getQuery();
+        query.whereEqualTo("objectId", QueryPreferences.getStoredSessionId(getActivity()));
+        query.findInBackground(new FindCallback<GameOnSession>() {
+            @Override
+            public void done(List<GameOnSession> objects, ParseException e) {
+                if (e == null) {
+                    mCurrentGameOnSession = objects.get(0);
+                    displayPlayerGrid(mCurrentGameOnSession);
+                } else {
+                    Log.e("GAMEON", e.toString());
+                }
+            }
+        });
     }
 
     @Override
     protected void performActionBasedOnSessionStarted() {
-        ((SessionActivity) getActivity()).showSessionStartedDialog();
+        MaterialDialog.Builder b = new MaterialDialog.Builder(getActivity())
+                .title(R.string.alert_dialog_session_started_title)
+                .content(R.string.alert_dialog_session_started_message)
+                .positiveText(R.string.alert_dialog_get_directions)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        // Delete the session ID from shared preferences
+                        QueryPreferences.removeStoredSessionId(getActivity());
+
+                        // Turn off polling if it's on
+                        if (PollService.isServiceAlarmOn(getContext())) {
+                            PollService.setServiceAlarm(getContext(), false);
+                        }
+
+                        // Send user to google maps with host location
+                        String latitude =
+                                Double.toString(mCurrentGameOnSession.getLocation().getLatitude());
+                        String longitude =
+                                Double.toString(mCurrentGameOnSession.getLocation().getLongitude());
+                        // Launch turn-by-turn navigation in Google Maps
+                        Uri gmmIntentUri =
+                                Uri.parse("google.navigation:q="+latitude+","+longitude);
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        startActivity(mapIntent);
+                    }
+                });
+        MaterialDialog d = b.build();
+        d.show();
     }
 
     @Override
     protected void performActionBasedOnSessionCancelled() {
-        ((SessionActivity)getActivity()).showSessionCancelledDialog();
+        MaterialDialog.Builder b = new MaterialDialog.Builder(getActivity())
+                .title(R.string.alert_dialog_session_cancelled_title)
+                .content(R.string.alert_dialog_session_cancelled_message)
+                .positiveText(R.string.dialog_timed_out_button_text)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        // Delete the session ID from shared preferences
+                        QueryPreferences.removeStoredSessionId(getActivity());
+
+                        // Turn off polling if it's on
+                        if (PollService.isServiceAlarmOn(getContext())) {
+                            PollService.setServiceAlarm(getContext(), false);
+                        }
+
+                        // Send user back to home page
+                        Intent intent = HomePagerActivity.newIntent(getContext());
+                        startActivity(intent);
+                    }
+                });
+        MaterialDialog d = b.build();
+        d.show();
     }
 
     @Override
@@ -167,25 +228,10 @@ public class SessionFragment extends VisibleFragment {
 
                         mUserIsHost = mCurrentGameOnSession.getHost().getObjectId()
                                 .equals(ParseUser.getCurrentUser().getObjectId());
-
-                        // Display grid of players in session, if players, display
-                        // else, show no players message
+                        mPlayerGrid = (GridView) view.findViewById(R.id.session_participant_container);
                         mNoPlayersFoundTextView = (TextView)
                                 view.findViewById(R.id.session_no_players_found);
-                        if(mCurrentGameOnSession.getAllPlayers().length() != 0) {
-                            mNoPlayersFoundTextView.setVisibility(View.GONE);
-                            mPlayerGrid = (GridView) view.findViewById(R.id.session_participant_container);
-                            mPlayerGrid.setAdapter(new PlayerAdapter(getContext(), mCurrentGameOnSession));
-                            mPlayerGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    Toast.makeText(getContext(), mCurrentGameOnSession.getPlayer(position), Toast.LENGTH_SHORT).show();
-                                    // Todo: grab parseuser with objectid and display user info onclick
-                                }
-                            });
-                        } else {
-                            mNoPlayersFoundTextView.setVisibility(View.VISIBLE);
-                        }
+                        displayPlayerGrid(mCurrentGameOnSession);
 
                         // Display board game name
                         mBoardGameTextView = (TextView) view.findViewById(R.id.session_game_game_name);
@@ -303,6 +349,29 @@ public class SessionFragment extends VisibleFragment {
         return view;
     }
 
+    private void displayPlayerGrid(GameOnSession session) {
+        // Display grid of players in session, if players, display
+        // else, show no players message
+        final GameOnSession currentSession = session;
+
+        mPlayerGridAdapter = new PlayerAdapter(getContext(), currentSession);
+        if(currentSession.getAllPlayers().length() != 0) {
+            mNoPlayersFoundTextView.setVisibility(View.GONE);
+            mPlayerGrid.setAdapter(mPlayerGridAdapter);
+            mPlayerGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Toast.makeText(getContext(), currentSession.getPlayer(position), Toast.LENGTH_SHORT).show();
+                    // Todo: grab parseuser with objectid and display user info onclick
+                }
+            });
+        } else {
+            // Clears the gridview if there's no players found
+            mPlayerGrid.setAdapter(null);
+            mNoPlayersFoundTextView.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void hostStartSession() {
         mCountDownTimer.cancel();
         // Stop checking for updates if it's on
@@ -332,7 +401,7 @@ public class SessionFragment extends VisibleFragment {
         MaterialDialog.Builder b = new MaterialDialog.Builder(getActivity())
                 .title("Not Enough Players")
                 .content("There are not enough players to start!")
-                .positiveText("Ok");
+                .positiveText(R.string.dialog_timed_out_button_text);
         MaterialDialog d = b.build();
         d.show();
     }
@@ -371,6 +440,7 @@ public class SessionFragment extends VisibleFragment {
 
                                     Glide.with(getContext())
                                             .load(file)
+                                            .centerCrop()
                                             .into(mBoardGameImageView);
                                 } else {
                                     Log.d("GAMEON", "Parsefile contains no data");

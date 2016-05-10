@@ -30,6 +30,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/session_game_game_name"
                 android:layout_gravity="center"
+                android:gravity="center"
                 android:textSize="32sp"
                 android:textStyle="bold"
                 android:textColor="#EEEEEE"

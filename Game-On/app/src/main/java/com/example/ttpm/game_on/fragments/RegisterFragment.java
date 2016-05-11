@@ -134,6 +134,7 @@ public class RegisterFragment extends android.support.v4.app.Fragment {
                         Intent intent = new Intent(getActivity(), HomePagerActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Will clear out your activity history stack till now
                         startActivity(intent);
+                        getActivity().finish();
                     } else {
                         Toast.makeText(getActivity(), "There was an unexpected error.", Toast.LENGTH_SHORT).show();
                     }

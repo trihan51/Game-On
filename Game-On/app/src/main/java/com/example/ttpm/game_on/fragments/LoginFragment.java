@@ -54,6 +54,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
                             Intent intent = new Intent(getActivity(), HomePagerActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Will clear out your activity history stack till now
                             startActivity(intent);
+                            getActivity().finish();
                         } else {
                             switch (e.getCode()) {
                                 case ParseException.OBJECT_NOT_FOUND: {

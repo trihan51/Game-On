@@ -155,7 +155,9 @@ public class SessionFragment extends VisibleFragment {
                                 Uri.parse("google.navigation:q="+latitude+","+longitude);
                         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                         mapIntent.setPackage("com.google.android.apps.maps");
+                        mapIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(mapIntent);
+                        getActivity().finish();
                     }
                 });
         MaterialDialog d = b.build();
@@ -556,6 +558,7 @@ public class SessionFragment extends VisibleFragment {
         Intent intent = new Intent(getActivity(), HomePagerActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Will clear out your activity history stack till now
         startActivity(intent);
+        getActivity().finish();
     }
 
     private void updateHostMarker()

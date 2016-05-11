@@ -180,10 +180,12 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
 
     @Override
     public void fragmentBecameVisible() {
-        if(QueryPreferences.getStoredSessionId(getContext()) == null
-                && sessionWarningTextView != null
-                && sessionWarningTextView.getVisibility() != View.GONE) {
-            sessionWarningTextView.setVisibility(View.GONE);
+        if(getContext() != null) {
+            if (QueryPreferences.getStoredSessionId(getContext()) == null
+                    && sessionWarningTextView != null
+                    && sessionWarningTextView.getVisibility() != View.GONE) {
+                sessionWarningTextView.setVisibility(View.GONE);
+            }
         }
     }
 

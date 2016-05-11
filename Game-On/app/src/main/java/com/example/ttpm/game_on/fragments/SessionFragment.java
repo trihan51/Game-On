@@ -140,8 +140,9 @@ public class SessionFragment extends VisibleFragment {
                         QueryPreferences.removeStoredSessionId(getActivity());
 
                         // Turn off polling if it's on
-                        if (PollService.isServiceAlarmOn(getContext())) {
-                            PollService.setServiceAlarm(getContext(), false);
+                        if (PollService.isServiceAlarmOn(getActivity())) {
+                            Log.d("GAMEON", "turn off polling");
+                            PollService.setServiceAlarm(getActivity(), false);
                         }
 
                         // Send user to google maps with host location
@@ -174,8 +175,9 @@ public class SessionFragment extends VisibleFragment {
                         QueryPreferences.removeStoredSessionId(getActivity());
 
                         // Turn off polling if it's on
-                        if (PollService.isServiceAlarmOn(getContext())) {
-                            PollService.setServiceAlarm(getContext(), false);
+                        if (PollService.isServiceAlarmOn(getActivity())) {
+                            Log.d("GAMEON", "turn off polling");
+                            PollService.setServiceAlarm(getActivity(), false);
                         }
 
                         // Send user back to home page

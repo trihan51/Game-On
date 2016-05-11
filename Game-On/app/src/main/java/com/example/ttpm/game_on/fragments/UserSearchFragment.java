@@ -200,11 +200,13 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
 
     @Override
     public void fragmentBecameVisible() {
-        queryForAllOpenUniqueBoardGames();
-        if(QueryPreferences.getStoredSessionId(getContext()) == null
-                && sessionWarningTextView != null
-                && sessionWarningTextView.getVisibility() != View.GONE) {
-            sessionWarningTextView.setVisibility(View.GONE);
+        if(getContext() != null) {
+            queryForAllOpenUniqueBoardGames();
+            if (QueryPreferences.getStoredSessionId(getContext()) == null
+                    && sessionWarningTextView != null
+                    && sessionWarningTextView.getVisibility() != View.GONE) {
+                sessionWarningTextView.setVisibility(View.GONE);
+            }
         }
     }
 

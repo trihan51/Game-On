@@ -89,7 +89,7 @@ public class HomePagerActivity extends AppCompatActivity {
 
             }
         });
-
+        viewPager.setCurrentItem(1);
         setCurrentLocationToDefault();
 
         mClient = new GoogleApiClient.Builder(this)

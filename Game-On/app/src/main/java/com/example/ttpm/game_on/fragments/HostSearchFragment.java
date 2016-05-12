@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.ttpm.game_on.activities.HomePagerActivity;
 import com.example.ttpm.game_on.interfaces.SwipeFragmentUpdateInterface;
 import com.example.ttpm.game_on.models.GameOnSession;
 import com.example.ttpm.game_on.QueryPreferences;
@@ -314,6 +315,8 @@ public class HostSearchFragment extends android.support.v4.app.Fragment
             session.setHost(ParseUser.getCurrentUser());
             session.setPlayers(new JSONArray());
             session.setOpenStatus(true);
+
+            mCurrentLocation = ((HomePagerActivity)getActivity()).getMostRecentUserLocation();
             session.setLocation(new ParseGeoPoint(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
 
             ParseACL acl  = new ParseACL();

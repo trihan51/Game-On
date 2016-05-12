@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.ttpm.game_on.activities.HomePagerActivity;
 import com.example.ttpm.game_on.interfaces.SwipeFragmentUpdateInterface;
 import com.example.ttpm.game_on.models.GameOnSession;
 import com.example.ttpm.game_on.QueryPreferences;
@@ -244,6 +245,8 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
                         String gameTitle = mBoardGameTextView.getText().toString();
                         String searchRadius = QueryPreferences.getSearchRange(getContext());
 
+                        mCurrentLocation = ((HomePagerActivity)getActivity()).getMostRecentUserLocation();
+
                         Intent intent = UserGameActivity.newIntent(
                                 getActivity(),
                                 gameTitle,
@@ -305,6 +308,7 @@ public class UserSearchFragment extends android.support.v4.app.Fragment
                                         // Saved Successfully
                                         QueryPreferences.setStoredSessionId(getActivity(),
                                                 mQuickJoinSession.getObjectId());
+                                        mCurrentLocation = ((HomePagerActivity)getActivity()).getMostRecentUserLocation();
                                         Intent intent = SessionActivity.newIntent(getActivity(), mCurrentLocation);
                                         startActivity(intent);
                                     } else {

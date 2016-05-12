@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -106,16 +107,16 @@ public class HomePagerActivity extends AppCompatActivity {
                             if (ActivityCompat.shouldShowRequestPermissionRationale(HomePagerActivity.this,
                                     Manifest.permission.ACCESS_FINE_LOCATION)) {
                                 // Display UI and wait for user interaction
-//                                AlertDialog.Builder builder = new AlertDialog.Builder(HomePagerActivity.this);
-//                                builder.setMessage("Please enable location tracking to use full service of Game On.")
-//                                        .setTitle("Permission Error")
-//                                        .setPositiveButton("Ok, next time", new DialogInterface.OnClickListener() {
-//                                            public void onClick(DialogInterface dialog, int id) {
-//                                                setCurrentLocationToDefault();
-//                                            }
-//                                        });
-//                                AlertDialog dialog = builder.create();
-//                                dialog.show();
+                                AlertDialog.Builder builder = new AlertDialog.Builder(HomePagerActivity.this);
+                                builder.setMessage("Please enable location tracking to use full service of Game On.")
+                                        .setTitle("Permission Error")
+                                        .setPositiveButton("Ok, next time", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                setCurrentLocationToDefault();
+                                            }
+                                        });
+                                AlertDialog dialog = builder.create();
+                                dialog.show();
                             } else {
                                 ActivityCompat.requestPermissions(HomePagerActivity.this,
                                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
@@ -308,5 +309,9 @@ public class HomePagerActivity extends AppCompatActivity {
         public int getItemPosition(Object object) {
             return POSITION_NONE;
         }
+    }
+
+    public Location getMostRecentUserLocation() {
+        return mCurrentLocation;
     }
 }

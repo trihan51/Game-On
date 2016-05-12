@@ -37,6 +37,7 @@ import com.example.ttpm.game_on.activities.HomePagerActivity;
 import com.example.ttpm.game_on.activities.SessionActivity;
 import com.example.ttpm.game_on.adapters.PlayerAdapter;
 import com.example.ttpm.game_on.models.GameOnSession;
+import com.google.android.gms.drive.query.Query;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -194,11 +195,16 @@ public class SessionFragment extends VisibleFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCurrentLocation = (Location) getArguments().getParcelable(ARG_CURRENT_LOCATION);
+        if(QueryPreferences.getStoredSessionId(getActivity()) != null) {
+            mCurrentLocation = (Location) getArguments().getParcelable(ARG_CURRENT_LOCATION);
 
-        boolean automaticUpdateIsOn = PollService.isServiceAlarmOn(getActivity());
-        if (!automaticUpdateIsOn) {
-            PollService.setServiceAlarm(getActivity(), true);
+            boolean automaticUpdateIsOn = PollService.isServiceAlarmOn(getActivity());
+            if (!automaticUpdateIsOn) {
+                PollService.setServiceAlarm(getActivity(), true);
+            }
+        } else {
+            Intent intent = HomePagerActivity.newIntent(getContext());
+            startActivity(intent);
         }
     }
 

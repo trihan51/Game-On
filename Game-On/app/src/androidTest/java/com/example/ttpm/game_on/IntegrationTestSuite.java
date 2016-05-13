@@ -15,26 +15,36 @@ public class IntegrationTestSuite extends ActivityInstrumentationTestCase2<Splas
         super(SplashActivity.class);
     }
 
+
     public void setUp() throws Exception {
         super.setUp();
         solo = new Solo(getInstrumentation());
         getActivity();
+        //login
+        solo.clickOnView(solo.getView(R.id.splash_login_button));
+        solo.sleep(2000);
+        solo.enterText((EditText) solo.getView(R.id.login_username_edittext), "sam@sjsu.edu");
+        solo.enterText((EditText) solo.getView(R.id.login_password_edittext), "a");
+        solo.clickOnView(solo.getView(R.id.login_login_button));
+        solo.sleep(2000);
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.LEFT);
+        solo.sleep(2000);
     }
 
     @Override
     public void tearDown() throws Exception {
+        solo.sleep(2000);
+        solo.clickOnView(solo.getView(R.id.user_profile_logout_button));
+        solo.sleep(4000);
         solo.finishOpenedActivities();
         super.tearDown();
     }
 
-    public void testRun() {
-        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
-        solo.clickOnView(solo.getView(R.id.list_item_user_games_list_button));
-    }
 
     //Host Session: Check to see if it opens up list of games
     public void testListGamesHosted() {
         solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
+        solo.sleep(2000);
         solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
         assertTrue(solo.searchText("Caverna: The Cave Farmers"));
         assertTrue(solo.searchText("Checkers"));
@@ -50,6 +60,10 @@ public class IntegrationTestSuite extends ActivityInstrumentationTestCase2<Splas
         assertTrue(solo.searchText("Terra Mystica"));
         assertTrue(solo.searchText("Twilight Struggle"));
 
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.LEFT);
+        solo.sleep(2000);
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.LEFT);
+
     }
 
     //Join Session: Overview of Join Screen
@@ -58,26 +72,37 @@ public class IntegrationTestSuite extends ActivityInstrumentationTestCase2<Splas
         assertTrue(solo.searchText("See List"));
         assertTrue(solo.searchText("Quick Join"));
         assertTrue(solo.searchText("open"));
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.LEFT);
     }
 
     //LogIn: Page Overview
     public void test_LogInPageOverview(){
-      //  solo.clickOnActionBarItem(R.id.menu_action_log_out);
+        solo.clickOnView(solo.getView(R.id.user_profile_logout_button));
         assertTrue(solo.searchText("Game On"));
         assertTrue(solo.searchText("Login"));
         assertTrue(solo.searchText("Register"));
-        // solo.clickOnView(solo.getView(R.id.menu_action_current_session));
-        // assertTrue(solo.searchText("Settings"));
-        //  assertTrue(solo.searchText("Log Out"));
+        solo.clickOnView(solo.getView(R.id.splash_login_button));
+        solo.sleep(2000);
+        solo.enterText((EditText) solo.getView(R.id.login_username_edittext), "sam@sjsu.edu");
+        solo.enterText((EditText) solo.getView(R.id.login_password_edittext), "a");
+        solo.clickOnView(solo.getView(R.id.login_login_button));
+        solo.sleep(2000);
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.LEFT);
     }
 
     //LogIn: User Successfully logsIn
     public void test_LogInSuccess(){
-    //    solo.clickOnActionBarItem(R.id.menu_action_log_out);
+
+        solo.clickOnView(solo.getView(R.id.user_profile_logout_button));
+        solo.sleep(2000);
         solo.clickOnView(solo.getView(R.id.splash_login_button));
+        solo.sleep(2000);
         solo.enterText((EditText) solo.getView(R.id.login_username_edittext), "sam@sjsu.edu");
         solo.enterText((EditText) solo.getView(R.id.login_password_edittext), "a");
         solo.clickOnView(solo.getView(R.id.login_login_button));
+        solo.sleep(2000);
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.LEFT);
+        solo.sleep(2000);
 
     }
 

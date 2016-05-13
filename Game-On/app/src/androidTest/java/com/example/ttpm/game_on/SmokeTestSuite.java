@@ -1,6 +1,7 @@
 package com.example.ttpm.game_on;
 
 import android.test.ActivityInstrumentationTestCase2;
+import android.widget.EditText;
 
 import com.example.ttpm.game_on.activities.SplashActivity;
 import com.robotium.solo.Solo;
@@ -14,52 +15,9 @@ public class SmokeTestSuite extends ActivityInstrumentationTestCase2<SplashActiv
         super(SplashActivity.class);
     }
 
-    public void setUp() throws Exception {
-        super.setUp();
-        solo = new Solo(getInstrumentation());
-        getActivity();
-    }
-
-    @Override
-    public void tearDown() throws Exception {
-        solo.finishOpenedActivities();
-        super.tearDown();
-    }
-
-    public void testViewList() {
-        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
-        solo.clickOnView(solo.getView(R.id.list_item_user_games_list_button));
-        //      solo.clickOnView(solo.getView(R.id.list_item_join_button));
-        //  solo.waitForView(solo.getView(com.example.ttpm.game_on.R.id.menu_action_log_out));
-        //solo.clickOnButton("JOIN");
-        //   solo.clickOnButton("Log Out");
-        //    solo.clickOnView(solo.getView(com.example.ttpm.game_on.R.id.menu_action_log_out));
-
-        /*
-        try {
-            solo.wait(1000000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        */
+ //this has been replaced by fullrun
 
 
 
-    }
-
-    public void test_LogOut(){
-      //  solo.clickOnActionBarItem(R.id.menu_action_log_out);
-        assertTrue(solo.searchText("Login"));
-       // solo.clickOnView(solo.getView(R.id.menu_action_current_session));
-       // assertTrue(solo.searchText("Settings"));
-      //  assertTrue(solo.searchText("Log Out"));
-    }
-
-
-    public void test_viewCurrentSession(){
-        solo.clickOnView(solo.getView(R.id.menu_action_current_session));
-        assertTrue(solo.searchText("GAME ON"));
-        assertTrue(solo.searchText("LEAVE"));
-    }
 
 }

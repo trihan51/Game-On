@@ -1,6 +1,7 @@
 package com.example.ttpm.game_on;
 
 import android.test.ActivityInstrumentationTestCase2;
+import android.widget.EditText;
 
 import com.example.ttpm.game_on.activities.SplashActivity;
 import com.robotium.solo.Solo;
@@ -18,30 +19,28 @@ public class PerformanceTestSuite extends ActivityInstrumentationTestCase2<Splas
         super.setUp();
         solo = new Solo(getInstrumentation());
         getActivity();
+        //login
+        solo.clickOnView(solo.getView(R.id.splash_login_button));
+        solo.sleep(2000);
+        solo.enterText((EditText) solo.getView(R.id.login_username_edittext), "sam@sjsu.edu");
+        solo.enterText((EditText) solo.getView(R.id.login_password_edittext), "a");
+        solo.clickOnView(solo.getView(R.id.login_login_button));
+        solo.sleep(2000);
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.LEFT);
+        solo.sleep(2000);
     }
 
     @Override
     public void tearDown() throws Exception {
+        solo.sleep(2000);
+        solo.clickOnView(solo.getView(R.id.user_profile_logout_button));
+        solo.sleep(4000);
         solo.finishOpenedActivities();
         super.tearDown();
     }
 
     public void testRun() {
-        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
-        solo.clickOnView(solo.getView(R.id.list_item_user_games_list_button));
-        //      solo.clickOnView(solo.getView(R.id.list_item_join_button));
-        //  solo.waitForView(solo.getView(com.example.ttpm.game_on.R.id.menu_action_log_out));
-        //solo.clickOnButton("JOIN");
-        //   solo.clickOnButton("Log Out");
-        //    solo.clickOnView(solo.getView(com.example.ttpm.game_on.R.id.menu_action_log_out));
 
-        /*
-        try {
-            solo.wait(1000000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        */
 
 
     }

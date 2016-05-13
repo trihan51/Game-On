@@ -21,30 +21,24 @@ public class AutomatedUnitTestSuite extends ActivityInstrumentationTestCase2<Spl
         super.setUp();
         solo = new Solo(getInstrumentation());
         getActivity();
+        //login
+        solo.clickOnView(solo.getView(R.id.splash_login_button));
+        solo.sleep(2000);
+        solo.enterText((EditText) solo.getView(R.id.login_username_edittext), "sam@sjsu.edu");
+        solo.enterText((EditText) solo.getView(R.id.login_password_edittext), "a");
+        solo.clickOnView(solo.getView(R.id.login_login_button));
+        solo.sleep(2000);
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.LEFT);
+        solo.sleep(2000);
     }
 
     @Override
     public void tearDown() throws Exception {
+        solo.sleep(2000);
+        solo.clickOnView(solo.getView(R.id.user_profile_logout_button));
+        solo.sleep(4000);
         solo.finishOpenedActivities();
         super.tearDown();
-    }
-
-    public void testRun() {
-        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
-        solo.clickOnView(solo.getView(R.id.list_item_user_games_list_button));
-        //      solo.clickOnView(solo.getView(R.id.list_item_join_button));
-        //  solo.waitForView(solo.getView(com.example.ttpm.game_on.R.id.menu_action_log_out));
-        //solo.clickOnButton("JOIN");
-        //   solo.clickOnButton("Log Out");
-        //    solo.clickOnView(solo.getView(com.example.ttpm.game_on.R.id.menu_action_log_out));
-
-        /*
-        try {
-            solo.wait(1000000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        */
     }
 
     //Host Session: Host a game
@@ -66,22 +60,37 @@ public class AutomatedUnitTestSuite extends ActivityInstrumentationTestCase2<Spl
             }
         }
 
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.LEFT);
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.LEFT);
+
     }
+
+
    //LogOut: Verify Action Bar
     public void test_Logout() {
-      //  solo.clickOnActionBarItem(assertTrue(solo.searchText("Settings")));
-     //   solo.waitForView(R.id.menu_action_log_out);
-    //    solo.clickOnActionBarItem(R.id.menu_action_log_out);
+        solo.clickOnView(solo.getView(R.id.user_profile_logout_button));
+        solo.sleep(2000);
+        solo.clickOnView(solo.getView(R.id.splash_login_button));
+        solo.enterText((EditText) solo.getView(R.id.login_username_edittext), "sam@sjsu.edu");
+        solo.enterText((EditText) solo.getView(R.id.login_password_edittext), "a");
+        solo.clickOnView(solo.getView(R.id.login_login_button));
+        solo.sleep(2000);
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.LEFT);
+
     }
 
 
     //LogIn: User Successfully logsIn
     public void test_LogInSuccess(){
-        //solo.clickOnActionBarItem(R.id.menu_action_log_out);
+        solo.clickOnView(solo.getView(R.id.user_profile_logout_button));
+        solo.sleep(2000);
         solo.clickOnView(solo.getView(R.id.splash_login_button));
+        solo.sleep(2000);
         solo.enterText((EditText) solo.getView(R.id.login_username_edittext), "sam@sjsu.edu");
         solo.enterText((EditText) solo.getView(R.id.login_password_edittext), "a");
         solo.clickOnView(solo.getView(R.id.login_login_button));
+        solo.sleep(2000);
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.LEFT);
 
     }
 
@@ -90,11 +99,19 @@ public class AutomatedUnitTestSuite extends ActivityInstrumentationTestCase2<Spl
     public void test_register() {
         //  solo.clickOnActionBarItem(assertTrue(solo.searchText("Settings")));
       //  solo.clickOnActionBarItem(R.id.menu_action_log_out);
+        solo.clickOnView(solo.getView(R.id.user_profile_logout_button));
         solo.waitForView(R.id.splash_register_button);
         assertTrue(solo.searchText("Login"));
         assertTrue(solo.searchText("Register"));
         solo.clickOnView(solo.getView(R.id.splash_register_button));
-        // solo.clickOnButton("Register");
+
+        solo.sleep(2000);
+        solo.clickOnScreen(90,170,1);
+        solo.clickOnView(solo.getView(R.id.splash_login_button));
+        solo.enterText((EditText) solo.getView(R.id.login_username_edittext), "sam@sjsu.edu");
+        solo.enterText((EditText) solo.getView(R.id.login_password_edittext), "a");
+        solo.clickOnView(solo.getView(R.id.login_login_button));
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.LEFT);
     }
 
 }

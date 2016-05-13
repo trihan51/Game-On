@@ -32,7 +32,59 @@ public class FullRun extends ActivityInstrumentationTestCase2<SplashActivity> {
         super.tearDown();
     }
 
+    public void testInitial() {
+        //login portion fragment_splash
+        solo.clickOnView(solo.getView(R.id.splash_login_button));
+        solo.sleep(2000);
+        solo.enterText((EditText) solo.getView(R.id.login_username_edittext), "sam@sjsu.edu");
+        solo.enterText((EditText) solo.getView(R.id.login_password_edittext), "a");
+        solo.sleep(2000);
+        solo.clickOnView(solo.getView(R.id.login_login_button));
+        solo.sleep(2000);
+
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
+
+        solo.clickOnView(solo.getView(R.id.menu_item_search));
+        solo.sleep(2000);
+        solo.enterText((EditText) solo.getView(R.id.search_src_text), "Checkers");
+        solo.sleep(2000);
+        solo.clickOnView(solo.getView(R.id.search_close_btn));
+        solo.sleep(2000);
+
+        solo.clickOnScreen(500,600,1);
+        solo.sleep(2000);
+        solo.clickOnScreen(60,170,1);
+        solo.sleep(2000);
+
+        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.LEFT);
+        solo.sleep(2000);
+
+        solo.clickOnView(solo.getView(R.id.user_profile_logout_button));
+        solo.sleep(2000);
+
+    }
+
     public void testAll() {
+
+        //register portion fragment_register
+        solo.clickOnView(solo.getView(R.id.splash_register_button));
+        solo.sleep(2000);
+        solo.enterText((EditText) solo.getView(R.id.register_firstname_edittext), "sam");
+        solo.sleep(2000);
+        solo.enterText((EditText) solo.getView(R.id.register_lastname_edittext), "p");
+        solo.sleep(2000);
+        solo.enterText((EditText) solo.getView(R.id.register_username_edittext), "samm");
+        solo.sleep(2000);
+        solo.enterText((EditText) solo.getView(R.id.register_email_edittext), "sp@sjsu.edu");
+        solo.sleep(2000);
+        solo.enterText((EditText) solo.getView(R.id.register_password_edittext), "a");
+        solo.sleep(2000);
+        solo.enterText((EditText) solo.getView(R.id.register_repeat_password_edittext), "a");
+        solo.sleep(2000);
+        solo.clickOnScreen(60,170,1);
+        solo.sleep(2000);
+
 
         //login portion fragment_splash
         solo.clickOnView(solo.getView(R.id.splash_login_button));
@@ -44,6 +96,9 @@ public class FullRun extends ActivityInstrumentationTestCase2<SplashActivity> {
         solo.sleep(2000);
 
         //initial screen once logged in fragment_user_profile
+        //click the profile tab just in case
+        solo.clickOnScreen(150,330,1);
+        solo.sleep(2000);
         solo.clickOnView(solo.getView((R.id.user_profile_radio1)));
         solo.sleep(2000);
         solo.clickOnView(solo.getView((R.id.user_profile_radio2)));
@@ -63,9 +118,9 @@ public class FullRun extends ActivityInstrumentationTestCase2<SplashActivity> {
         solo.sleep(2000);
 
         solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
-        solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
+   //     solo.scrollViewToSide(solo.getView(R.id.activity_home_pager_view_pager), solo.RIGHT);
 
-        //fragment_user_game I can't join sessions :S
+        //fragment_user_game
 
         solo.clickOnView(solo.getView(R.id.menu_item_search));
         solo.sleep(2000);

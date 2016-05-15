@@ -14,7 +14,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp"
         android:padding="1dp"
-        android:src="@drawable/com_parse_ui_twitter_login_logo"
+        android:src="@mipmap/ic_launcher"
         app:civ_border_width="2dp"
         app:civ_border_color="#FF000000"
         tools:background="@color/wallet_dim_foreground_inverse_disabled_holo_dark" />

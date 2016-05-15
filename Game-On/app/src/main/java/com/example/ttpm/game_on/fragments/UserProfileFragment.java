@@ -296,7 +296,10 @@ public class UserProfileFragment extends android.support.v4.app.Fragment
                                     ex.printStackTrace();
                                 }
 
-                                Glide.with(getContext()).load(file).into(mProfileImageView);
+                                Glide.with(getContext())
+                                        .load(file)
+                                        .centerCrop()
+                                        .into(mProfileImageView);
                             } else {
                                 Log.d("GAMEON", "Parsefile contains no data");
                             }
@@ -305,7 +308,8 @@ public class UserProfileFragment extends android.support.v4.app.Fragment
                 } else {
                     Glide.with(getContext())
                             .load("")
-                            .placeholder(R.drawable.com_parse_ui_facebook_login_logo)
+                            .placeholder(R.mipmap.ic_launcher)
+                            .centerCrop()
                             .into(mProfileImageView);
                 }
             } else {
